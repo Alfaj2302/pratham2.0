@@ -51,27 +51,32 @@ export interface GetBatchLearnersParams {
   limit: number;
   offset: number;
   name?: string;
-  status?: LearnerProgressStatus;
+  status?: LearnerProgressStatus | LearnerProgressStatus[];
+  // Overrides ALL_LEARNER_STATUSES as the "no status selected" fallback —
+  // used by the Placements page so its "All" filter only ever requests
+  // course_completed/placed, never My Teaching Center's full 5-value set.
+  defaultStatuses?: LearnerProgressStatus[];
 }
 
 // Calls fetchCohortMemberList() directly (not the getMyCohortMemberList()
 // wrapper — see BatchListService.ts's getLearnerCount() comment for why).
 // filters.status carries the learner-progress enum directly: a single
 // selected status filters to just that value; with no status selected
-// ("All Status"), every value except the old generic 'active' is sent
-// (ALL_LEARNER_STATUSES) — confirmed backend contract, no client-side
-// filtering needed.
+// ("All Status"), every value in `defaultStatuses` is sent — confirmed
+// backend contract (POST /cohortmember/list filters.status takes an array),
+// no client-side filtering needed.
 export const getBatchLearners = async ({
   batchCohortId,
   limit,
   offset,
   name,
   status,
+  defaultStatuses = ALL_LEARNER_STATUSES,
 }: GetBatchLearnersParams): Promise<{ userDetails: any[]; totalCount: number }> => {
   const filters: any = {
     cohortId: batchCohortId,
     role: Role.STUDENT,
-    status: status ? [status] : ALL_LEARNER_STATUSES,
+    status: status ? (Array.isArray(status) ? status : [status]) : defaultStatuses,
   };
   if (name) filters.name = name;
 

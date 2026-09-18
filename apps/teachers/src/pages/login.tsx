@@ -283,6 +283,10 @@ const LoginComponent = () => {
               // skipping the /youth -> bare /youthnet hop every other
               // Youthnet role takes.
               router.push('/youthnet/l2-interested-queue');
+            } else if (localStorage.getItem('role') === RoleNames.PLACEMENT_RETENTION_COORDINATOR) {
+              // Placement Retention Coordinator: go straight to the
+              // Placements page, same shortcut as the Trainer role above.
+              router.push('/youthnet/placements');
             } else {
               router.push('/youth');
             }
@@ -318,6 +322,8 @@ const LoginComponent = () => {
       ) {
         if (localStorage.getItem('role') === RoleNames.TEACHER) {
           router.push('/youthnet/l2-interested-queue');
+        } else if (localStorage.getItem('role') === RoleNames.PLACEMENT_RETENTION_COORDINATOR) {
+          router.push('/youthnet/placements');
         } else if (localStorage.getItem('role') === RoleNames.TEAM_LEADER) {
           router.push('/youthnet');
         } else router.push('/unauthorized');

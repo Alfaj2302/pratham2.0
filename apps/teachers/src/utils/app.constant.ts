@@ -63,11 +63,15 @@ export enum Role {
   TEACHER = 'Instructor',
   TEAM_LEADER = 'Lead',
   ADMIN = 'State Lead',
+  // Backend role name string (apps/admin-app-repo's RoleName.PLACEMENT_RETENTION_COORDINATOR),
+  // distinct from the display label "Placement Retention Coordinator".
+  PLACEMENT_RETENTION_COORDINATOR = 'Placement Retention',
 }
 export enum RoleNames {
   STUDENT = 'Learner',
   TEACHER = 'Instructor',
   TEAM_LEADER = 'Lead',
+  PLACEMENT_RETENTION_COORDINATOR = 'Placement Retention',
 }
 export enum Status {
   DROPOUT = 'dropout',
@@ -130,6 +134,7 @@ export enum RoleId {
   TEACHER = 'a5f1dbc9-2ad4-442c-b762-0e3fc1f6c6da',
   TEAM_LEADER = 'c4454929-954e-4c51-bb7d-cca834ab9375',
   ADMIN = '4a3493aa-a4f7-4e2b-b141-f213084b5599',
+  PLACEMENT_RETENTION_COORDINATOR = '4c0c8421-2969-4155-9e78-c8d975d028ef',
 }
 
 export enum Pagination {

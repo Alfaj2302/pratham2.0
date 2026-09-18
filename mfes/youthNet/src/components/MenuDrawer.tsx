@@ -14,6 +14,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import LocalLibraryOutlinedIcon from '@mui/icons-material/LocalLibraryOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import {
@@ -389,8 +390,12 @@ const MenuDrawer: React.FC<DrawerProps> = ({
 
   const isTrainer =
     typeof window !== 'undefined' && window.localStorage.getItem('role') === Role.TEACHER;
+  const isPlacementRetentionCoordinator =
+    typeof window !== 'undefined' &&
+    window.localStorage.getItem('role') === Role.PLACEMENT_RETENTION_COORDINATOR;
   const isL2InterestedQueue = router.pathname.includes('/l2-interested-queue');
   const isMyTeachingCenter = router.pathname.includes('/my-teaching-center');
+  const isPlacements = router.pathname.includes('/placements');
 
   return (
     <Drawer
@@ -570,7 +575,7 @@ const MenuDrawer: React.FC<DrawerProps> = ({
           </Box>
         )}
 
-        {tenantName === TENANT_DATA.YOUTHNET && !isTrainer && (
+        {tenantName === TENANT_DATA.YOUTHNET && !isTrainer && !isPlacementRetentionCoordinator && (
           <Box>
             <NavItem
               collapsed={collapsed}
@@ -669,6 +674,22 @@ const MenuDrawer: React.FC<DrawerProps> = ({
                 router.push('/my-teaching-center');
               }}
               label={t('DASHBOARD.MY_TEACHING_CENTERS')}
+              sx={{ marginTop: '25px' }}
+            />
+          </Box>
+        )}
+
+        {tenantName === TENANT_DATA.YOUTHNET && isPlacementRetentionCoordinator && (
+          <Box>
+            <NavItem
+              collapsed={collapsed}
+              isActive={isPlacements}
+              icon={<WorkOutlineIcon sx={{ fontSize: '24px !important' }} />}
+              onClick={() => {
+                closeDrawer();
+                router.push('/placements');
+              }}
+              label={t('DASHBOARD.PLACEMENTS')}
               sx={{ marginTop: '25px' }}
             />
           </Box>
