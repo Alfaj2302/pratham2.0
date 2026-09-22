@@ -13,7 +13,11 @@ import { YOUTHNET_USER_ROLE } from '../components/youthNet/tempConfigs';
 import { getCoordinatorDomains } from '../services/placements/PlacementTaxonomyService';
 import { getPlacementForm, PlacementFormBundle } from '../services/placements/PlacementFormService';
 import { PlacementBatch } from '../services/placements/PlacementBatchService';
-import { SdbvFilters } from '../services/placements/PlacementCenterService';
+import { PlacementCenter, SdbvFilters } from '../services/placements/PlacementCenterService';
+import {
+  loadPlacementsFilters,
+  savePlacementsFilters,
+} from '../services/placements/placementsFilterStorage';
 import {
   PlacementSearchSchema,
   PlacementSearchUISchema,
@@ -37,9 +41,19 @@ const PlacementsPage = () => {
     }
   }, []);
 
+  // Restored once per mount (not on every render) so a page refresh brings
+  // back the Coordinator's SDBV/Center/Batch selection instead of dropping
+  // them — see placementsFilterStorage.
+  const [persistedFilters] = useState(() => loadPlacementsFilters());
+
   const [domains, setDomains] = useState<string[]>([]);
-  const [sdbv, setSdbv] = useState<SdbvFilters>({});
-  const [selectedBatch, setSelectedBatch] = useState<PlacementBatch | null>(null);
+  const [sdbv, setSdbv] = useState<SdbvFilters>(persistedFilters.sdbv || {});
+  const [selectedCenter, setSelectedCenter] = useState<PlacementCenter | null>(
+    persistedFilters.center || null
+  );
+  const [selectedBatch, setSelectedBatch] = useState<PlacementBatch | null>(
+    persistedFilters.batch || null
+  );
   const [placementForm, setPlacementForm] = useState<PlacementFormBundle | null>(null);
 
   useEffect(() => {
@@ -50,11 +64,23 @@ const PlacementsPage = () => {
   }, []);
 
   const handleSdbvSubmit = (formData: any) => {
-    setSdbv({
+    const nextSdbv = {
       state: formData?.state?.[0],
       district: formData?.district?.[0],
       block: formData?.block?.[0],
-    });
+    };
+    setSdbv(nextSdbv);
+    savePlacementsFilters({ sdbv: nextSdbv, sdbvFormData: formData });
+  };
+
+  const handleCenterSelected = (center: PlacementCenter | null) => {
+    setSelectedCenter(center);
+    savePlacementsFilters({ center });
+  };
+
+  const handleBatchSelected = (batch: PlacementBatch | null) => {
+    setSelectedBatch(batch);
+    savePlacementsFilters({ batch });
   };
 
   return (
@@ -98,12 +124,10 @@ const PlacementsPage = () => {
           <Box
             mb={3}
             sx={{
-              '& .MuiGrid-container': { width: '100%', margin: 0 },
-              '& .MuiGrid-item': {
-                flex: '1 1 0 !important',
-                flexBasis: '0 !important',
-                maxWidth: 'none !important',
-              },
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: 2,
             }}
           >
             <DynamicForm
@@ -114,12 +138,24 @@ const PlacementsPage = () => {
               }}
               SubmitaFunction={handleSdbvSubmit}
               isCallSubmitInHandle={true}
-              prefilledFormData={{}}
+              // Restored District/Block need DynamicForm's own dependent-API
+              // re-fetch to populate their option lists from the restored
+              // State/District — isReassign is what triggers that (see
+              // DynamicForm's renderPrefilledForm effect).
+              isReassign={!!persistedFilters.sdbvFormData}
+              prefilledFormData={persistedFilters.sdbvFormData || {}}
               type="placements-center-search"
             />
           </Box>
 
-          <CenterBatchSelector domains={domains} sdbv={sdbv} onBatchSelected={setSelectedBatch} />
+          <CenterBatchSelector
+            domains={domains}
+            sdbv={sdbv}
+            initialCenter={selectedCenter}
+            initialBatch={selectedBatch}
+            onCenterSelected={handleCenterSelected}
+            onBatchSelected={handleBatchSelected}
+          />
         </Box>
 
         {selectedBatch && (

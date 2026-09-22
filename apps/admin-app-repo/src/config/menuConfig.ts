@@ -189,6 +189,11 @@ export const MENU_CONFIG = {
           link: '/user-placement-retention-coordinator',
           roles: [Role.CENTRAL_ADMIN],
         },
+        {
+          title: 'SIDEBAR.TRAINER',
+          link: '/user-trainer',
+          roles: [Role.ADMIN, Role.CENTRAL_ADMIN],
+        },
       ],
     },
     master: {

@@ -4,6 +4,7 @@ export const pageActionBarSx = {
   justifyContent: 'flex-end',
   alignItems: 'center',
   gap: 2,
+  mt: 5,
 } as const;
 
 export const pageTableSectionSx = {

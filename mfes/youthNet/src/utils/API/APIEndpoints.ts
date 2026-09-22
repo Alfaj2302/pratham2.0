@@ -44,6 +44,7 @@ const API_ENDPOINTS = {
   cohortCreate: `${baseurl}/cohort/create`,
   cohortMemberUpdate: (membershipId: string | number) =>
     `${baseurl}/cohortmember/update/${membershipId}`,
+  fieldValuesDelete: `${baseurl}/fields/values/delete`,
 
 };
 

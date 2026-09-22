@@ -269,7 +269,8 @@
     "CURRICULUM_PLANNER": "Curriculum Planner",
     "BATCH": "Batch",
     "MOBILIZER": "Mentor",
-    "PLACEMENT_PROPERTY": "Placement Property"
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "State",

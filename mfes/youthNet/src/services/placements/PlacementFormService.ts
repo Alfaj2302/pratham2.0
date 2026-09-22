@@ -1,5 +1,7 @@
+import { deleteApi } from '@shared-lib';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { filterSchema } from '../../utils/helper';
+import API_ENDPOINTS from '../../utils/API/APIEndpoints';
 import { PLACEMENT_FORM_CONTEXT } from './placements.config';
 
 export interface PlacementFormBundle {
@@ -169,4 +171,31 @@ export const getPlacementFieldOrder = (form: PlacementFormBundle | null): string
   const order: string[] | undefined = form?.uiSchema?.['ui:order'];
   if (!Array.isArray(order)) return propertyKeys;
   return order.filter((key) => propertyKeys.includes(key));
+};
+
+// Delete Placement's real data-clearing step: DELETE /fields/values/delete
+// with one {fieldId, itemId} entry per Placement Form field — itemId is the
+// learner's cohortMembershipId (not userId; confirmed contract), fieldId is
+// each field's own schema fieldId, so this can't drift from whatever fields
+// the backend form config actually defines. updateCohortMemberStatus (kept
+// separately, see DeletePlacementModal) still handles reverting `status`
+// back to course_completed — this call only clears the customField values
+// themselves, which that status-only call never touched.
+export const deletePlacementFieldValues = async (
+  schema: any,
+  membershipId: string | number
+): Promise<boolean> => {
+  const fieldValues = Object.values(schema?.properties || {})
+    .map((property: any) => property?.fieldId)
+    .filter(Boolean)
+    .map((fieldId: string) => ({ fieldId, itemId: membershipId }));
+  if (fieldValues.length === 0) return true;
+
+  try {
+    await deleteApi(API_ENDPOINTS.fieldValuesDelete, { fieldValues });
+    return true;
+  } catch (error) {
+    console.error('Error deleting placement field values:', error);
+    return false;
+  }
 };

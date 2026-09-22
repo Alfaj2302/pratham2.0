@@ -150,6 +150,14 @@ const PlacementModal: React.FC<PlacementModalProps> = ({
                 uiSchema={form.uiSchema}
                 SubmitaFunction={(data: any) => setFormData(data)}
                 isCallSubmitInHandle={true}
+                // The Placement Form has dependent-API fields (district
+                // depends on state) — DynamicForm's own dependent-key
+                // handling only partially reassembles prefilledFormData
+                // during that async dance. isReassign makes it do one more,
+                // explicit full re-apply of prefilledFormData once
+                // rendering is complete (same fix already used for the SDBV
+                // filter bar's own State→District cascade).
+                isReassign={isUpdate}
                 prefilledFormData={formData}
                 type="placement"
               />

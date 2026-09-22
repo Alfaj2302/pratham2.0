@@ -258,7 +258,8 @@
     "YOUTH_VOLUNTEERS": "युवक / स्वयंसेवक",
     "SEARCH_VILLAGES": "गाव शोधा",
     "SEARCH_YOUTH": "युवक शोधा",
-    "SEARCH_MENTOR": "मेंटॉर शोधा"
+    "SEARCH_MENTOR": "मेंटॉर शोधा",
+    "TRAINER_MAPPING": "Trainer Role Mapping"
   },
   "ATTENDANCE": {
     "TOTAL_STUDENTS": "शिकणाऱ्यांची एकूण संख्या: {{count}}",
@@ -1301,5 +1302,15 @@
   "NO_USERS_FOUND_FOR_CATEGORY": "या श्रेणीसाठी कोणतेही वापरकर्ते आढळले नाहीत",
   "COURSE_COMPLETION": "अभ्यासक्रम पूर्णता",
   "COMPLETED": "पूर्ण झाले",
-  "IN_PROGRESS": "प्रगतीपथावर आहे."
+  "IN_PROGRESS": "प्रगतीपथावर आहे.",
+  "TRAINER_MAPPING": {
+    "PAGE_TITLE": "Trainer Role Mapping",
+    "PAGE_SUBTITLE": "Select a user, then Domain and Skill, to map them as a Trainer at a matching Center",
+    "SELECT_DOMAIN_AND_SKILL": "Please select a Domain and at least one Skill",
+    "MATCHING_CENTERS_LABEL": "Centers matching {{domain}} / {{skills}}",
+    "MAP_AS_TRAINER": "Map as Trainer",
+    "MAP_SUCCESS": "Trainer mapped successfully",
+    "MAP_FAILED": "Could not map Trainer",
+    "FORM_LOAD_FAILED": "Could not load the Trainer Mapping form. Please try again later."
+  }
 }

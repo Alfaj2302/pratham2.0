@@ -370,7 +370,8 @@
     "YOUTH_VOLUNTEERS": "Youth/Volunteers",
     "SEARCH_VILLAGES": "Search Village",
     "SEARCH_YOUTH": "Search youth",
-    "SEARCH_MENTOR": "Search mentor"
+    "SEARCH_MENTOR": "Search mentor",
+    "TRAINER_MAPPING": "Trainer Role Mapping"
   },
   "ATTENDANCE": {
     "TOTAL_STUDENTS": "Total: {{count}}",
@@ -1440,5 +1441,15 @@
   "NO_USERS_FOUND_FOR_CATEGORY": "No users found for this category",
   "COURSE_COMPLETION": "Course Completion",
   "COMPLETED": "Completed",
-  "IN_PROGRESS": "In Progress"
+  "IN_PROGRESS": "In Progress",
+  "TRAINER_MAPPING": {
+    "PAGE_TITLE": "Trainer Role Mapping",
+    "PAGE_SUBTITLE": "Select a user, then Domain and Skill, to map them as a Trainer at a matching Center",
+    "SELECT_DOMAIN_AND_SKILL": "Please select a Domain and at least one Skill",
+    "MATCHING_CENTERS_LABEL": "Centers matching {{domain}} / {{skills}}",
+    "MAP_AS_TRAINER": "Map as Trainer",
+    "MAP_SUCCESS": "Trainer mapped successfully",
+    "MAP_FAILED": "Could not map Trainer",
+    "FORM_LOAD_FAILED": "Could not load the Trainer Mapping form. Please try again later."
+  }
 }

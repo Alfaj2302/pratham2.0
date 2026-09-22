@@ -1007,7 +1007,29 @@
     "OWNED": "स्वयं का",
     "GOVERNMENT": "सरकारी",
     "VIRTUAL": "वर्चुअल",
-    "EXTENSION_CENTER": "विस्तार केंद्र"
+    "EXTENSION_CENTER": "विस्तार केंद्र",
+    "FULL_TIME": "Full Time",
+    "PART_TIME": "Part Time",
+    "SELF_EMPLOYED": "Self Employed",
+    "APPRENTICESHIP": "Apprenticeship",
+    "PLACED": "Placed",
+    "NOT_PLACED": "Not Placed",
+    "NOT_INTERESTED": "Not Interested",
+    "WORKING_IN_ANOTHER_PROFESSION": "Working in Another Profession",
+    "ENTREPRENEUR": "Entrepreneur",
+    "REFUSED": "Refused",
+    "THROUGH_PRATHAM": "Through Pratham",
+    "FOOD": "Food",
+    "ACCO_AND_FOOD": "Accommodation and Food",
+    "TRAVELLING": "Travelling",
+    "TRAVELLING_AND_FOOD": "Travelling and Food",
+    "FOOD_ACCO_TRAVEL": "Food, Accommodation and Travel",
+    "ACCO_TRAVEL": "Accommodation and Travel",
+    "NO_FACILITY": "No Facility",
+    "HR_LETTER": "HR Letter",
+    "APPOINTMENT_LETTER": "Appointment Letter",
+    "DOMESTIC": "Domestic",
+    "INTERNATIONAL": "International"
   },
   "ORGANISATION_NAME": "संगठन का नाम",
   "FORM_ERROR_MESSAGES": {
@@ -1202,5 +1224,15 @@
     "camp_to_club_discription": "कैंप टू क्लब",
     "Second Chance Program Pathways": "सेकंड चांस प्रोग्राम पाथवेज",
     "second_chance_program_pathways_discription": "अपनी 12वीं कक्षा की पढ़ाई पूरी करने के लिए दूसरा मौका पाइए"
-  }
+  },
+  "MONTHLY_SALARY": "Monthly Salary",
+  "EMPLOYMENT_TYPE": "Employment Type",
+  "DATE_OF_JOINING": "Date of Joining",
+  "PLACEMENT_DETAILS": "Placement Details",
+  "REMARKS": "Remarks",
+  "PLACEMENT_PROPERTY": "Placement Property",
+  "DESIGINATION": "Designation",
+  "SALARY_BENEFITS": "Salary Benefits",
+  "PLACEMENT_DOCUMENT_DETAILS": "Placement Document Details",
+  "PLACEMENT_TYPE": "Placement Type"
 }

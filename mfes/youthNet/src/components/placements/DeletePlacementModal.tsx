@@ -10,24 +10,31 @@ import {
   isMutationSuccess,
 } from '../../services/myTeachingCenter/LearnerListService';
 import { UNPLACED_STATUS } from '../../services/placements/placements.config';
+import { deletePlacementFieldValues } from '../../services/placements/PlacementFormService';
 
 interface DeletePlacementModalProps {
   open: boolean;
   onClose: () => void;
   membershipId: string | number | null;
   learnerName?: string;
+  // Needed to know every field's own fieldId — see
+  // PlacementFormService.deletePlacementFieldValues.
+  schema: any;
   onDeleted: () => void;
 }
 
 // Confirmation dialog, same Modal shell as DropoutReasonModal.tsx. "Delete"
-// reverts the learner's cohort-membership status back to course_completed
-// and clears their placement customFields — see the plan's "Persisting
-// placement data" section for why this isn't a hard record delete.
+// clears the learner's saved Placement field values (DELETE
+// /fields/values/delete — confirmed backend contract, itemId is the
+// cohortMembershipId) and reverts their cohort-membership status back to
+// course_completed — see the plan's "Persisting placement data" section for
+// why this isn't a hard cohort-membership record delete.
 const DeletePlacementModal: React.FC<DeletePlacementModalProps> = ({
   open,
   onClose,
   membershipId,
   learnerName,
+  schema,
   onDeleted,
 }) => {
   const { t } = useTranslation();
@@ -38,6 +45,11 @@ const DeletePlacementModal: React.FC<DeletePlacementModalProps> = ({
     if (!membershipId || saving) return;
     setSaving(true);
     try {
+      const fieldsCleared = await deletePlacementFieldValues(schema, membershipId);
+      if (!fieldsCleared) {
+        showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
+        return;
+      }
       const result = await updateCohortMemberStatus({
         membershipId,
         memberStatus: UNPLACED_STATUS,
@@ -80,7 +92,7 @@ const DeletePlacementModal: React.FC<DeletePlacementModalProps> = ({
           <Button onClick={onClose} disabled={saving}>
             {t('COMMON.CANCEL')}
           </Button>
-          <Button variant="contained" color="error" onClick={handleDelete} disabled={saving}>
+          <Button variant="contained" color="primary" onClick={handleDelete} disabled={saving}>
             {t('PLACEMENTS.DELETE_PLACEMENT')}
           </Button>
         </Box>

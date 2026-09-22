@@ -234,6 +234,24 @@ const PlacementRetentionCoordinator = () => {
     }
   };
 
+  // Extract a display label from a customFields selectedValues entry, which
+  // the API returns either as a plain string or as an { id, value } object.
+  const getSelectedValueLabel = (selectedValue: any): string | null => {
+    if (selectedValue == null) return null;
+    if (typeof selectedValue === 'object') {
+      return selectedValue.label || selectedValue.value || null;
+    }
+    return String(selectedValue);
+  };
+
+  const findCustomFieldValues = (row: any, label: string): string => {
+    const field = row?.customFields?.find((f: any) => f.label === label);
+    const values = (field?.selectedValues || [])
+      .map(getSelectedValueLabel)
+      .filter(Boolean);
+    return values.length ? values.join(', ') : '-';
+  };
+
   // Define table columns
   let columns = [
     {
@@ -253,13 +271,23 @@ const PlacementRetentionCoordinator = () => {
       }),
     },
     {
-      key: 'STATE',
-      label: 'State',
-      render: (row) => {
-        const state =
-          row.customFields.find((field) => field.label === 'STATE')
-            ?.selectedValues?.[0]?.value || '-';
-        return `${state}`;
+      key: 'gender',
+      label: 'Gender',
+      render: (row: any) => transformLabel(row.gender) || '-',
+    },
+    {
+      key: 'mobile',
+      label: 'Mobile',
+      render: (row: any) => row.mobile || '-',
+    },
+    {
+      key: 'LOCATION',
+      label: 'Location (State / District / Block / Village)',
+      render: (row: any) => {
+        const parts = ['STATE', 'DISTRICT', 'BLOCK', 'VILLAGE']
+          .map((label) => findCustomFieldValues(row, label))
+          .filter((part) => part && part !== '-');
+        return parts.length ? parts.join(' / ') : '-';
       },
     },
     {

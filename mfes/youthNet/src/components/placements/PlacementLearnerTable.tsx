@@ -23,6 +23,10 @@ import {
   getPlacementFieldOrder,
   PlacementFormBundle,
 } from '../../services/placements/PlacementFormService';
+import {
+  loadPlacementsFilters,
+  savePlacementsFilters,
+} from '../../services/placements/placementsFilterStorage';
 import { LearnerProgressStatus } from '../../utils/Interfaces';
 import PlacementModal from './PlacementModal';
 import DeletePlacementModal from './DeletePlacementModal';
@@ -40,9 +44,15 @@ const PlacementLearnerTable: React.FC<PlacementLearnerTableProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Restored once per mount so a page refresh doesn't drop the Status/
+  // Search selections either — see placementsFilterStorage.
+  const [persistedFilters] = useState(() => loadPlacementsFilters());
+
   const [currentPage, setCurrentPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<LearnerProgressStatus | ''>('');
+  const [searchTerm, setSearchTerm] = useState(persistedFilters.search || '');
+  const [statusFilter, setStatusFilter] = useState<LearnerProgressStatus | ''>(
+    (persistedFilters.status as LearnerProgressStatus | '') || ''
+  );
   const [rows, setRows] = useState<any[] | null>(null);
   const [totalCount, setTotalCount] = useState(0);
 
@@ -149,7 +159,10 @@ const PlacementLearnerTable: React.FC<PlacementLearnerTableProps> = ({
       <Box display="flex" flexWrap="wrap" alignItems="center" gap={2} sx={{ mb: 2 }}>
         <Box sx={{ flex: 1, minWidth: 260 }}>
           <LearnerSearchBar
-            onSearch={(value) => setSearchTerm(value)}
+            onSearch={(value) => {
+              setSearchTerm(value);
+              savePlacementsFilters({ search: value });
+            }}
             value={searchTerm}
             placeholder={t('PLACEMENTS.SEARCH_LEARNER')}
             fullWidth
@@ -160,7 +173,11 @@ const PlacementLearnerTable: React.FC<PlacementLearnerTableProps> = ({
           size="small"
           label={t('PLACEMENTS.STATUS')}
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as LearnerProgressStatus | '')}
+          onChange={(e) => {
+            const value = e.target.value as LearnerProgressStatus | '';
+            setStatusFilter(value);
+            savePlacementsFilters({ status: value });
+          }}
           sx={{ width: 180, mt: 2 }}
         >
           <MenuItem value="">{t('PLACEMENTS.ALL_STATUSES')}</MenuItem>
@@ -218,6 +235,7 @@ const PlacementLearnerTable: React.FC<PlacementLearnerTableProps> = ({
         onClose={() => setDeleteModalRow(null)}
         membershipId={deleteModalRow?.cohortMembershipId ?? null}
         learnerName={deleteModalRow ? getLearnerDisplayName(deleteModalRow) : undefined}
+        schema={placementForm?.schema}
         onDeleted={refreshCurrentPage}
       />
     </Box>
