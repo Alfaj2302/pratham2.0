@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Button, IconButton, CircularProgress, Modal, Divider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'next-i18next';
@@ -15,24 +15,35 @@ import {
 } from '../../services/myTeachingCenter/LearnerListService';
 
 interface PlacementModalProps {
-  open: boolean;
   onClose: () => void;
-  membershipId: string | number | null;
+  membershipId: string | number;
   learnerName?: string;
   isUpdate: boolean;
   initialFormData: Record<string, any>;
-  form: PlacementFormBundle | null;
+  form: PlacementFormBundle;
   onSaved: () => void;
 }
 
 // Placement Form is fetched from the backend (form/read?context=PLACEMENT&
 // contextType=PLACEMENT — see PlacementFormService) and rendered with
-// DynamicForm, same Modal shell as AllocateToBatchModal.tsx. Same
-// "DynamicForm keeps local formData via SubmitaFunction, a separate footer
-// button does the real save" pattern already used for L2QueueAssignSchema in
-// l2-interested-queue.tsx's side panel.
+// DynamicForm, same Modal shell as AllocateToBatchModal.tsx.
+//
+// The caller (PlacementLearnerTable) only renders this component AT ALL
+// while a row is selected for Place/Update — there is no `open` prop here,
+// this component IS the open state. That matters: DynamicForm has no
+// unmount cleanup for its own async prefill chain (fetching Domain/State/
+// Placement Property options, resolving dependent District options, etc.),
+// so an earlier attempt that kept one persistent <PlacementModal> mounted
+// and only toggled an `open` prop + remounted the inner <DynamicForm> via a
+// changing `key` still let a superseded DynamicForm instance's straggling
+// async resolution call back into this (still-mounted) component's setState
+// and clobber the correct data — a race whose outcome depended on network
+// timing (reliably fine on a warm connection right after placing someone,
+// unreliable after a full reload's cold connection). Fully unmounting this
+// whole component between opens (see PlacementLearnerTable) means a stale
+// instance's delayed callback lands on a component that's genuinely gone —
+// React no-ops it — instead of a component that merely looks new via `key`.
 const PlacementModal: React.FC<PlacementModalProps> = ({
-  open,
   onClose,
   membershipId,
   learnerName,
@@ -43,26 +54,11 @@ const PlacementModal: React.FC<PlacementModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const theme = useTheme<any>();
-  const [formData, setFormData] = useState<Record<string, any>>(initialFormData || {});
+  const [formData, setFormData] = useState<Record<string, any>>(initialFormData);
   const [saving, setSaving] = useState(false);
 
-  // DynamicForm only reads its `prefilledFormData` prop into internal state
-  // on first mount (see l2-interested-queue.tsx's own comment on this same
-  // quirk) — this Modal's <DynamicForm> stays mounted across every open, so
-  // without a remount it would keep showing whichever learner's data it
-  // first mounted with. Bumping this key on every open forces a fresh
-  // mount, so it always re-reads the current initialFormData.
-  const [formKey, setFormKey] = useState(0);
-
-  useEffect(() => {
-    if (!open) return;
-    setFormData(initialFormData || {});
-    setFormKey((key) => key + 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
   const handleSave = async () => {
-    if (!membershipId || !form?.schema || saving) return;
+    if (saving) return;
     setSaving(true);
     try {
       const customFields = buildPlacementCustomFields(form.schema, formData);
@@ -89,7 +85,7 @@ const PlacementModal: React.FC<PlacementModalProps> = ({
   };
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="placement-modal-title">
+    <Modal open onClose={onClose} aria-labelledby="placement-modal-title">
       <Box
         sx={{
           position: 'absolute',
@@ -129,44 +125,35 @@ const PlacementModal: React.FC<PlacementModalProps> = ({
         <Divider />
 
         <Box sx={{ p: 2, overflowY: 'auto' }}>
-          {form?.schema && form?.uiSchema ? (
-            // DynamicForm hardcodes a Grid item xs={12} md={4} lg={3} per
-            // field whenever isCallSubmitInHandle is true, ignoring any
-            // uiSchema grid option — same quirk l2-interested-queue.tsx's
-            // side panel already works around this exact way. Forcing every
-            // field to 100% width here stacks the Placement Form one field
-            // below another instead of several per row.
-            <Box
-              sx={{
-                '& .MuiGrid-item': {
-                  flexBasis: '100% !important',
-                  maxWidth: '100% !important',
-                },
-              }}
-            >
-              <DynamicForm
-                key={formKey}
-                schema={form.schema}
-                uiSchema={form.uiSchema}
-                SubmitaFunction={(data: any) => setFormData(data)}
-                isCallSubmitInHandle={true}
-                // The Placement Form has dependent-API fields (district
-                // depends on state) — DynamicForm's own dependent-key
-                // handling only partially reassembles prefilledFormData
-                // during that async dance. isReassign makes it do one more,
-                // explicit full re-apply of prefilledFormData once
-                // rendering is complete (same fix already used for the SDBV
-                // filter bar's own State→District cascade).
-                isReassign={isUpdate}
-                prefilledFormData={formData}
-                type="placement"
-              />
-            </Box>
-          ) : (
-            <Box display="flex" justifyContent="center" sx={{ py: 4 }}>
-              <CircularProgress size={24} />
-            </Box>
-          )}
+          {/* DynamicForm hardcodes a Grid item xs={12} md={4} lg={3} per
+              field whenever isCallSubmitInHandle is true, ignoring any
+              uiSchema grid option — same quirk l2-interested-queue.tsx's
+              side panel already works around this exact way. Forcing every
+              field to 100% width here stacks the Placement Form one field
+              below another instead of several per row. */}
+          <Box
+            sx={{
+              '& .MuiGrid-item': {
+                flexBasis: '100% !important',
+                maxWidth: '100% !important',
+              },
+            }}
+          >
+            <DynamicForm
+              schema={form.schema}
+              uiSchema={form.uiSchema}
+              SubmitaFunction={(data: any) => setFormData(data)}
+              isCallSubmitInHandle={true}
+              // The Placement Form has dependent-API fields (district
+              // depends on state) — isReassign makes DynamicForm do an
+              // explicit full re-apply of prefilledFormData once rendering
+              // is complete (same fix already used for the SDBV filter
+              // bar's own State→District cascade).
+              isReassign={isUpdate}
+              prefilledFormData={initialFormData}
+              type="placement"
+            />
+          </Box>
         </Box>
 
         <Divider />
@@ -174,7 +161,7 @@ const PlacementModal: React.FC<PlacementModalProps> = ({
           <Button onClick={onClose} disabled={saving}>
             {t('COMMON.CANCEL')}
           </Button>
-          <Button variant="contained" disabled={!form?.schema || saving} onClick={handleSave}>
+          <Button variant="contained" disabled={saving} onClick={handleSave}>
             {saving ? <CircularProgress size={20} /> : t('COMMON.SAVE')}
           </Button>
         </Box>

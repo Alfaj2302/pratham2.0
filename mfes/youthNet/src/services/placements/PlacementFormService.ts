@@ -1,6 +1,5 @@
 import { deleteApi } from '@shared-lib';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
-import { filterSchema } from '../../utils/helper';
 import API_ENDPOINTS from '../../utils/API/APIEndpoints';
 import { PLACEMENT_FORM_CONTEXT } from './placements.config';
 
@@ -9,12 +8,20 @@ export interface PlacementFormBundle {
   uiSchema: any;
 }
 
-// Same fetchForm()+filterSchema() convention used by every other dynamic
-// form in this app (see MentorAssignment.tsx, user-profile/[userId].tsx,
-// villages/index.tsx): two identical form/read calls — one without a
-// tenantId header, one with — then filterSchema() strips out any
-// state/district/block/village fields (a no-op here, the Placement Form has
-// none) and returns the remaining schema/uiSchema.
+// Same fetchForm() convention every other dynamic form in this app uses
+// (see MentorAssignment.tsx, user-profile/[userId].tsx, villages/index.tsx):
+// two identical form/read calls — one without a tenantId header, one with.
+//
+// Deliberately NOT running the result through filterSchema() (unlike those
+// other call sites): that helper strips out any state/district/block/
+// village properties on the assumption they're generic SDBV fields handled
+// by a separate widget elsewhere on the page. The Placement Form's own
+// `state`/`district` are real fields (the placement's job location), not
+// that — and `district` is this schema's only `callType: 'dependent'`
+// field. Stripping it made DynamicForm's own dependentApis.length check
+// false, which skipped the whole block that re-applies the complete
+// prefilled data on Update Placement — not just state/district, every
+// field.
 export const getPlacementForm = async (): Promise<PlacementFormBundle | null> => {
   const fetchUrl = `${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/form/read?context=${PLACEMENT_FORM_CONTEXT.context}&contextType=${PLACEMENT_FORM_CONTEXT.contextType}`;
   const responseForm: any = await fetchForm([
@@ -23,10 +30,9 @@ export const getPlacementForm = async (): Promise<PlacementFormBundle | null> =>
   ]);
   if (!responseForm?.schema || !responseForm?.uiSchema) return null;
 
-  const { newSchema } = filterSchema(responseForm);
-  const schema = newSchema?.schema;
+  const schema = responseForm.schema;
   const uiSchema = {
-    ...newSchema?.uiSchema,
+    ...responseForm.uiSchema,
     'ui:submitButtonOptions': { norender: true },
   };
 
@@ -60,6 +66,26 @@ export const getPlacementForm = async (): Promise<PlacementFormBundle | null> =>
       'ui:widget': 'CustomDateWidget',
     };
   }
+
+  // state/district aren't wanted as visible Placement Form fields — but
+  // they have to stay in the *schema* (see the comment above this
+  // function): district is the schema's only callType:'dependent' field,
+  // and removing it from schema.properties breaks DynamicForm's whole
+  // prefill re-sync. `ui:widget: 'hidden'` hides the input control itself,
+  // but this app's CustomObjectFieldTemplate may still render the field's
+  // own schema `title` as a visible label regardless of the widget — so
+  // also blank the title as a second, template-independent layer. Nothing
+  // else reads this title (the learner-table columns that used to use it
+  // already exclude state/district separately — see
+  // PLACEMENT_TABLE_EXCLUDED_FIELDS), so blanking it is safe.
+  ['state', 'district'].forEach((key) => {
+    if (uiSchema[key]) {
+      uiSchema[key] = { ...uiSchema[key], 'ui:widget': 'hidden' };
+    }
+    if (schema?.properties?.[key]) {
+      schema.properties[key] = { ...schema.properties[key], title: '' };
+    }
+  });
 
   return {
     schema,
@@ -159,6 +185,48 @@ export const formatPlacementValueForDisplay = (
     return value.length ? value.map(resolveLabel).join(', ') : '-';
   }
   return resolveLabel(value);
+};
+
+// A field whose options come from an API (domain, placementPoperty, state,
+// district — anything with `api.callType`) only shows a prefilled value as
+// selected once its enumOptions actually contains that exact value — and
+// that list is empty (just the ['Select'] placeholder) until the live API
+// call resolves. Whether the async prefill re-sync (isReassign) happens to
+// land after that call resolves is a timing race this app has already
+// proven unreliable (see PlacementModal.tsx's own history). Sidestep the
+// race entirely: inject the learner's already-known saved value as a
+// guaranteed option into a *clone* of the schema before handing it to
+// DynamicForm, so the widget can resolve it immediately at mount,
+// independent of whether/when the real API call finishes. When the real
+// options arrive later they simply extend the list (this fallback entry
+// stays valid — the widget's own two-way choice still shows the current
+// value regardless of which array `enum` ends up being).
+export const buildUpdatePlacementSchema = (schema: any, learnerRow: any): any => {
+  const cloned = JSON.parse(JSON.stringify(schema));
+  Object.keys(cloned?.properties || {}).forEach((key) => {
+    const originalProperty = schema?.properties?.[key];
+    if (!originalProperty?.api) return; // only API-driven fields need this
+
+    const value = getLearnerPlacementValue(schema, key, learnerRow);
+    const rawValues = (Array.isArray(value) ? value : [value]).filter(
+      (v) => typeof v === 'string' && v !== ''
+    );
+    if (rawValues.length === 0) return;
+
+    const target = cloned.properties[key]?.items ?? cloned.properties[key];
+    if (!target) return;
+    const enumArr: any[] = Array.isArray(target.enum) ? target.enum : [];
+    const enumNames: any[] = Array.isArray(target.enumNames) ? target.enumNames : [];
+    rawValues.forEach((v: string) => {
+      if (!enumArr.includes(v)) {
+        enumArr.push(v);
+        enumNames.push(v);
+      }
+    });
+    target.enum = enumArr;
+    target.enumNames = enumNames;
+  });
+  return cloned;
 };
 
 // Field keys to render as Placement columns in the learner table, in the

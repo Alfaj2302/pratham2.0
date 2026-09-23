@@ -13,9 +13,8 @@ import { UNPLACED_STATUS } from '../../services/placements/placements.config';
 import { deletePlacementFieldValues } from '../../services/placements/PlacementFormService';
 
 interface DeletePlacementModalProps {
-  open: boolean;
   onClose: () => void;
-  membershipId: string | number | null;
+  membershipId: string | number;
   learnerName?: string;
   // Needed to know every field's own fieldId — see
   // PlacementFormService.deletePlacementFieldValues.
@@ -29,8 +28,11 @@ interface DeletePlacementModalProps {
 // cohortMembershipId) and reverts their cohort-membership status back to
 // course_completed — see the plan's "Persisting placement data" section for
 // why this isn't a hard cohort-membership record delete.
+//
+// No `open` prop — the caller (PlacementLearnerTable) only renders this
+// component at all while a row is selected for delete, same "mount on
+// demand" pattern PlacementModal uses.
 const DeletePlacementModal: React.FC<DeletePlacementModalProps> = ({
-  open,
   onClose,
   membershipId,
   learnerName,
@@ -42,7 +44,7 @@ const DeletePlacementModal: React.FC<DeletePlacementModalProps> = ({
   const [saving, setSaving] = useState(false);
 
   const handleDelete = async () => {
-    if (!membershipId || saving) return;
+    if (saving) return;
     setSaving(true);
     try {
       const fieldsCleared = await deletePlacementFieldValues(schema, membershipId);
@@ -67,7 +69,7 @@ const DeletePlacementModal: React.FC<DeletePlacementModalProps> = ({
   };
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="delete-placement-modal-title">
+    <Modal open onClose={onClose} aria-labelledby="delete-placement-modal-title">
       <Box sx={modalStyles}>
         <Box display="flex" justifyContent="space-between" sx={{ padding: '18px 16px' }}>
           <Typography

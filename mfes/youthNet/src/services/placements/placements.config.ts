@@ -27,3 +27,9 @@ export const PLACEMENT_FORM_CONTEXT = {
 // their placement (matches the wireframe's "Un-place" behavior — the record
 // is deactivated, not hard-deleted).
 export const UNPLACED_STATUS: LearnerProgressStatus = 'course_completed';
+
+// state/district are real Placement Form fields (the placement's job
+// location) and must stay in the schema DynamicForm renders — but the
+// learner table's own auto-generated Placement columns (see
+// PlacementLearnerTable.tsx) shouldn't show them as separate columns.
+export const PLACEMENT_TABLE_EXCLUDED_FIELDS = ['state', 'district'];

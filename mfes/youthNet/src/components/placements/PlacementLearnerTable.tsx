@@ -16,8 +16,10 @@ import {
 import {
   PLACEMENT_LEARNER_STATUSES,
   PLACEMENT_STATUS_LABEL_KEYS,
+  PLACEMENT_TABLE_EXCLUDED_FIELDS,
 } from '../../services/placements/placements.config';
 import {
+  buildUpdatePlacementSchema,
   extractPlacementFormData,
   formatPlacementValueForDisplay,
   getPlacementFieldOrder,
@@ -90,13 +92,18 @@ const PlacementLearnerTable: React.FC<PlacementLearnerTableProps> = ({
   // One column per Placement Form field, in the form's own field order —
   // driven entirely by whatever the backend form config actually returns,
   // never a hardcoded field list, so the table can't drift from the form.
+  // state/district stay in the form itself (real job-location fields, and
+  // district is the schema's only dependent-API field) but are excluded
+  // here — they're not meant to be shown as table columns.
   const placementFieldColumns = placementForm
-    ? getPlacementFieldOrder(placementForm).map((key) => ({
-        key: `placement_${key}`,
-        label: t(placementForm.schema?.properties?.[key]?.title || key),
-        render: (row: any) =>
-          formatPlacementValueForDisplay(placementForm.schema, key, row, t),
-      }))
+    ? getPlacementFieldOrder(placementForm)
+        .filter((key) => !PLACEMENT_TABLE_EXCLUDED_FIELDS.includes(key))
+        .map((key) => ({
+          key: `placement_${key}`,
+          label: t(placementForm.schema?.properties?.[key]?.title || key),
+          render: (row: any) =>
+            formatPlacementValueForDisplay(placementForm.schema, key, row, t),
+        }))
     : [];
 
   const columns = [
@@ -208,36 +215,60 @@ const PlacementLearnerTable: React.FC<PlacementLearnerTableProps> = ({
         </Box>
       )}
 
-      <PlacementModal
-        open={placementModalRow !== null}
-        onClose={() => setPlacementModalRow(null)}
-        membershipId={placementModalRow?.cohortMembershipId ?? null}
-        learnerName={placementModalRow ? getLearnerDisplayName(placementModalRow) : undefined}
-        isUpdate={!!placementModalRow && getLearnerStatus(placementModalRow) === 'placed'}
-        // Only prefill for Update Placement (an already-placed learner) —
-        // a learner who was un-placed still carries their old Placement
-        // customFields on the backend (Delete Placement reverts status
-        // without clearing them), so a fresh Place Student must start blank
-        // rather than resurface that stale data.
-        initialFormData={
-          placementModalRow &&
-          placementForm?.schema &&
-          getLearnerStatus(placementModalRow) === 'placed'
-            ? extractPlacementFormData(placementForm.schema, placementModalRow)
-            : {}
-        }
-        form={placementForm}
-        onSaved={refreshCurrentPage}
-      />
+      {/* Mounted only while a row is actually selected — not always-mounted
+          with an `open` prop toggling visibility. DynamicForm has no
+          unmount cleanup for its own async prefill chain, so a
+          persistently-mounted modal let a superseded instance's delayed
+          async resolution call back into live state and clobber the
+          correct prefilled data (a race that depended on network timing —
+          fine right after placing someone on a warm connection, broken
+          after a full reload's cold one). Fully unmounting between opens
+          means a stale instance's callback lands on a component that no
+          longer exists, so React just drops it. */}
+      {placementModalRow && placementForm && (() => {
+        const isPlacementUpdate = getLearnerStatus(placementModalRow) === 'placed';
+        // API-driven fields (domain, placementPoperty, ...) only show a
+        // prefilled value once their fetched option list actually contains
+        // it — a timing race against DynamicForm's own async option-fetch
+        // that's proven unreliable. buildUpdatePlacementSchema sidesteps it
+        // by injecting the learner's already-known values as guaranteed
+        // options into a schema clone, so they resolve immediately
+        // regardless of API timing. Only needed for Update (there's nothing
+        // to prefill on a fresh Place Student).
+        const formForModal = isPlacementUpdate
+          ? { ...placementForm, schema: buildUpdatePlacementSchema(placementForm.schema, placementModalRow) }
+          : placementForm;
+        return (
+          <PlacementModal
+            onClose={() => setPlacementModalRow(null)}
+            membershipId={placementModalRow.cohortMembershipId}
+            learnerName={getLearnerDisplayName(placementModalRow)}
+            isUpdate={isPlacementUpdate}
+            // Only prefill for Update Placement (an already-placed learner)
+            // — a learner who was un-placed still carries their old
+            // Placement customFields on the backend (Delete Placement
+            // reverts status without clearing them), so a fresh Place
+            // Student must start blank rather than resurface stale data.
+            initialFormData={
+              isPlacementUpdate
+                ? extractPlacementFormData(placementForm.schema, placementModalRow)
+                : {}
+            }
+            form={formForModal}
+            onSaved={refreshCurrentPage}
+          />
+        );
+      })()}
 
-      <DeletePlacementModal
-        open={deleteModalRow !== null}
-        onClose={() => setDeleteModalRow(null)}
-        membershipId={deleteModalRow?.cohortMembershipId ?? null}
-        learnerName={deleteModalRow ? getLearnerDisplayName(deleteModalRow) : undefined}
-        schema={placementForm?.schema}
-        onDeleted={refreshCurrentPage}
-      />
+      {deleteModalRow && placementForm && (
+        <DeletePlacementModal
+          onClose={() => setDeleteModalRow(null)}
+          membershipId={deleteModalRow.cohortMembershipId}
+          learnerName={getLearnerDisplayName(deleteModalRow)}
+          schema={placementForm.schema}
+          onDeleted={refreshCurrentPage}
+        />
+      )}
     </Box>
   );
 };
