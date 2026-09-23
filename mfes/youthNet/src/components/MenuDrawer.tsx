@@ -16,6 +16,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import {
@@ -397,6 +398,7 @@ const MenuDrawer: React.FC<DrawerProps> = ({
   const isL2InterestedQueue = router.pathname.includes('/l2-interested-queue');
   const isMyTeachingCenter = router.pathname.includes('/my-teaching-center');
   const isPlacements = router.pathname.includes('/placements');
+  const isRetention = router.pathname.includes('/retention');
   const isUserTrainer = router.pathname.includes('/user-trainer');
 
   return (
@@ -706,6 +708,22 @@ const MenuDrawer: React.FC<DrawerProps> = ({
                 router.push('/placements');
               }}
               label={t('DASHBOARD.PLACEMENTS')}
+              sx={{ marginTop: '25px' }}
+            />
+          </Box>
+        )}
+
+        {tenantName === TENANT_DATA.YOUTHNET && isPlacementRetentionCoordinator && (
+          <Box>
+            <NavItem
+              collapsed={collapsed}
+              isActive={isRetention}
+              icon={<TrackChangesIcon sx={{ fontSize: '24px !important' }} />}
+              onClick={() => {
+                closeDrawer();
+                router.push('/retention');
+              }}
+              label={t('DASHBOARD.RETENTION')}
               sx={{ marginTop: '25px' }}
             />
           </Box>

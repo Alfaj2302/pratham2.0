@@ -180,6 +180,32 @@
     "COPY_REGISTRATION_LINK": "رجسٹریشن لنک کاپی کریں۔",
     "LINK_COPIED": "لنک کاپی ہو گیا!"
   },
+  "RETENTION": {
+    "PAGE_TITLE": "ریٹینشن",
+    "PAGE_SUBTITLE": "ایک سینٹر اور بیچ منتخب کریں، پھر لرنر کے ریٹینشن فالو اپ کو ٹریک کریں",
+    "LEARNER": "لرنر",
+    "STATUS": "حیثیت",
+    "ALL_STATUSES": "تمام",
+    "STATUS_PLACED": "پلیسڈ",
+    "STATUS_RETENTION_COMPLETED": "ریٹینشن مکمل",
+    "SEARCH_LEARNER": "لرنر کے نام سے تلاش کریں",
+    "NO_LEARNERS_FOUND": "اس بیچ میں کوئی لرنر نہیں ملا",
+    "MILESTONE_1M": "1 مہینہ",
+    "MILESTONE_2M": "2 مہینے",
+    "MILESTONE_3M": "3 مہینے",
+    "MILESTONE_6M": "6 مہینے",
+    "MILESTONE_9M": "9 مہینے",
+    "MILESTONE_12M": "12 مہینے",
+    "STATE_UPCOMING": "آئندہ",
+    "STATE_DUE": "واجب الادا",
+    "STATE_COMPLETED": "مکمل",
+    "TARGET_DATE": "ہدف تاریخ: {{date}}",
+    "COMPLETED_DATE": "تکمیل کی تاریخ: {{date}}",
+    "COMPLETE_FOLLOW_UP": "{{milestone}} فالو اپ",
+    "VIEW_FOLLOW_UP": "{{milestone}} فالو اپ",
+    "FOLLOW_UP_SAVED_SUCCESS": "ریٹینشن فالو اپ کامیابی سے محفوظ ہو گیا",
+    "STATUS_UPDATE_FAILED": "فالو اپ محفوظ ہو گئے، لیکن لرنر کی حیثیت اپ ڈیٹ کرنے میں ناکامی"
+  },
   "LOGIN_PAGE": {
     "USERNAME": "صارف نام",
     "PASSWORD": "پاس ورڈ",
@@ -259,7 +285,8 @@
     "SEARCH_VILLAGES": "گاؤں تلاش کریں۔",
     "SEARCH_YOUTH": "نوجوانوں کو تلاش کریں",
     "SEARCH_MENTOR": "سرپرست تلاش کریں۔",
-    "TRAINER_MAPPING": "Trainer Role Mapping"
+    "TRAINER_MAPPING": "Trainer Role Mapping",
+    "RETENTION": "ریٹینشن"
   },
   "ATTENDANCE": {
     "TOTAL_STUDENTS": "کل طلباء",

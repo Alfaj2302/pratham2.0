@@ -180,6 +180,32 @@
     "COPY_REGISTRATION_LINK": "रजिस्ट्रेशन लिंक कॉपी करें",
     "LINK_COPIED": "लिंक कॉपी हो गया!"
   },
+  "RETENTION": {
+    "PAGE_TITLE": "रिटेंशन",
+    "PAGE_SUBTITLE": "एक सेंटर और बैच चुनें, फिर लर्नर के रिटेंशन फॉलो-अप को ट्रैक करें",
+    "LEARNER": "लर्नर",
+    "STATUS": "स्थिति",
+    "ALL_STATUSES": "सभी",
+    "STATUS_PLACED": "प्लेस्ड",
+    "STATUS_RETENTION_COMPLETED": "रिटेंशन पूर्ण",
+    "SEARCH_LEARNER": "लर्नर के नाम से खोजें",
+    "NO_LEARNERS_FOUND": "इस बैच में कोई लर्नर नहीं मिला",
+    "MILESTONE_1M": "1 माह",
+    "MILESTONE_2M": "2 माह",
+    "MILESTONE_3M": "3 माह",
+    "MILESTONE_6M": "6 माह",
+    "MILESTONE_9M": "9 माह",
+    "MILESTONE_12M": "12 माह",
+    "STATE_UPCOMING": "आगामी",
+    "STATE_DUE": "देय",
+    "STATE_COMPLETED": "पूर्ण",
+    "TARGET_DATE": "लक्ष्य तिथि: {{date}}",
+    "COMPLETED_DATE": "पूर्ण तिथि: {{date}}",
+    "COMPLETE_FOLLOW_UP": "{{milestone}} फॉलो-अप",
+    "VIEW_FOLLOW_UP": "{{milestone}} फॉलो-अप",
+    "FOLLOW_UP_SAVED_SUCCESS": "रिटेंशन फॉलो-अप सफलतापूर्वक सेव हो गया",
+    "STATUS_UPDATE_FAILED": "फॉलो-अप सेव हो गए, लेकिन लर्नर की स्थिति अपडेट करना विफल रहा"
+  },
   "LOGIN_PAGE": {
     "USERNAME": "उपयोगकर्ता नाम",
     "PASSWORD": "पासवर्ड",
@@ -259,7 +285,8 @@
     "SEARCH_VILLAGES": "गांव खोजें",
     "SEARCH_YOUTH": "युवा खोजें",
     "SEARCH_MENTOR": "मेंटोर खोजें",
-    "TRAINER_MAPPING": "Trainer Role Mapping"
+    "TRAINER_MAPPING": "Trainer Role Mapping",
+    "RETENTION": "रिटेंशन"
   },
   "ATTENDANCE": {
     "TOTAL_STUDENTS": "कुल छात्रों की संख्या: {{count}}",
