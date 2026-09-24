@@ -66,6 +66,14 @@ const EnrollProfileCompletionInner = () => {
       }
       if (program.params?.collectionFramework) {
         localStorage.setItem('collectionFramework', program.params.collectionFramework);
+      } else {
+        // The enrolled-program payload doesn't carry collectionFramework, so
+        // clear any value left over from a previously active program instead
+        // of leaving it in place. CommonL1ContentList only re-fetches this
+        // from getTenantInfo() when nothing is stored, so a stale value here
+        // would otherwise keep pointing the dashboard at the old program's
+        // framework APIs.
+        localStorage.removeItem('collectionFramework');
       }
 
       localStorage.setItem('landingPage', landingPage || '');
