@@ -40,3 +40,16 @@ export const RETENTION_MILESTONES: RetentionMilestoneDef[] = [
 ];
 
 export type RetentionFollowUpState = 'upcoming' | 'due' | 'completed';
+
+// Backend-provided cohort-membership customField, one per milestone — the
+// entire Retention Form submission for that milestone is JSON-encoded into
+// this single field's value (see RetentionFormService). These are fixed,
+// backend-assigned ids, not derived from the Retention Form's own schema.
+export const RETENTION_MILESTONE_FIELD_IDS: Record<RetentionMilestoneKey, string> = {
+  '1m': '748be7e8-77bb-46ea-9efb-fddc7e0ec814',
+  '2m': '358e636b-f8eb-4a56-9a3e-7f8321eb28fe',
+  '3m': '578a50ed-1a33-4754-9e38-bcd31bae937d',
+  '6m': '2b4ea885-067c-4e79-8f0b-b9d34b829683',
+  '9m': '80a6b0b7-2ac9-4446-891c-f19ce0e85d8b',
+  '12m': '83ef473f-5836-4a6a-b100-4d4af9272407',
+};

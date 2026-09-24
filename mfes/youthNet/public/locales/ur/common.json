@@ -200,7 +200,6 @@
     "STATE_DUE": "واجب الادا",
     "STATE_COMPLETED": "مکمل",
     "TARGET_DATE": "ہدف تاریخ: {{date}}",
-    "COMPLETED_DATE": "تکمیل کی تاریخ: {{date}}",
     "COMPLETE_FOLLOW_UP": "{{milestone}} فالو اپ",
     "VIEW_FOLLOW_UP": "{{milestone}} فالو اپ",
     "FOLLOW_UP_SAVED_SUCCESS": "ریٹینشن فالو اپ کامیابی سے محفوظ ہو گیا",

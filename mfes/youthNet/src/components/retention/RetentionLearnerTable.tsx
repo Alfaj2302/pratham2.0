@@ -11,7 +11,9 @@ import {
 } from '../../services/myTeachingCenter/LearnerListService';
 import { getLearnerPlacementValue, PlacementFormBundle } from '../../services/placements/PlacementFormService';
 import {
-  getMilestoneEntry,
+  buildRetentionSchemaWithKnownValues,
+  extractRetentionFormData,
+  getFreshRetentionFormData,
   isMilestoneCompleted,
   RetentionFormBundle,
 } from '../../services/retention/RetentionFormService';
@@ -102,17 +104,13 @@ const RetentionLearnerTable: React.FC<RetentionLearnerTableProps> = ({
       if (!placementDate || !retentionForm?.schema) return '-';
 
       const targetDate = computeMilestoneTargetDate(placementDate, milestone.months);
-      const completed = isMilestoneCompleted(retentionForm.schema, row, milestone.key);
+      const completed = isMilestoneCompleted(row, milestone.key);
       const state = getFollowUpState(targetDate, completed);
-      const submittedAt = completed
-        ? getMilestoneEntry(retentionForm.schema, row, milestone.key)?.submittedAt
-        : undefined;
 
       return (
         <RetentionFollowUpBox
           targetDate={targetDate}
           state={state}
-          completedDate={submittedAt ? new Date(submittedAt) : null}
           onClick={
             state !== 'upcoming'
               ? () =>
@@ -155,10 +153,6 @@ const RetentionLearnerTable: React.FC<RetentionLearnerTableProps> = ({
       },
     },
   ];
-
-  const modalMilestoneDef = followUpModal
-    ? RETENTION_MILESTONES.find((m) => m.key === followUpModal.milestoneKey)
-    : null;
 
   return (
     <Box>
@@ -214,18 +208,43 @@ const RetentionLearnerTable: React.FC<RetentionLearnerTableProps> = ({
         </Box>
       )}
 
-      <RetentionModal
-        open={followUpModal !== null}
-        onClose={() => setFollowUpModal(null)}
-        membershipId={followUpModal?.row?.cohortMembershipId ?? null}
-        learnerName={followUpModal ? getLearnerDisplayName(followUpModal.row) : undefined}
-        learnerRow={followUpModal?.row}
-        milestoneKey={followUpModal?.milestoneKey ?? null}
-        milestoneLabel={modalMilestoneDef ? t(modalMilestoneDef.labelKey) : undefined}
-        isCompleted={!!followUpModal?.isCompleted}
-        form={retentionForm}
-        onSaved={refreshCurrentPage}
-      />
+      {/* Mounted only while a Follow-Up is actually selected — see
+          RetentionModal's own comment (mirrors PlacementModal.tsx exactly)
+          for why: a persistently-mounted modal toggling an `open` prop let
+          a superseded DynamicForm instance's delayed async option-fetch
+          clobber live state, a race that depended on network timing. */}
+      {followUpModal && retentionForm && (() => {
+        const { row, milestoneKey, isCompleted } = followUpModal;
+        const milestoneDef = RETENTION_MILESTONES.find((m) => m.key === milestoneKey);
+        const initialFormData = isCompleted
+          ? extractRetentionFormData(row, milestoneKey)
+          : getFreshRetentionFormData(retentionForm.schema, milestoneKey);
+        // API-driven fields (domain) only show a prefilled value once their
+        // fetched option list actually contains it — a timing race against
+        // DynamicForm's own async option-fetch that's proven unreliable.
+        // buildRetentionSchemaWithKnownValues sidesteps it by injecting the
+        // already-known value as a guaranteed option into a schema clone,
+        // so it resolves immediately regardless of API timing. Only needed
+        // when viewing a Completed Follow-Up — a fresh one has nothing to
+        // prefill yet.
+        const formForModal = isCompleted
+          ? { ...retentionForm, schema: buildRetentionSchemaWithKnownValues(retentionForm.schema, initialFormData) }
+          : retentionForm;
+        return (
+          <RetentionModal
+            onClose={() => setFollowUpModal(null)}
+            membershipId={row.cohortMembershipId}
+            learnerName={getLearnerDisplayName(row)}
+            learnerRow={row}
+            milestoneKey={milestoneKey}
+            milestoneLabel={milestoneDef ? t(milestoneDef.labelKey) : undefined}
+            isCompleted={isCompleted}
+            initialFormData={initialFormData}
+            form={formForModal}
+            onSaved={refreshCurrentPage}
+          />
+        );
+      })()}
     </Box>
   );
 };

@@ -99,20 +99,14 @@ export const updateCohortMemberStatus = async ({
 }: UpdateCohortMemberStatusParams): Promise<any> => {
   const apiUrl: string = API_ENDPOINTS.cohortMemberUpdate(membershipId);
 
+  // Every value type — array, string, or plain object (e.g. Retention's
+  // whole-form-answers object) — is sent through untouched. The backend
+  // does its own single JSON.stringify() when persisting into
+  // selectedValues[0] (confirmed for Placements' array/string fields via
+  // PlacementFormService's own parsing comment); stringifying a plain
+  // object here too, on top of that, would double-encode it.
   const prepareCustomFields = (customFields: any[]): any[] =>
-    customFields.map((field) => {
-      if (field && field.value !== undefined) {
-        return {
-          ...field,
-          value: Array.isArray(field.value)
-            ? field.value
-            : typeof field.value === 'object' && field.value !== null
-            ? JSON.stringify(field.value)
-            : field.value,
-        };
-      }
-      return field;
-    });
+    customFields.map((field) => (field && field.value !== undefined ? { ...field } : field));
 
   const requestBody = {
     ...(memberStatus && { status: memberStatus }),
@@ -124,9 +118,9 @@ export const updateCohortMemberStatus = async ({
           : value;
       return acc;
     }, {} as Record<string, any>),
-    // Only stringify the `value` field of customFields if needed — this
-    // spread runs after the generic one above and overwrites its
-    // (wrongly stringified) customFields entry with the correct array.
+    // This spread runs after the generic one above and overwrites its
+    // (wrongly stringified) customFields entry with the correct,
+    // untouched array.
     ...(dynamicBody?.customFields && {
       customFields: prepareCustomFields(dynamicBody.customFields),
     }),

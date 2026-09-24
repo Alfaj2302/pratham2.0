@@ -1,6 +1,11 @@
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { filterSchema } from '../../utils/helper';
-import { RETENTION_FORM_CONTEXT, RetentionMilestoneKey, RETENTION_MILESTONES } from './retention.config';
+import {
+  RETENTION_FORM_CONTEXT,
+  RETENTION_MILESTONE_FIELD_IDS,
+  RetentionMilestoneKey,
+  RETENTION_MILESTONES,
+} from './retention.config';
 
 export interface RetentionFormBundle {
   schema: any;
@@ -30,22 +35,67 @@ export const getRetentionForm = async (): Promise<RetentionFormBundle | null> =>
 };
 
 // A fresh (not-yet-completed) Retention Form opens with every field blank —
-// nothing pre-selected, including currentlyEmployed — rather than the key
-// being absent from formData altogether. That distinction matters for any
-// field driving extra.skipAndHide (currentlyEmployed hides both
+// nothing pre-selected — rather than the key being absent from formData
+// altogether. That distinction matters for any field driving
+// extra.skipAndHide (e.g. currentlyEmployed, which hides both
 // monthlySalary and reasonForLeavingJob until answered): DynamicForm's own
 // getSkipKeys only ever resolves a skipAndHide branch when `formData[key]`
-// is *truthy* (see DynamicForm.tsx), so a genuinely missing key can never
-// trigger the "" branch even though it's a valid skipAndHide entry, and
-// both dependent fields would wrongly show up on first render. An empty
-// array is truthy and stringifies to '' for that lookup, so it resolves
-// correctly.
+// is *truthy* (see DynamicForm.tsx — unmodified; this is worked around at
+// this layer instead, see applySkipAndHide below for the initial-render
+// gap that leaves open regardless), so a genuinely missing key can never
+// trigger the "" branch even though it's a valid skipAndHide entry. An
+// empty array is truthy and stringifies to '' for that lookup, so it
+// resolves correctly once the user's first interaction re-evaluates it.
 export const getInitialRetentionFormData = (schema: any): Record<string, any> => {
   const initial: Record<string, any> = {};
   Object.entries(schema?.properties || {}).forEach(([key, property]: [string, any]) => {
-    initial[key] = property?.type === 'array' ? [""] : '';
+    initial[key] = property?.type === 'array' ? [''] : '';
   });
   return initial;
+};
+
+// --- skipAndHide resolution -------------------------------------------
+//
+// Generic, schema-driven re-implementation of DynamicForm's own
+// getSkipKeys/hideFieldsInUISchema (see DynamicForm.tsx — left unmodified),
+// applied once up front when building the uiSchema we hand to DynamicForm,
+// rather than relying on its internal effect timing. DynamicForm's own
+// version only recomputes hidden fields on user interaction (handleChange)
+// or, for a prefilled form, inside an effect that (for this form's shape —
+// domain has an 'initial' API field but nothing 'dependent' on it) never
+// actually runs — see getInitialRetentionFormData's comment. Either way,
+// the very first render is left showing every field, including ones that
+// should start hidden. Precomputing the hidden set ourselves from the
+// schema's own extra.skipAndHide (not hardcoded to any particular field —
+// works for currentlyEmployed or any other controlling field a form
+// defines) closes that gap; DynamicForm's own live handleChange logic
+// takes over correctly for every interaction after that.
+export const applySkipAndHide = (
+  schema: any,
+  uiSchema: any,
+  formData: Record<string, any>
+): any => {
+  const updated = { ...uiSchema };
+  Object.entries(schema?.properties || {}).forEach(([key, property]: [string, any]) => {
+    const skipAndHide = property?.extra?.skipAndHide;
+    if (!skipAndHide) return;
+
+    // Same value normalization DynamicForm's own getSkipKeys relies on
+    // implicitly (an array used as an object key coerces via
+    // Array.prototype.toString, which is equivalent to .join(',')) — [] and
+    // [''] both resolve to '', matching skipAndHide's own "" entry for "no
+    // value selected", instead of silently finding no match.
+    const rawValue = formData?.[key];
+    const lookupValue = Array.isArray(rawValue) ? rawValue.join(',') : rawValue ?? '';
+    const fieldsToHide: string[] = skipAndHide[lookupValue] || [];
+
+    fieldsToHide.forEach((hiddenKey) => {
+      if (updated[hiddenKey]) {
+        updated[hiddenKey] = { ...updated[hiddenKey], 'ui:widget': 'hidden' };
+      }
+    });
+  });
+  return updated;
 };
 
 // A read-only view of a Retention Form (used for a Completed Follow-Up):
@@ -63,122 +113,155 @@ export const getReadOnlyUiSchema = (schema: any, uiSchema: any): any => {
 
 // --- Per-milestone data storage -------------------------------------------
 //
-// The Retention Form has no dedicated backend endpoint of its own — like
-// Placements, its fields are saved as the learner's cohort-membership
-// customFields (PUT /cohortmember/update, keyed by each field's own
-// fieldId). Placements only ever needs one value per field; Retention needs
-// six independent submissions per field (1/2/3/6/9/12 months). So each
-// field's stored value is itself a JSON object keyed by milestone:
-//   { "1m": { value: <answer>, submittedAt: <ISO date> }, "2m": {...}, ... }
-// Every submission writes this same shape to *every* field in the form
-// (not just the ones the Coordinator filled in), so completion for a given
-// milestone can be read off any single field — see ANCHOR_FIELD below —
-// without depending on which fields happened to be optional/blank.
-
-interface MilestoneEntry {
-  value: any;
-  submittedAt: string;
-}
-type FieldMilestoneBlob = Partial<Record<RetentionMilestoneKey, MilestoneEntry>>;
-
-const parseFieldBlob = (raw: any): FieldMilestoneBlob => {
-  if (typeof raw !== 'string' || raw === '') return {};
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch {
-    return {};
-  }
-};
+// Each of the 6 follow-ups has its own dedicated, backend-provided
+// cohort-membership customField (RETENTION_MILESTONE_FIELD_IDS) — unlike
+// Placements, which has no such per-milestone concept and just maps each
+// form field to its own fieldId. A Retention submission stores the entire
+// form's answers as that one milestone field's value, as a genuine JSON
+// object/array — not a client-side-stringified string, and not wrapped in
+// any envelope (no {formData, submittedAt} — just the form's own key/value
+// pairs directly). updateCohortMemberStatus (LearnerListService) sends this
+// through untouched; the backend does its own single JSON.stringify() when
+// persisting into selectedValues[0], the same as every other customField.
 
 const findLearnerCustomField = (learnerRow: any, fieldId: string) =>
   learnerRow?.customField?.find((field: any) => field.fieldId === fieldId);
 
-const getFieldBlob = (schema: any, propertyKey: string, learnerRow: any): FieldMilestoneBlob => {
-  const fieldId = schema?.properties?.[propertyKey]?.fieldId;
-  if (!fieldId) return {};
-  const raw = findLearnerCustomField(learnerRow, fieldId)?.selectedValues?.[0];
-  return parseFieldBlob(raw);
+// Undoes the backend's single JSON.stringify() to read the plain formData
+// object back. selectedValues[0] can also already be a plain object (e.g.
+// if a future backend response stops string-encoding it) — handled as-is.
+const parseMilestoneFormData = (raw: any): Record<string, any> | undefined => {
+  if (raw && typeof raw === 'object') return raw;
+  if (typeof raw !== 'string' || raw === '') return undefined;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
 };
 
-// The single field whose blob is treated as authoritative for "has this
-// milestone been completed" — the first schema property, in a fixed,
-// deterministic order. Every submission writes to every field (see
-// buildRetentionCustomFields below), so any field would do; picking one
-// consistently avoids relying on which fields the Coordinator chose to fill.
-const getAnchorPropertyKey = (schema: any): string | undefined =>
-  Object.keys(schema?.properties || {})[0];
-
-export const getMilestoneEntry = (
-  schema: any,
+export const getMilestoneFormData = (
   learnerRow: any,
   milestoneKey: RetentionMilestoneKey
-): MilestoneEntry | undefined => {
-  const anchorKey = getAnchorPropertyKey(schema);
-  if (!anchorKey) return undefined;
-  return getFieldBlob(schema, anchorKey, learnerRow)[milestoneKey];
+): Record<string, any> | undefined => {
+  const fieldId = RETENTION_MILESTONE_FIELD_IDS[milestoneKey];
+  const raw = findLearnerCustomField(learnerRow, fieldId)?.selectedValues?.[0];
+  return parseMilestoneFormData(raw);
 };
 
 export const isMilestoneCompleted = (
-  schema: any,
   learnerRow: any,
   milestoneKey: RetentionMilestoneKey
-): boolean => !!getMilestoneEntry(schema, learnerRow, milestoneKey);
+): boolean => !!getMilestoneFormData(learnerRow, milestoneKey);
 
-export const areAllMilestonesCompleted = (schema: any, learnerRow: any): boolean =>
-  RETENTION_MILESTONES.every((milestone) => isMilestoneCompleted(schema, learnerRow, milestone.key));
+export const areAllMilestonesCompleted = (learnerRow: any): boolean =>
+  RETENTION_MILESTONES.every((milestone) => isMilestoneCompleted(learnerRow, milestone.key));
 
 // Reads a learner's previously submitted answers for one milestone back into
 // RJSF formData — used to prefill the read-only view of a Completed
-// Follow-Up. The inverse of buildRetentionCustomFields.
+// Follow-Up. The inverse of buildRetentionSubmission.
 export const extractRetentionFormData = (
-  schema: any,
   learnerRow: any,
   milestoneKey: RetentionMilestoneKey
-): Record<string, any> => {
-  const formData: Record<string, any> = {};
-  Object.keys(schema?.properties || {}).forEach((key) => {
-    const entry = getFieldBlob(schema, key, learnerRow)[milestoneKey];
-    if (entry) formData[key] = entry.value;
-  });
-  return formData;
-};
+): Record<string, any> => getMilestoneFormData(learnerRow, milestoneKey) || {};
 
-// Builds the customFields payload for one Retention Follow-Up submission:
-// every schema field's existing milestone blob, with this milestone's entry
-// merged in (added or overwritten, all earlier milestones left untouched).
-// Also reports whether, after this merge, every required milestone would be
-// completed — the caller uses that to decide whether to additionally update
-// the learner's status to retention_complete.
+// Builds the single customField write for one Retention Follow-Up
+// submission — that milestone's own dedicated field, holding the whole
+// form's answers as a plain object (not JSON.stringify()'d here — see the
+// module comment above). Also reports whether, counting this submission,
+// every required milestone is now completed — the caller uses that to
+// decide whether to additionally update the learner's status to
+// retention_complete.
 export const buildRetentionSubmission = (
-  schema: any,
   learnerRow: any,
   milestoneKey: RetentionMilestoneKey,
   formData: Record<string, any>
-): { customFields: { fieldId: string; value: string }[]; allMilestonesCompleted: boolean } => {
-  const submittedAt = new Date().toISOString();
-  const propertyKeys = Object.keys(schema?.properties || {});
+): { customFields: { fieldId: string; value: Record<string, any> }[]; allMilestonesCompleted: boolean } => {
+  const customFields = [{ fieldId: RETENTION_MILESTONE_FIELD_IDS[milestoneKey], value: formData }];
 
-  const customFields = propertyKeys
-    .map((key) => {
-      const fieldId = schema.properties[key]?.fieldId;
-      if (!fieldId) return null;
-      const existingBlob = getFieldBlob(schema, key, learnerRow);
-      const newBlob: FieldMilestoneBlob = {
-        ...existingBlob,
-        [milestoneKey]: { value: formData?.[key] ?? null, submittedAt },
-      };
-      return { fieldId, value: JSON.stringify(newBlob) };
-    })
-    .filter((field): field is { fieldId: string; value: string } => !!field);
-
-  const anchorKey = getAnchorPropertyKey(schema);
-  const anchorBlobAfterSave: FieldMilestoneBlob = anchorKey
-    ? { ...getFieldBlob(schema, anchorKey, learnerRow), [milestoneKey]: { value: null, submittedAt } }
-    : {};
-  const allMilestonesCompleted = RETENTION_MILESTONES.every(
-    (milestone) => !!anchorBlobAfterSave[milestone.key]
+  const allMilestonesCompleted = RETENTION_MILESTONES.every((milestone) =>
+    milestone.key === milestoneKey ? true : isMilestoneCompleted(learnerRow, milestone.key)
   );
 
   return { customFields, allMilestonesCompleted };
+};
+
+// --- Call Interval auto-select/lock ----------------------------------------
+//
+// The Retention Form's own callInterval field lets the Coordinator record
+// which month this follow-up is for — but since that's already determined
+// by which milestone box they clicked, it must be preset to the matching
+// value and locked, not left for them to (mis)select.
+const CALL_INTERVAL_FIELD_KEY = 'callInterval';
+
+const RETENTION_MILESTONE_CALL_INTERVAL_VALUES: Record<RetentionMilestoneKey, string> = {
+  '1m': '1-month',
+  '2m': '2-months',
+  '3m': '3-months',
+  '6m': '6-months',
+  '9m': '9-months',
+  '12m': '12-months',
+};
+
+export const getCallIntervalValue = (milestoneKey: RetentionMilestoneKey): string[] => [
+  RETENTION_MILESTONE_CALL_INTERVAL_VALUES[milestoneKey],
+];
+
+// Locks callInterval (ui:disabled) without touching any other field's
+// editability — used for a fresh (not-yet-completed) submission, where
+// every other field must stay editable. A Completed Follow-Up already
+// disables every field via getReadOnlyUiSchema, callInterval included.
+export const withCallIntervalLocked = (uiSchema: any): any => ({
+  ...uiSchema,
+  [CALL_INTERVAL_FIELD_KEY]: { ...uiSchema?.[CALL_INTERVAL_FIELD_KEY], 'ui:disabled': true },
+});
+
+// Initial formData for a brand-new (not-yet-completed) Follow-Up: every
+// field blank (see getInitialRetentionFormData) except callInterval, preset
+// to the milestone being filled (see the Call Interval section above).
+export const getFreshRetentionFormData = (
+  schema: any,
+  milestoneKey: RetentionMilestoneKey
+): Record<string, any> => ({
+  ...getInitialRetentionFormData(schema),
+  callInterval: getCallIntervalValue(milestoneKey),
+});
+
+// Same trick as PlacementFormService.buildUpdatePlacementSchema: guarantees
+// an API-driven field's already-known value (e.g. domain: "Beauty") is
+// present in its enum/enumNames from the very first render, so a Completed
+// Follow-Up's prefilled selection doesn't depend on winning a race against
+// DynamicForm's own async option-fetch — an unreliable race (fine on a warm
+// connection, broken after a full page reload's cold one), the same one
+// Placements' own Update flow already hit and fixed this same way.
+export const buildRetentionSchemaWithKnownValues = (
+  schema: any,
+  formData: Record<string, any>
+): any => {
+  const cloned = JSON.parse(JSON.stringify(schema));
+  Object.keys(cloned?.properties || {}).forEach((key) => {
+    const originalProperty = schema?.properties?.[key];
+    if (!originalProperty?.api) return; // only API-driven fields need this
+
+    const value = formData?.[key];
+    const rawValues = (Array.isArray(value) ? value : [value]).filter(
+      (v) => typeof v === 'string' && v !== ''
+    );
+    if (rawValues.length === 0) return;
+
+    const target = cloned.properties[key]?.items ?? cloned.properties[key];
+    if (!target) return;
+    const enumArr: any[] = Array.isArray(target.enum) ? target.enum : [];
+    const enumNames: any[] = Array.isArray(target.enumNames) ? target.enumNames : [];
+    rawValues.forEach((v: string) => {
+      if (!enumArr.includes(v)) {
+        enumArr.push(v);
+        enumNames.push(v);
+      }
+    });
+    target.enum = enumArr;
+    target.enumNames = enumNames;
+  });
+  return cloned;
 };

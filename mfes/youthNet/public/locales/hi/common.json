@@ -200,7 +200,6 @@
     "STATE_DUE": "देय",
     "STATE_COMPLETED": "पूर्ण",
     "TARGET_DATE": "लक्ष्य तिथि: {{date}}",
-    "COMPLETED_DATE": "पूर्ण तिथि: {{date}}",
     "COMPLETE_FOLLOW_UP": "{{milestone}} फॉलो-अप",
     "VIEW_FOLLOW_UP": "{{milestone}} फॉलो-अप",
     "FOLLOW_UP_SAVED_SUCCESS": "रिटेंशन फॉलो-अप सफलतापूर्वक सेव हो गया",

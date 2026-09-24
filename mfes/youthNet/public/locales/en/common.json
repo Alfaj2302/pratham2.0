@@ -115,7 +115,6 @@
     "STATE_DUE": "Due",
     "STATE_COMPLETED": "Completed",
     "TARGET_DATE": "Target: {{date}}",
-    "COMPLETED_DATE": "Completed: {{date}}",
     "COMPLETE_FOLLOW_UP": "{{milestone}} Follow-Up",
     "VIEW_FOLLOW_UP": "{{milestone}} Follow-Up",
     "FOLLOW_UP_SAVED_SUCCESS": "Retention follow-up saved successfully",
