@@ -105,6 +105,20 @@ export const withCallIntervalLocked = (uiSchema: any): any => ({
   [CALL_INTERVAL_FIELD_KEY]: { ...uiSchema?.[CALL_INTERVAL_FIELD_KEY], 'ui:disabled': true },
 });
 
+// Calling Date can't be before the day this Follow-Up became Due (its
+// milestone target date, 'YYYY-MM-DD'). CustomDateWidget's minValue is
+// inclusive, so the target date itself stays selectable.
+export const withCallingDateMinimum = (uiSchema: any, minDate?: string): any =>
+  minDate && uiSchema?.callingDate
+    ? {
+        ...uiSchema,
+        callingDate: {
+          ...uiSchema.callingDate,
+          'ui:options': { ...uiSchema.callingDate['ui:options'], minValue: minDate },
+        },
+      }
+    : uiSchema;
+
 // Initial formData for a brand-new (not-yet-completed) Follow-Up: every
 // field blank (see getInitialRetentionFormData) except callInterval, preset
 // to the milestone being filled (see the Call Interval section above).

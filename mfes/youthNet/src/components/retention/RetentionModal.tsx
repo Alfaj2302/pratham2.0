@@ -8,6 +8,7 @@ import {
   getReadOnlyUiSchema,
   RetentionFormBundle,
   withCallIntervalLocked,
+  withCallingDateMinimum,
 } from '../../services/retention/RetentionFormService';
 import { RETENTION_MILESTONES, RetentionMilestoneKey } from '../../services/retention/retention.config';
 import { savePlacementRetentionData } from '../../services/placementRetention/PlacementRetentionRepository';
@@ -31,6 +32,8 @@ interface RetentionModalProps {
   milestoneKey: RetentionMilestoneKey;
   milestoneLabel?: string;
   isCompleted: boolean;
+  // 'YYYY-MM-DD' this Follow-Up became Due — earliest selectable Calling Date.
+  callingDateMin?: string;
   initialFormData: Record<string, any>;
   form: RetentionFormBundle;
   onSaved: () => void;
@@ -59,6 +62,7 @@ const RetentionModal: React.FC<RetentionModalProps> = ({
   milestoneKey,
   milestoneLabel,
   isCompleted,
+  callingDateMin,
   initialFormData,
   form,
   onSaved,
@@ -111,7 +115,7 @@ const RetentionModal: React.FC<RetentionModalProps> = ({
   // formData, for both the editable and the read-only view.
   const uiSchema = isCompleted
     ? getReadOnlyUiSchema(form.schema, form.uiSchema)
-    : withCallIntervalLocked(form.uiSchema);
+    : withCallingDateMinimum(withCallIntervalLocked(form.uiSchema), callingDateMin);
 
   return (
     <SimpleModal

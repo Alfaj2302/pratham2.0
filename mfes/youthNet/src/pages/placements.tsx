@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -11,7 +11,11 @@ import { TENANT_DATA } from '../utils/app.config';
 import { getLoggedInUserRole } from '../utils/helper';
 import { YOUTHNET_USER_ROLE } from '../components/youthNet/tempConfigs';
 import { getCoordinatorDomains } from '../services/placements/PlacementTaxonomyService';
-import { getPlacementForm, PlacementFormBundle } from '../services/placements/PlacementFormService';
+import {
+  getPlacementForm,
+  PlacementFormBundle,
+  withDateOfJoiningAfter,
+} from '../services/placements/PlacementFormService';
 import { PlacementBatch } from '../services/placements/PlacementBatchService';
 import { PlacementCenter, SdbvFilters } from '../services/placements/PlacementCenterService';
 import {
@@ -55,6 +59,12 @@ const PlacementsPage = () => {
     persistedFilters.batch || null
   );
   const [placementForm, setPlacementForm] = useState<PlacementFormBundle | null>(null);
+  // Date of Joining picker restricted to after the selected Batch's End
+  // Date — recomputed whenever the Batch changes.
+  const batchPlacementForm = useMemo(
+    () => withDateOfJoiningAfter(placementForm, selectedBatch?.endDate),
+    [placementForm, selectedBatch?.endDate]
+  );
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -161,7 +171,7 @@ const PlacementsPage = () => {
         {selectedBatch && (
           <PlacementLearnerTable
             batchCohortId={selectedBatch.cohortId}
-            placementForm={placementForm}
+            placementForm={batchPlacementForm}
           />
         )}
       </Box>

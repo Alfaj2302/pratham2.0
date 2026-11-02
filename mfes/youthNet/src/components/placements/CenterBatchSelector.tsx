@@ -95,8 +95,11 @@ const CenterBatchSelector: React.FC<CenterBatchSelectorProps> = ({
       const batches = await getBatchesForCenter(centerId);
       setBatchOptions(batches);
       if (preselectBatch) {
-        setSelectedBatch(preselectBatch);
-        onBatchSelected(preselectBatch);
+        // Prefer the freshly fetched batch — the restored one may predate
+        // fields added later (e.g. endDate) or carry a since-edited value.
+        const batch = batches.find((b) => b.cohortId === preselectBatch.cohortId) || preselectBatch;
+        setSelectedBatch(batch);
+        onBatchSelected(batch);
       }
     } catch (error) {
       console.error('Error loading batches:', error);

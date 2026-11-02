@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Chip, IconButton, TextField, MenuItem, Tooltip } from '@mui/material';
 import HistoryIcon from '@mui/icons-material/History';
 import { useTranslation } from 'next-i18next';
+import { format } from 'date-fns';
 import CommonDataTable from '@shared-lib-v2/lib/Table/CommonDataTable';
 import Loader from '@shared-lib-v2/DynamicForm/components/Loader';
 import { showToastMessage } from '@shared-lib-v2/DynamicForm/components/Toastify';
@@ -16,6 +17,7 @@ import {
   RetentionFormBundle,
 } from '../../services/retention/RetentionFormService';
 import {
+  computeMilestoneTargetDate,
   formatPlacementDate,
   getPlacementMilestoneViews,
 } from '../../services/retention/RetentionMilestones';
@@ -301,6 +303,12 @@ const RetentionLearnerTable: React.FC<RetentionLearnerTableProps> = ({
         const { row, placementId, milestoneKey, isCompleted, fromHistory } = followUpModal;
         const milestoneDef = RETENTION_MILESTONES.find((m) => m.key === milestoneKey);
         const placement = getPlacementById(getRowData(row), placementId);
+        // Same target date that makes this Follow-Up Due (see
+        // getPlacementMilestoneViews) — the earliest allowed Calling Date.
+        const targetDate =
+          placement?.placementDate && milestoneDef
+            ? computeMilestoneTargetDate(placement.placementDate, milestoneDef.months)
+            : null;
         const initialFormData = isCompleted
           ? getRetentionMilestone(placement, milestoneDef?.months ?? -1)?.formData || {}
           : getFreshRetentionFormData(retentionForm.schema, milestoneKey);
@@ -327,6 +335,7 @@ const RetentionLearnerTable: React.FC<RetentionLearnerTableProps> = ({
             milestoneKey={milestoneKey}
             milestoneLabel={milestoneDef ? t(milestoneDef.labelKey) : undefined}
             isCompleted={isCompleted}
+            callingDateMin={targetDate ? format(targetDate, 'yyyy-MM-dd') : undefined}
             initialFormData={initialFormData}
             form={formForModal}
             onSaved={refreshCurrentPage}

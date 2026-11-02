@@ -1,3 +1,4 @@
+import { addDays, format } from 'date-fns';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { PLACEMENT_FIELD_LABEL_OVERRIDES, PLACEMENT_FORM_CONTEXT } from './placements.config';
 
@@ -80,6 +81,31 @@ export const getPlacementForm = async (): Promise<PlacementFormBundle | null> =>
   return {
     schema,
     uiSchema,
+  };
+};
+
+// Date of Joining must be strictly after the selected Batch's End Date.
+// CustomDateWidget's minValue is inclusive, so it gets End Date + 1 day.
+// Dates are handled as local 'YYYY-MM-DD' (no UTC parse) to avoid an
+// off-by-one in negative/positive timezone offsets. UI-only restriction —
+// the schema is untouched so an older saved placement can still be updated.
+export const withDateOfJoiningAfter = (
+  form: PlacementFormBundle | null,
+  batchEndDate?: string
+): PlacementFormBundle | null => {
+  if (!form?.uiSchema?.dateOfJoining || !batchEndDate) return form;
+  const [year, month, day] = batchEndDate.split('-').map(Number);
+  if (!year || !month || !day) return form;
+  const minValue = format(addDays(new Date(year, month - 1, day), 1), 'yyyy-MM-dd');
+  return {
+    ...form,
+    uiSchema: {
+      ...form.uiSchema,
+      dateOfJoining: {
+        ...form.uiSchema.dateOfJoining,
+        'ui:options': { ...form.uiSchema.dateOfJoining['ui:options'], minValue },
+      },
+    },
   };
 };
 
