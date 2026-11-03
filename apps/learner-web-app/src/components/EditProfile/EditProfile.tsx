@@ -155,6 +155,25 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
         : { schema: addSchema, uiSchema: addUiSchema },
     [isPathwaysProgram, addSchema, addUiSchema]
   );
+  // Complete-profile form shows the missing fields plus the saved fields that
+  // control them (see getMissingFields); prefill whatever was already saved.
+  const completeProfilePrefill = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.keys((addSchema as any)?.properties || {})
+          .filter((key) => {
+            const value = userFormData?.[key];
+            return (
+              value !== undefined &&
+              value !== null &&
+              value !== '' &&
+              !(Array.isArray(value) && value.length === 0)
+            );
+          })
+          .map((key) => [key, userFormData[key]])
+      ),
+    [addSchema, userFormData]
+  );
 
   // Mobile field states
   const [mobileAddUiSchema, setMobileAddUiSchema] = useState({});
@@ -951,7 +970,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         parentDataSchema={parentDataSchema}
                         forEditedschema={responseFormData?.schema?.properties}
                         FormSubmitFunction={FormSubmitFunction}
-                        prefilledFormData={completeProfile && !enrolledProgram ? {}: enrolledProgram && isModeOfLearningPresent ? { preferred_mode_of_learning: 'remote' } : userFormData}
+                        prefilledFormData={completeProfile && !enrolledProgram ? completeProfilePrefill : enrolledProgram && isModeOfLearningPresent ? { preferred_mode_of_learning: 'remote' } : userFormData}
                         hideSubmit={true}
                         type="learner"
                         isCompleteProfile={completeProfile}
