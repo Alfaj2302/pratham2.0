@@ -31,6 +31,7 @@ import { ContentSearch } from '@learner/utils/API/contentService';
 import { getAssessmentStatus } from '@learner/utils/API/AssesmentService';
 import { getCohortList } from '@learner/utils/API/CohortService';
 import SimpleModal from '@learner/components/SimpleModal/SimpleModal';
+import { resolveProgramEntryRoute } from '@learner/utils/helpers/vtBatchHelper';
 
 const Login = dynamic(
   () => import('@login/Components/LoginComponent/LoginComponent'),
@@ -490,7 +491,14 @@ const LoginPageContent = () => {
             router.push(`/programs`);
             }
             else
-         router.push(landingPage || '/home');
+         // A VT learner with a batch goes straight to L2 Courses.
+         router.push(
+           await resolveProgramEntryRoute(
+             userResponse?.userId,
+             enrolledTenant.tenantName,
+             landingPage || '/home'
+           )
+         );
           return;
         } else {
           // User is not enrolled — look up program name then show modal
@@ -756,7 +764,14 @@ const LoginPageContent = () => {
              }
             }
             else{
-         router.push(`${landingPage}`)
+         // A VT learner with a batch goes straight to L2 Courses.
+         router.push(
+           await resolveProgramEntryRoute(
+             userResponse?.userId,
+             selectedTenantName,
+             `${landingPage}`
+           )
+         )
             }
          // router.push(`/programs?tenantId=${tenantDataDetails[0]?.tenantId}`);
         }

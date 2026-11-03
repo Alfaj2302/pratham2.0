@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { logout } from '@learner/utils/API/LoginService';
 import { useRouter } from 'next/navigation';
 import { preserveLocalStorage } from '@learner/utils/helper';
+import { resetFirstBatchCheck } from '@learner/utils/helpers/vtBatchHelper';
 import { Loader, useTranslation } from '@shared-lib';
 import { Telemetry } from '@shared-lib-v2/DynamicForm/utils/app.constant';
 import { telemetryFactory } from '@shared-lib-v2/DynamicForm/utils/telemetry';
@@ -40,6 +41,8 @@ function Logout() {
       // Specify the keys you want to keep
       preserveLocalStorage();
     }
+    // Logging back in without a reload should still get the L2 Courses redirect.
+    resetFirstBatchCheck();
 
     // NavaPatham learners belong back on their own landing page, not the
     // generic one. isForNavaPatham survives preserveLocalStorage().
