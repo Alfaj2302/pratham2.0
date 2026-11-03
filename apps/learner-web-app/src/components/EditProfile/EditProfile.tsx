@@ -300,7 +300,11 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
           const useInfo = await getUserDetails(userId, true);
           console.log('useInfo', useInfo?.result?.userData);
           setuserData(useInfo?.result?.userData);
-          const mappedData = mapUserData(useInfo?.result?.userData);
+          // Pass the form schema so custom fields outside mapUserData's fixed list prefill too
+          const mappedData = mapUserData(
+            useInfo?.result?.userData,
+            responseFormCopy?.schema
+          );
 
           // console.log("responseFormForEnroll", responseFormForEnroll?.schema?.properties)
           const keyNames = Object.keys(responseFormForEnroll?.schema?.properties);

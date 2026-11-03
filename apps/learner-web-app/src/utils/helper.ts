@@ -1,3 +1,5 @@
+import { extractMatchingKeys } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
+
 export enum Storage {
   USER_DATA = 'userData',
   NAME = 'name',
@@ -22,7 +24,9 @@ const getSelectedValueName = (fields: any, label: any) => {
 
   return null;
 };
-export const mapUserData = (userData: any) => {
+// When a form schema is passed, schema fields the fixed mapping below doesn't
+// cover (or leaves empty) are filled from userData.customFields by fieldId.
+export const mapUserData = (userData: any, schema?: any) => {
   console.log(userData, 'userData===>');
   try {
     const getSelectedValue = (label: any) =>
@@ -136,6 +140,25 @@ result.number_of_children_in_your_group = getSingleTextValue('NUMBER_OF_CHILDREN
           'PARENT_GUARDIAN_PHONE_NO'
         ) || '';
     }
+    if (schema?.properties) {
+      const isEmptyValue = (value: any) =>
+        value === undefined ||
+        value === null ||
+        value === '' ||
+        (Array.isArray(value) && value.length === 0);
+      try {
+        Object.entries(extractMatchingKeys(userData, schema)).forEach(
+          ([key, value]) => {
+            if (isEmptyValue(result[key]) && !isEmptyValue(value)) {
+              result[key] = value;
+            }
+          }
+        );
+      } catch (error) {
+        // Keep the fixed mapping if a custom field has an unexpected shape
+        console.log('schema field mapping failed', error);
+      }
+    }
     console.log("result===>", result);
     return result;
   } catch (error) {
@@ -147,7 +170,9 @@ result.number_of_children_in_your_group = getSingleTextValue('NUMBER_OF_CHILDREN
 export const getMissingFields = (schema: any, userData: any) => {
   try {
     // use mapped data instead of raw userData
-    const mappedUserData = mapUserData(userData);
+    // Map every schema field (not just mapUserData's fixed list), otherwise
+    // filled custom fields count as missing.
+    const mappedUserData = mapUserData(userData, schema);
     console.log(mappedUserData, 'mappedUserData');
     console.log(schema, 'schema');
 

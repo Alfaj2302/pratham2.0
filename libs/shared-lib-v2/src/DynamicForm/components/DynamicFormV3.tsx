@@ -41,7 +41,7 @@ import {
   toPascalCase,
   transformLabel,
 } from '../utils/helper';
-import { HiddenAwareObjectFieldTemplate } from './FormTemplate/ObjectFieldTemplate';
+import { ObjectFieldTemplateV3 } from './FormTemplate/ObjectFieldTemplateV3';
 import { useTranslation } from '../../lib/context/LanguageContext';
 import SecurityIcon from '@mui/icons-material/Security';
 import { showToastMessage } from './Toastify';
@@ -2288,7 +2288,7 @@ const DynamicFormV3 = forwardRef(({
           fields={customFields}
           id={id ||"dynamic-form-id"}
           // template
-          templates={{ ObjectFieldTemplate: HiddenAwareObjectFieldTemplate }}
+          templates={{ ObjectFieldTemplate: ObjectFieldTemplateV3 }}
         >
           <button
             type="submit"
