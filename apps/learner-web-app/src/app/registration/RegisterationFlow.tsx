@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Box,
@@ -22,6 +22,8 @@ import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
 // import MobileVerificationSuccess from '@learner/components/MobileVerificationSuccess/MobileVerificationSuccess';
 import CreateAccountForm from '@learner/components/CreateAccountForm/CreateAccountForm';
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
+import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
+import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { FormContext } from '@shared-lib-v2/DynamicForm/components/DynamicFormConstant';
 import { useRouter } from 'next/navigation';
@@ -53,6 +55,7 @@ import { getVerifiedMobile, clearVerifiedMobile } from '@learner/utils/verifiedM
 import Image from 'next/image';
 import SwitchAccountDialog from '@shared-lib-v2/SwitchAccount/SwitchAccount';
 import { getInterestedToJoinFieldId } from '@shared-lib-v2/utils/helper';
+import { TenantName } from '@learner/utils/app.constant';
 
 type UserAccount = {
   name: string;
@@ -125,6 +128,11 @@ const RegisterationFlow = () => {
   const [password, setPassword] = useState('');
   const [mobile, setMobile] = useState('');
   const [tenantName, setTenantName] = useState('');
+  // Pathways registration uses DynamicFormV3; other programs keep DynamicForm
+  const isPathwaysProgram =
+    tenantName?.toLowerCase() ===
+    TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase();
+  const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
   const [tenantUiConfig, setTenantUiConfig] = useState<any>(null);
 
   const [switchDialogOpen, setSwitchDialogOpen] = useState(false);
@@ -135,6 +143,16 @@ const RegisterationFlow = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [addSchema, setAddSchema] = useState(null);
   const [addUiSchema, setAddUiSchema] = useState(null);
+  // Pathways asks for the Class 10 passing year through a year picker
+  const learnerFormConfig = useMemo(
+    () =>
+      isPathwaysProgram
+        ? applyYearPickerFields(addSchema, addUiSchema, [
+            'inWhichYearDidYouPassClass10',
+          ])
+        : { schema: addSchema, uiSchema: addUiSchema },
+    [isPathwaysProgram, addSchema, addUiSchema]
+  );
 
   // const [schema, setSchema] = useState(facilitatorSearchSchema);
   // const [uiSchema, setUiSchema] = useState(facilitatorSearchUISchema);
@@ -1079,16 +1097,16 @@ const RegisterationFlow = () => {
               )}
             </Alert>
             {addSchema && addUiSchema && (
-              <DynamicForm
-                schema={addSchema}
+              <LearnerForm
+                schema={learnerFormConfig.schema}
                 uiSchema={
                   mobileFromQuery
                     ? {
-                        ...(addUiSchema as any),
-                        mobile: { ...(addUiSchema as any)?.mobile, 'ui:disabled': true },
-                        parent_phone: { ...(addUiSchema as any)?.parent_phone, 'ui:disabled': true },
+                        ...(learnerFormConfig.uiSchema as any),
+                        mobile: { ...(learnerFormConfig.uiSchema as any)?.mobile, 'ui:disabled': true },
+                        parent_phone: { ...(learnerFormConfig.uiSchema as any)?.parent_phone, 'ui:disabled': true },
                       }
-                    : addUiSchema
+                    : learnerFormConfig.uiSchema
                 }
                 FormSubmitFunction={FormSubmitFunction}
                 prefilledFormData={{ ...formData, ...(mobileFromQuery ? { mobile: mobileFromQuery, parent_phone: mobileFromQuery } : {}) }}

@@ -1203,5 +1203,10 @@
     "camp_to_club_discription": "कैंप टू क्लब",
     "Pathways": "पाथवेज",
     "second_chance_program_pathways_discription": "अपनी 12वीं कक्षा की पढ़ाई पूरी करने के लिए दूसरा मौका पाइए"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "आपने कक्षा 10 किस बोर्ड से पास की?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "यदि अन्य, तो कृपया उस बोर्ड का नाम बताएं जिससे आपने कक्षा 10 पास की",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "कक्षा 10 में आपको कौन सी श्रेणी / कितने प्रतिशत अंक मिले?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "क्या आपने प्रथम के सेकंड चांस प्रोग्राम में पढ़ाई की है?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "आपने कक्षा 10 किस वर्ष में पास की?"
 }

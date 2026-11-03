@@ -1203,5 +1203,10 @@
     "camp_to_club_discription": "કૅમ્પ ટુ ક્લબ",
     "Pathways": "પાથવેઝ",
     "second_chance_program_pathways_discription": "તમારું ધોરણ 12નું શિક્ષણ પૂર્ણ કરવા માટે બીજી તક મેળવો"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "તમે ધોરણ 10 કયા બોર્ડમાંથી પાસ કર્યું?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "જો અન્ય હોય, તો કૃપા કરીને તે બોર્ડનું નામ જણાવો જેમાંથી તમે ધોરણ 10 પાસ કર્યું",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "ધોરણ 10 માં તમને કયો વર્ગ / કેટલા ટકા મળ્યા?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "શું તમે પ્રથમના સેકન્ડ ચાન્સ પ્રોગ્રામમાં અભ્યાસ કર્યો છે?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "તમે ધોરણ 10 કયા વર્ષમાં પાસ કર્યું?"
 }

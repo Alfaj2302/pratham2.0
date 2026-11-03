@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Link, Typography, useRadioGroup } from '@mui/material';
 import SimpleModal from '@learner/components/SimpleModal/SimpleModal';
 import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
 import axios from 'axios';
 
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
+import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
+import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
+import { TenantName } from '@learner/utils/app.constant';
 import {
   fetchForm,
   splitUserData,
@@ -115,6 +118,13 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
       ? t('NAVAPATHAM.NAVAPATHAM')
       : localStorage.getItem('userProgram') || '';
   };
+  // Pathways learners fill their profile with DynamicFormV3; other programs keep DynamicForm
+  const isPathwaysProgram =
+    typeof window !== 'undefined' &&
+    window.localStorage &&
+    localStorage.getItem('userProgram')?.toLowerCase() ===
+      TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase();
+  const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
   // let formData: any = {};
   const [loading, setLoading] = useState(true);
   const [invalidLinkModal, setInvalidLinkModal] = useState(false);
@@ -135,6 +145,16 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
 
   const [addSchema, setAddSchema] = useState(null);
   const [addUiSchema, setAddUiSchema] = useState(null);
+  // Pathways asks for the Class 10 passing year through a year picker
+  const learnerFormConfig = useMemo(
+    () =>
+      isPathwaysProgram
+        ? applyYearPickerFields(addSchema, addUiSchema, [
+            'inWhichYearDidYouPassClass10',
+          ])
+        : { schema: addSchema, uiSchema: addUiSchema },
+    [isPathwaysProgram, addSchema, addUiSchema]
+  );
 
   // Mobile field states
   const [mobileAddUiSchema, setMobileAddUiSchema] = useState({});
@@ -918,9 +938,9 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         </Box>
                       )}
                     {addSchema && addUiSchema && (
-                      <DynamicForm
-                        schema={addSchema}
-                        uiSchema={addUiSchema}
+                      <LearnerForm
+                        schema={learnerFormConfig.schema}
+                        uiSchema={learnerFormConfig.uiSchema}
                         mobileAddUiSchema={mobileAddUiSchema}
                         mobileSchema={mobileSchema}
                         parentDataAddUiSchema={parentDataAddUiSchema}

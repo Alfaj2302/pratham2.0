@@ -1203,5 +1203,10 @@
     "camp_to_club_discription": "कॅम्प टू क्लब",
     "Pathways": "पाथवेज",
     "second_chance_program_pathways_discription": "तुमचे बारावीचे शिक्षण पूर्ण करण्यासाठी दुसरी संधी मिळवा"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "तुम्ही इयत्ता 10 वी कोणत्या बोर्डातून उत्तीर्ण झालात?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "इतर असल्यास, कृपया तुम्ही इयत्ता 10 वी ज्या बोर्डातून उत्तीर्ण झालात त्याचे नाव लिहा",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "इयत्ता 10 वी मध्ये तुम्हाला कोणती श्रेणी / किती टक्के गुण मिळाले?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "तुम्ही प्रथमच्या सेकंड चान्स प्रोग्राममध्ये शिक्षण घेतले आहे का?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "तुम्ही इयत्ता 10 वी कोणत्या वर्षी उत्तीर्ण झालात?"
 }
