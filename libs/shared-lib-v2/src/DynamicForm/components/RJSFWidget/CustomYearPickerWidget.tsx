@@ -30,7 +30,7 @@ export const applyYearPickerFields = (
 ) => {
   if (!schema?.properties) return { schema, uiSchema };
   const properties = { ...schema.properties };
-  const updatedUiSchema = { ...(uiSchema || {}) };
+  const updatedUiSchema = { ...(uiSchema) };
   fieldKeys.forEach((key) => {
     if (properties[key]) {
       properties[key] = { ...properties[key], enum: getYearOptions() };
@@ -68,7 +68,7 @@ const CustomYearPickerWidget = ({
   const selectedYear = isValidYear ? dayjs(`${yearValue}-01-01`) : null;
 
   const handleYearChange = (date: any) => {
-    if (date && date?.isValid()) {
+    if (date ?? date?.isValid()) {
       onChange(date.format('YYYY'));
     } else {
       onChange(undefined);
