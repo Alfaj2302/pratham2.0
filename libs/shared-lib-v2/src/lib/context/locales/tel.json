@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "నేను స్వచ్ఛందంగా సేవ చేస్తున్నాను",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "మీరు స్వతంత్రంగా స్వచ్ఛంద సేవ చేస్తుంటే ఈ ఎంపికను ఎంచుకోండి.",
     "NO_ACTIVE_COHORTS_FOUND": "యాక్టివ్ కోహోర్ట్‌లు ఏవీ కనుగొనబడలేదు",
-    "ORGANISATION_TYPE": "సంస్థ రకం"
+    "ORGANISATION_TYPE": "సంస్థ రకం",
+    "DISTINCTION_75_100": "డిస్టింక్షన్ (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "ప్రథమ శ్రేణి (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "ద్వితీయ శ్రేణి (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "తృతీయ శ్రేణి (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "అవును, 2025-26 నుండి",
+    "YES_BEFORE_2025_26": "అవును, 2025-26 కి ముందు"
   },
   "ORGANISATION_NAME": "సంస్థ పేరు",
   "FORM_ERROR_MESSAGES": {

@@ -958,7 +958,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "میں اپنے طور پر والنٹیر کا کام کر رہا ہوں۔",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "اگر آپ آزادانہ طور پر والنٹیر کی خدمات انجام دے رہے ہیں تو اس اختیار کو منتخب کریں۔",
     "NO_ACTIVE_COHORTS_FOUND": "کوئی فعال گروہ نہیں ملا",
-    "ORGANISATION_TYPE": "تنظیم کی قسم"
+    "ORGANISATION_TYPE": "تنظیم کی قسم",
+    "DISTINCTION_75_100": "امتیازی (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "فرسٹ ڈویژن (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "سیکنڈ ڈویژن (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "تھرڈ ڈویژن (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "ہاں، 2025-26 سے آگے",
+    "YES_BEFORE_2025_26": "ہاں، 2025-26 سے پہلے"
   },
   "ORGANISATION_NAME": "ادارے کا نام",
   "FORM_ERROR_MESSAGES": {

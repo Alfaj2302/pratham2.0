@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "હું મારી જાતે સ્વયંસેવક છું.",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "જો તમે સ્વતંત્ર રીતે સ્વયંસેવા કરી રહ્યા છો, તો આ વિકલ્પ પસંદ કરો.",
     "NO_ACTIVE_COHORTS_FOUND": "કોઈ સક્રિય સમૂહ મળ્યા નથી.",
-    "ORGANISATION_TYPE": "સંસ્થાનો પ્રકાર"
+    "ORGANISATION_TYPE": "સંસ્થાનો પ્રકાર",
+    "DISTINCTION_75_100": "વિશેષ યોગ્યતા (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "પ્રથમ શ્રેણી (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "દ્વિતીય શ્રેણી (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "તૃતીય શ્રેણી (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "હા, 2025-26 થી આગળ",
+    "YES_BEFORE_2025_26": "હા, 2025-26 પહેલાં"
   },
   "ORGANISATION_NAME": "સંસ્થાનું નામ",
   "FORM_ERROR_MESSAGES": {

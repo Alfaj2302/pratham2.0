@@ -39,7 +39,7 @@ export const getSelectedValues = (value: any): string[] => {
   const values = Array.isArray(value) ? value : [value];
   return values
     .filter((v) => v !== undefined && v !== null && v !== '')
-    .map((v) => String(v));
+    .map(String);
 };
 
 const collectHiddenFields = (
@@ -131,7 +131,7 @@ export const applyHiddenFieldsToSchema = (
 };
 
 export const removeHiddenFieldValues = (
-  formData: Record<string, any> = {},
+  formData: Record<string, any>,
   hiddenFields: Set<string>
 ): Record<string, any> => {
   const updated = { ...formData };

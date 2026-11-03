@@ -1015,7 +1015,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "I am volunteering independently.",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "Select this option if you are volunteering independently.",
     "NO_ACTIVE_COHORTS_FOUND": "No active cohorts found",
-    "ORGANISATION_TYPE": "Organisation Type"
+    "ORGANISATION_TYPE": "Organisation Type",
+    "DISTINCTION_75_100": "Distinction (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "First Division (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "Second Division (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "Third Division (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "Yes, 2025-26 Onwards",
+    "YES_BEFORE_2025_26": "Yes, Before 2025-26"
   },
   "ORGANISATION_NAME": "Organisation Name",
   "FORM_ERROR_MESSAGES": {

@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "நான் தனியாக தன்னார்வமாக செயல்படுகிறேன்",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "நீங்கள் தனிப்பட்ட முறையில் தன்னார்வமாக செயல்படுகிறீர்கள் என்றால் இந்த விருப்பத்தைத் தேர்வு செய்க.",
     "NO_ACTIVE_COHORTS_FOUND": "செயலில் உள்ள cohort-கள் எதுவும் கிடைக்கவில்லை",
-    "ORGANISATION_TYPE": "நிறுவனத்தின் வகை"
+    "ORGANISATION_TYPE": "நிறுவனத்தின் வகை",
+    "DISTINCTION_75_100": "சிறப்புத் தகுதி (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "முதல் வகுப்பு (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "இரண்டாம் வகுப்பு (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "மூன்றாம் வகுப்பு (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "ஆம், 2025-26 முதல்",
+    "YES_BEFORE_2025_26": "ஆம், 2025-26 க்கு முன்"
   },
   "ORGANISATION_NAME": "நிறுவனத்தின் பெயர்",
   "FORM_ERROR_MESSAGES": {

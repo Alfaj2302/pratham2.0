@@ -68,7 +68,7 @@ const CustomYearPickerWidget = ({
   const selectedYear = isValidYear ? dayjs(`${yearValue}-01-01`) : null;
 
   const handleYearChange = (date: any) => {
-    if (date && date.isValid()) {
+    if (date && date?.isValid()) {
       onChange(date.format('YYYY'));
     } else {
       onChange(undefined);
@@ -108,7 +108,7 @@ const CustomYearPickerWidget = ({
       <Box onKeyDownCapture={blockKeyboardInput}>
         <DatePicker
           disabled={isDisabled}
-          label={`${t(`FORM.${label}`, { defaultValue: label })}`}
+          label={t(`FORM.${label}`, { defaultValue: label })}
           value={selectedYear}
           onChange={handleYearChange}
           views={['year']}

@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "मी स्वतःहून स्वयंसेवा करत आहे",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "तुम्ही स्वतंत्रपणे स्वयंसेवा करत असल्यास हा पर्याय निवडा.",
     "NO_ACTIVE_COHORTS_FOUND": "कोणतेही सक्रिय कोहॉर्ट आढळले नाहीत",
-    "ORGANISATION_TYPE": "संस्थेचा प्रकार"
+    "ORGANISATION_TYPE": "संस्थेचा प्रकार",
+    "DISTINCTION_75_100": "विशेष प्राविण्य (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "प्रथम श्रेणी (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "द्वितीय श्रेणी (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "तृतीय श्रेणी (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "होय, 2025-26 पासून पुढे",
+    "YES_BEFORE_2025_26": "होय, 2025-26 पूर्वी"
   },
   "ORGANISATION_NAME": "संस्थेचे नाव",
   "FORM_ERROR_MESSAGES": {
