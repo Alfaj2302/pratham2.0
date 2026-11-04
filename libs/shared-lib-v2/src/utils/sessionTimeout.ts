@@ -14,8 +14,8 @@
  * login are unaffected.
  */
 
-/** Idle time allowed, in minutes: 3 days = 3 * 24 * 60 = 4320. */
-export const SESSION_TIMEOUT_MINUTES = 2;
+/** Idle time allowed, in minutes: 24 hours = 24 * 60 = 1440. */
+export const SESSION_TIMEOUT_MINUTES = 24 * 60;
 
 export const SESSION_ACTIVITY_KEY = 'sessionLastActivityAt';
 // Interactions fire many times a second; storage is written at most this often.
