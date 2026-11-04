@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "நான் தனியாக தன்னார்வமாக செயல்படுகிறேன்",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "நீங்கள் தனிப்பட்ட முறையில் தன்னார்வமாக செயல்படுகிறீர்கள் என்றால் இந்த விருப்பத்தைத் தேர்வு செய்க.",
     "NO_ACTIVE_COHORTS_FOUND": "செயலில் உள்ள cohort-கள் எதுவும் கிடைக்கவில்லை",
-    "ORGANISATION_TYPE": "நிறுவனத்தின் வகை"
+    "ORGANISATION_TYPE": "நிறுவனத்தின் வகை",
+    "DISTINCTION_75_100": "சிறப்புத் தகுதி (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "முதல் வகுப்பு (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "இரண்டாம் வகுப்பு (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "மூன்றாம் வகுப்பு (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "ஆம், 2025-26 முதல்",
+    "YES_BEFORE_2025_26": "ஆம், 2025-26 க்கு முன்"
   },
   "ORGANISATION_NAME": "நிறுவனத்தின் பெயர்",
   "FORM_ERROR_MESSAGES": {
@@ -1203,5 +1209,10 @@
     "camp_to_club_discription": "காம்ப் டு க்ளப்",
     "Pathways": "பாத்வேஸ்",
     "second_chance_program_pathways_discription": "உங்கள் 12ஆம் வகுப்புக் கல்வியை முடிக்க இரண்டாவது வாய்ப்பைப் பெறுங்கள்"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "நீங்கள் 10 ஆம் வகுப்பை எந்த வாரியத்தில் தேர்ச்சி பெற்றீர்கள்?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "மற்றவை எனில், நீங்கள் 10 ஆம் வகுப்பில் தேர்ச்சி பெற்ற வாரியத்தின் பெயரைக் குறிப்பிடவும்",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "10 ஆம் வகுப்பில் நீங்கள் எந்த பிரிவு / எத்தனை சதவீதம் பெற்றீர்கள்?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "நீங்கள் பிரதமின் செகண்ட் சான்ஸ் திட்டத்தில் படித்திருக்கிறீர்களா?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "நீங்கள் 10 ஆம் வகுப்பை எந்த ஆண்டில் தேர்ச்சி பெற்றீர்கள்?"
 }

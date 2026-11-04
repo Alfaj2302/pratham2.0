@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "હું મારી જાતે સ્વયંસેવક છું.",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "જો તમે સ્વતંત્ર રીતે સ્વયંસેવા કરી રહ્યા છો, તો આ વિકલ્પ પસંદ કરો.",
     "NO_ACTIVE_COHORTS_FOUND": "કોઈ સક્રિય સમૂહ મળ્યા નથી.",
-    "ORGANISATION_TYPE": "સંસ્થાનો પ્રકાર"
+    "ORGANISATION_TYPE": "સંસ્થાનો પ્રકાર",
+    "DISTINCTION_75_100": "વિશેષ યોગ્યતા (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "પ્રથમ શ્રેણી (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "દ્વિતીય શ્રેણી (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "તૃતીય શ્રેણી (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "હા, 2025-26 થી આગળ",
+    "YES_BEFORE_2025_26": "હા, 2025-26 પહેલાં"
   },
   "ORGANISATION_NAME": "સંસ્થાનું નામ",
   "FORM_ERROR_MESSAGES": {
@@ -1203,5 +1209,10 @@
     "camp_to_club_discription": "કૅમ્પ ટુ ક્લબ",
     "Pathways": "પાથવેઝ",
     "second_chance_program_pathways_discription": "તમારું ધોરણ 12નું શિક્ષણ પૂર્ણ કરવા માટે બીજી તક મેળવો"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "તમે ધોરણ 10 કયા બોર્ડમાંથી પાસ કર્યું?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "જો અન્ય હોય, તો કૃપા કરીને તે બોર્ડનું નામ જણાવો જેમાંથી તમે ધોરણ 10 પાસ કર્યું",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "ધોરણ 10 માં તમને કયો વર્ગ / કેટલા ટકા મળ્યા?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "શું તમે પ્રથમના સેકન્ડ ચાન્સ પ્રોગ્રામમાં અભ્યાસ કર્યો છે?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "તમે ધોરણ 10 કયા વર્ષમાં પાસ કર્યું?"
 }

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
+import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
+import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
 import Loader from '@/components/Loader';
 import { useTranslation } from 'react-i18next';
 import { useTranslation as useSharedTranslation } from '@shared-lib-v2/lib/context/LanguageContext';
@@ -59,6 +61,16 @@ const AddEditUser = ({
   parentData = [],
 }) => {
   console.log('parentData=======>', parentData);
+  // Learner add/edit in the Pathways program uses DynamicFormV3; everything else keeps DynamicForm
+  const isPathwaysProgram =
+    typeof window !== 'undefined' &&
+    [localStorage.getItem('tenantName'), localStorage.getItem('program')].some(
+      (name) =>
+        name?.toLowerCase() ===
+        TENANT_DATA.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase()
+    );
+  const isPathwaysLearnerForm = isPathwaysProgram && type === 'learner';
+  const UserForm = isPathwaysLearnerForm ? DynamicFormV3 : DynamicForm;
   const [isLoading, setIsLoading] = useState(false);
   const [showAssignmentScreen, setShowAssignmentScreen] =
     useState<boolean>(false);
@@ -281,6 +293,17 @@ const AddEditUser = ({
       isEditUiSchema['ui:order'] = [...updatedOrder, ...remainingKeys];
 
       console.log('Updated ui:order', isEditUiSchema['ui:order']);
+    }
+
+    // Pathways asks for the learner's Class 10 passing year through a year picker
+    if (isPathwaysLearnerForm) {
+      const yearPickerForm = applyYearPickerFields(
+        isEditSchema,
+        isEditUiSchema,
+        ['inWhichYearDidYouPassClass10']
+      );
+      isEditSchema = yearPickerForm.schema;
+      isEditUiSchema = yearPickerForm.uiSchema;
     }
 
     setAlteredSchema(isEditSchema);
@@ -711,7 +734,7 @@ const AddEditUser = ({
                 }
               />
             )} */}
-            <DynamicForm
+            <UserForm
               schema={alteredSchema}
               uiSchema={alteredUiSchema}
               t={t}

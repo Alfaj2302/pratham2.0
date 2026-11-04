@@ -22,6 +22,8 @@ import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
 // import MobileVerificationSuccess from '@learner/components/MobileVerificationSuccess/MobileVerificationSuccess';
 import CreateAccountForm from '@learner/components/CreateAccountForm/CreateAccountForm';
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
+import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
+import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { FormContext } from '@shared-lib-v2/DynamicForm/components/DynamicFormConstant';
 import { useRouter } from 'next/navigation';
@@ -53,6 +55,7 @@ import { getVerifiedMobile, clearVerifiedMobile } from '@learner/utils/verifiedM
 import Image from 'next/image';
 import SwitchAccountDialog from '@shared-lib-v2/SwitchAccount/SwitchAccount';
 import { getInterestedToJoinFieldId } from '@shared-lib-v2/utils/helper';
+import { TenantName } from '@learner/utils/app.constant';
 
 type UserAccount = {
   name: string;
@@ -125,6 +128,15 @@ const RegisterationFlow = () => {
   const [password, setPassword] = useState('');
   const [mobile, setMobile] = useState('');
   const [tenantName, setTenantName] = useState('');
+  // Pathways registration uses DynamicFormV3; other programs keep DynamicForm
+  // `enroll` is known before the tenant is resolved, so the form fetch below
+  // can already tell it is building the Pathways form
+  const isPathwaysProgram = [tenantName, enroll].some(
+    (name) =>
+      name?.toLowerCase() ===
+      TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase()
+  );
+  const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
   const [tenantUiConfig, setTenantUiConfig] = useState<any>(null);
 
   const [switchDialogOpen, setSwitchDialogOpen] = useState(false);
@@ -338,6 +350,17 @@ const RegisterationFlow = () => {
           'mobile',
           'parent_phone'
         );
+
+        // Pathways asks for the Class 10 passing year through a year picker
+        if (isPathwaysProgram) {
+          const yearPickerForm = applyYearPickerFields(
+            alterSchema,
+            updatedUiSchema,
+            ['inWhichYearDidYouPassClass10']
+          );
+          alterSchema = yearPickerForm.schema;
+          updatedUiSchema = yearPickerForm.uiSchema;
+        }
 
         setAddSchema(alterSchema);
         setAddUiSchema(updatedUiSchema);
@@ -1079,7 +1102,7 @@ const RegisterationFlow = () => {
               )}
             </Alert>
             {addSchema && addUiSchema && (
-              <DynamicForm
+              <LearnerForm
                 schema={addSchema}
                 uiSchema={
                   mobileFromQuery

@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Link, Typography, useRadioGroup } from '@mui/material';
 import SimpleModal from '@learner/components/SimpleModal/SimpleModal';
 import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
 import axios from 'axios';
 
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
+import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
+import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
+import { TenantName } from '@learner/utils/app.constant';
 import {
   fetchForm,
   splitUserData,
@@ -115,6 +118,13 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
       ? t('NAVAPATHAM.NAVAPATHAM')
       : localStorage.getItem('userProgram') || '';
   };
+  // Pathways learners fill their profile with DynamicFormV3; other programs keep DynamicForm
+  const isPathwaysProgram =
+    typeof window !== 'undefined' &&
+    window.localStorage &&
+    localStorage.getItem('userProgram')?.toLowerCase() ===
+      TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase();
+  const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
   // let formData: any = {};
   const [loading, setLoading] = useState(true);
   const [invalidLinkModal, setInvalidLinkModal] = useState(false);
@@ -135,6 +145,25 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
 
   const [addSchema, setAddSchema] = useState(null);
   const [addUiSchema, setAddUiSchema] = useState(null);
+  // Complete-profile form shows the missing fields plus the saved fields that
+  // control them (see getMissingFields); prefill whatever was already saved.
+  const completeProfilePrefill = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.keys((addSchema as any)?.properties || {})
+          .filter((key) => {
+            const value = userFormData?.[key];
+            return (
+              value !== undefined &&
+              value !== null &&
+              value !== '' &&
+              !(Array.isArray(value) && value.length === 0)
+            );
+          })
+          .map((key) => [key, userFormData[key]])
+      ),
+    [addSchema, userFormData]
+  );
 
   // Mobile field states
   const [mobileAddUiSchema, setMobileAddUiSchema] = useState({});
@@ -280,7 +309,11 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
           const useInfo = await getUserDetails(userId, true);
           console.log('useInfo', useInfo?.result?.userData);
           setuserData(useInfo?.result?.userData);
-          const mappedData = mapUserData(useInfo?.result?.userData);
+          // Pass the form schema so custom fields outside mapUserData's fixed list prefill too
+          const mappedData = mapUserData(
+            useInfo?.result?.userData,
+            responseFormCopy?.schema
+          );
 
           // console.log("responseFormForEnroll", responseFormForEnroll?.schema?.properties)
           const keyNames = Object.keys(responseFormForEnroll?.schema?.properties);
@@ -496,8 +529,18 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
               (item:any) => !['nda_policy', 'child_pocso_fraud_policy'].includes(item)
             );
           }
-          setAddSchema(alterSchema);
           alterUISchema.mobile = responseForm?.uiSchema?.mobile
+          // Pathways asks for the Class 10 passing year through a year picker
+          if (isPathwaysProgram) {
+            const yearPickerForm = applyYearPickerFields(
+              alterSchema,
+              alterUISchema,
+              ['inWhichYearDidYouPassClass10']
+            );
+            alterSchema = yearPickerForm.schema;
+            alterUISchema = yearPickerForm.uiSchema;
+          }
+          setAddSchema(alterSchema);
           console.log("alterUISchema", alterUISchema);
           setAddUiSchema(alterUISchema);
         }
@@ -918,7 +961,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         </Box>
                       )}
                     {addSchema && addUiSchema && (
-                      <DynamicForm
+                      <LearnerForm
                         schema={addSchema}
                         uiSchema={addUiSchema}
                         mobileAddUiSchema={mobileAddUiSchema}
@@ -927,7 +970,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         parentDataSchema={parentDataSchema}
                         forEditedschema={responseFormData?.schema?.properties}
                         FormSubmitFunction={FormSubmitFunction}
-                        prefilledFormData={completeProfile && !enrolledProgram ? {}: enrolledProgram && isModeOfLearningPresent ? { preferred_mode_of_learning: 'remote' } : userFormData}
+                        prefilledFormData={completeProfile && !enrolledProgram ? completeProfilePrefill : enrolledProgram && isModeOfLearningPresent ? { preferred_mode_of_learning: 'remote' } : userFormData}
                         hideSubmit={true}
                         type="learner"
                         isCompleteProfile={completeProfile}

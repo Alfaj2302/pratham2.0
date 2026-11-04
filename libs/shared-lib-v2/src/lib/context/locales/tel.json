@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "నేను స్వచ్ఛందంగా సేవ చేస్తున్నాను",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "మీరు స్వతంత్రంగా స్వచ్ఛంద సేవ చేస్తుంటే ఈ ఎంపికను ఎంచుకోండి.",
     "NO_ACTIVE_COHORTS_FOUND": "యాక్టివ్ కోహోర్ట్‌లు ఏవీ కనుగొనబడలేదు",
-    "ORGANISATION_TYPE": "సంస్థ రకం"
+    "ORGANISATION_TYPE": "సంస్థ రకం",
+    "DISTINCTION_75_100": "డిస్టింక్షన్ (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "ప్రథమ శ్రేణి (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "ద్వితీయ శ్రేణి (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "తృతీయ శ్రేణి (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "అవును, 2025-26 నుండి",
+    "YES_BEFORE_2025_26": "అవును, 2025-26 కి ముందు"
   },
   "ORGANISATION_NAME": "సంస్థ పేరు",
   "FORM_ERROR_MESSAGES": {
@@ -1203,5 +1209,10 @@
     "camp_to_club_discription": "క్యాంప్ టు క్లబ్",
     "Pathways": "పాత్‌వేస్",
     "second_chance_program_pathways_discription": "మీ 12వ తరగతి విద్యను పూర్తి చేయడానికి రెండవ అవకాశం పొందండి"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "మీరు 10వ తరగతి ఏ బోర్డు నుండి ఉత్తీర్ణులయ్యారు?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "ఇతరం అయితే, మీరు 10వ తరగతి ఉత్తీర్ణులైన బోర్డు పేరును తెలియజేయండి",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "10వ తరగతిలో మీకు ఏ డివిజన్ / ఎంత శాతం వచ్చింది?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "మీరు ప్రథమ్ యొక్క సెకండ్ ఛాన్స్ ప్రోగ్రామ్‌లో చదివారా?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "మీరు 10వ తరగతి ఏ సంవత్సరంలో ఉత్తీర్ణులయ్యారు?"
 }

@@ -958,7 +958,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "میں اپنے طور پر والنٹیر کا کام کر رہا ہوں۔",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "اگر آپ آزادانہ طور پر والنٹیر کی خدمات انجام دے رہے ہیں تو اس اختیار کو منتخب کریں۔",
     "NO_ACTIVE_COHORTS_FOUND": "کوئی فعال گروہ نہیں ملا",
-    "ORGANISATION_TYPE": "تنظیم کی قسم"
+    "ORGANISATION_TYPE": "تنظیم کی قسم",
+    "DISTINCTION_75_100": "امتیازی (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "فرسٹ ڈویژن (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "سیکنڈ ڈویژن (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "تھرڈ ڈویژن (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "ہاں، 2025-26 سے آگے",
+    "YES_BEFORE_2025_26": "ہاں، 2025-26 سے پہلے"
   },
   "ORGANISATION_NAME": "ادارے کا نام",
   "FORM_ERROR_MESSAGES": {
@@ -1151,5 +1157,10 @@
     "camp_to_club_discription": "کیمپ ٹو کلب",
     "Pathways": "پاتھ ویز",
     "second_chance_program_pathways_discription": "اپنی بارہویں جماعت کی تعلیم مکمل کرنے کے لیے دوسرا موقع حاصل کریں"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "آپ نے دسویں جماعت کس بورڈ سے پاس کی؟",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "اگر دیگر ہے تو براہ کرم اس بورڈ کا نام بتائیں جس سے آپ نے دسویں جماعت پاس کی",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "دسویں جماعت میں آپ کو کون سا درجہ / کتنے فیصد نمبر ملے؟",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "کیا آپ نے پرتھم کے سیکنڈ چانس پروگرام میں تعلیم حاصل کی ہے؟",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "آپ نے دسویں جماعت کس سال میں پاس کی؟"
 }

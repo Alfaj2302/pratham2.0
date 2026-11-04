@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "मैं स्वतंत्र रूप से स्वयंसेवा कर रहा/रही हूं।",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "यदि आप स्वतंत्र रूप से स्वयंसेवा कर रहे हैं तो इस विकल्प का चयन करें।",
     "NO_ACTIVE_COHORTS_FOUND": "कोई सक्रिय समूह नहीं मिला",
-    "ORGANISATION_TYPE": "संगठन का प्रकार"
+    "ORGANISATION_TYPE": "संगठन का प्रकार",
+    "DISTINCTION_75_100": "विशेष योग्यता (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "प्रथम श्रेणी (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "द्वितीय श्रेणी (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "तृतीय श्रेणी (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "हाँ, 2025-26 से आगे",
+    "YES_BEFORE_2025_26": "हाँ, 2025-26 से पहले"
   },
   "ORGANISATION_NAME": "संगठन का नाम",
   "FORM_ERROR_MESSAGES": {
@@ -1203,5 +1209,10 @@
     "camp_to_club_discription": "कैंप टू क्लब",
     "Pathways": "पाथवेज",
     "second_chance_program_pathways_discription": "अपनी 12वीं कक्षा की पढ़ाई पूरी करने के लिए दूसरा मौका पाइए"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "आपने कक्षा 10 किस बोर्ड से पास की?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "यदि अन्य, तो कृपया उस बोर्ड का नाम बताएं जिससे आपने कक्षा 10 पास की",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "कक्षा 10 में आपको कौन सी श्रेणी / कितने प्रतिशत अंक मिले?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "क्या आपने प्रथम के सेकंड चांस प्रोग्राम में पढ़ाई की है?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "आपने कक्षा 10 किस वर्ष में पास की?"
 }

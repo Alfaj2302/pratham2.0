@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "ମୁ ନିଜେ ସ୍ୱେଚ୍ଛାସେବା କରୁଛି",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "ଯଦି ଆପଣ ସ୍ୱାଧୀନ ଭାବେ ସ୍ୱେଚ୍ଛାସେବା କରୁଛନ୍ତି ତେବେ ଏହି ବିକଳ୍ପ ବାଛନ୍ତୁ।",
     "NO_ACTIVE_COHORTS_FOUND": "କୌଣସି ସକ୍ରିୟ କୋହର୍ଟ ମିଳିଲା ନାହିଁ",
-    "ORGANISATION_TYPE": "ସଂସ୍ଥାର ପ୍ରକାର"
+    "ORGANISATION_TYPE": "ସଂସ୍ଥାର ପ୍ରକାର",
+    "DISTINCTION_75_100": "ବିଶେଷ ଯୋଗ୍ୟତା (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "ପ୍ରଥମ ଶ୍ରେଣୀ (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "ଦ୍ୱିତୀୟ ଶ୍ରେଣୀ (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "ତୃତୀୟ ଶ୍ରେଣୀ (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "ହଁ, 2025-26 ଠାରୁ",
+    "YES_BEFORE_2025_26": "ହଁ, 2025-26 ପୂର୍ବରୁ"
   },
   "ORGANISATION_NAME": "ସଂସ୍ଥାର ନାମ",
   "FORM_ERROR_MESSAGES": {
@@ -1203,5 +1209,10 @@
     "camp_to_club_discription": "କ୍ୟାମ୍ପ ଟୁ କ୍ଲବ୍",
     "Pathways": "ପାଥୱେଜ୍",
     "second_chance_program_pathways_discription": "ଆପଣଙ୍କ ଦ୍ୱାଦଶ ଶ୍ରେଣୀ ଶିକ୍ଷା ସମ୍ପୂର୍ଣ୍ଣ କରିବା ପାଇଁ ଦ୍ୱିତୀୟ ସୁଯୋଗ ପାଆନ୍ତୁ"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "ଆପଣ କେଉଁ ବୋର୍ଡରୁ ଦଶମ ଶ୍ରେଣୀ ପାସ୍ କରିଛନ୍ତି?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "ଯଦି ଅନ୍ୟ, ଦୟାକରି ଯେଉଁ ବୋର୍ଡରୁ ଆପଣ ଦଶମ ଶ୍ରେଣୀ ପାସ୍ କରିଛନ୍ତି ତାହାର ନାମ ଲେଖନ୍ତୁ",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "ଦଶମ ଶ୍ରେଣୀରେ ଆପଣ କେଉଁ ଡିଭିଜନ୍ / କେତେ ପ୍ରତିଶତ ପାଇଥିଲେ?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "ଆପଣ ପ୍ରଥମର ସେକେଣ୍ଡ ଚାନ୍ସ ପ୍ରୋଗ୍ରାମରେ ପଢ଼ିଛନ୍ତି କି?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "ଆପଣ କେଉଁ ବର୍ଷରେ ଦଶମ ଶ୍ରେଣୀ ପାସ୍ କରିଛନ୍ତି?"
 }

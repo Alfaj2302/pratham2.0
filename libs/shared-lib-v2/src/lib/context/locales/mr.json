@@ -1010,7 +1010,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "मी स्वतःहून स्वयंसेवा करत आहे",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "तुम्ही स्वतंत्रपणे स्वयंसेवा करत असल्यास हा पर्याय निवडा.",
     "NO_ACTIVE_COHORTS_FOUND": "कोणतेही सक्रिय कोहॉर्ट आढळले नाहीत",
-    "ORGANISATION_TYPE": "संस्थेचा प्रकार"
+    "ORGANISATION_TYPE": "संस्थेचा प्रकार",
+    "DISTINCTION_75_100": "विशेष प्राविण्य (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "प्रथम श्रेणी (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "द्वितीय श्रेणी (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "तृतीय श्रेणी (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "होय, 2025-26 पासून पुढे",
+    "YES_BEFORE_2025_26": "होय, 2025-26 पूर्वी"
   },
   "ORGANISATION_NAME": "संस्थेचे नाव",
   "FORM_ERROR_MESSAGES": {
@@ -1203,5 +1209,10 @@
     "camp_to_club_discription": "कॅम्प टू क्लब",
     "Pathways": "पाथवेज",
     "second_chance_program_pathways_discription": "तुमचे बारावीचे शिक्षण पूर्ण करण्यासाठी दुसरी संधी मिळवा"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "तुम्ही इयत्ता 10 वी कोणत्या बोर्डातून उत्तीर्ण झालात?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "इतर असल्यास, कृपया तुम्ही इयत्ता 10 वी ज्या बोर्डातून उत्तीर्ण झालात त्याचे नाव लिहा",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "इयत्ता 10 वी मध्ये तुम्हाला कोणती श्रेणी / किती टक्के गुण मिळाले?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "तुम्ही प्रथमच्या सेकंड चान्स प्रोग्राममध्ये शिक्षण घेतले आहे का?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "तुम्ही इयत्ता 10 वी कोणत्या वर्षी उत्तीर्ण झालात?"
 }

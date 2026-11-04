@@ -1015,7 +1015,13 @@
     "INDIVIDUAL_VOLUNTEER_ALONE_DESCRIPTION": "I am volunteering independently.",
     "INDIVIDUAL_VOLUNTEER_ALONE_HELP_TEXT": "Select this option if you are volunteering independently.",
     "NO_ACTIVE_COHORTS_FOUND": "No active cohorts found",
-    "ORGANISATION_TYPE": "Organisation Type"
+    "ORGANISATION_TYPE": "Organisation Type",
+    "DISTINCTION_75_100": "Distinction (75% – 100%)",
+    "FIRST_DIVISION_60_74_99": "First Division (60% – 74.99%)",
+    "SECOND_DIVISION_45_59_99": "Second Division (45% – 59.99%)",
+    "THIRD_DIVISION_33_44_99": "Third Division (33% – 44.99%)",
+    "YES_2025_26_ONWARDS": "Yes, 2025-26 Onwards",
+    "YES_BEFORE_2025_26": "Yes, Before 2025-26"
   },
   "ORGANISATION_NAME": "Organisation Name",
   "FORM_ERROR_MESSAGES": {
@@ -1212,5 +1218,10 @@
     "camp_to_club_discription" : "Camp to Club",
     "Pathways" : "Pathways",
     "second_chance_program_pathways_discription" : "Get a second chance to complete your 12th grade education"
-  }
+  },
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10": "From which board did you pass Class 10?",
+  "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "If other, please specify the board from which you passed Class 10",
+  "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "What division / percentage did you get in Class 10?",
+  "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "Have you studied in Pratham's Second Chance Program?",
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "In which year did you pass Class 10?"
 }
