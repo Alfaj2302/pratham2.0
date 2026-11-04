@@ -33,6 +33,7 @@ interface PlayerProps {
   configFunctionality?: any;
   firstName?: string;
   lastName?: string;
+  hideBackButton?: boolean;
 }
 
 const SunbirdPlayers = ({
@@ -43,6 +44,7 @@ const SunbirdPlayers = ({
   configFunctionality,
   firstName,
   lastName,
+  hideBackButton,
 }: PlayerProps) => {
   console.log('workspace playerconfig', playerConfig);
 
@@ -80,6 +82,7 @@ const SunbirdPlayers = ({
           playerConfig={updatedPlayerConfig}
           relatedData={{ courseId, unitId, userId }}
           configFunctionality={configFunctionality}
+          hideBackButton={hideBackButton}
         />
       );
     // case 'application/pdf':
