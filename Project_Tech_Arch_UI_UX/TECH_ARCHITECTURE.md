@@ -329,7 +329,7 @@ git clone → docker-compose -f docker-compose.teachers.yml up -d
 
 ### Token Refresh (automatic)
 Axios response interceptor:
-1. On 401 → call POST `/account/auth/refresh` with `{ refresh_token }`
+1. On 401 → call POST `/user/auth/refresh` with `{ refresh_token }`
 2. New tokens overwrite `localStorage.token` + `localStorage.refreshToken`
 3. Retry original request with new token
 4. On refresh failure → redirect to `/logout`
@@ -378,7 +378,7 @@ All frontend API calls go through this single gateway.
 
 | Category | Prefix | Description |
 |----------|--------|-------------|
-| Auth | `/account/login`, `/account/auth/refresh` | Token management |
+| Auth | `/account/login`, `/user/auth/refresh` | Token management |
 | User | `/user/list`, `/user/read/:id`, `/user/update/:id` | User CRUD |
 | User OTP | `/user/send-otp`, `/user/verify-otp` | OTP flows |
 | Cohort | `/cohort/search`, `/cohort/create`, `/cohort/update/:id` | Center/batch management |

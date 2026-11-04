@@ -6,6 +6,7 @@ import Loader from "@/components/Loader";
 import { useTranslation } from "next-i18next";
 import { useQueryClient } from '@tanstack/react-query';
 import { preserveLocalStorage } from "@/utils/helper";
+import { getSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 
 function Logout() {
   const router = useRouter();
@@ -15,7 +16,8 @@ function Logout() {
   useEffect(() => {
     const userLogout = async () => {
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        // Read before the synchronous storage clear below; the ciphertext is captured synchronously.
+        const refreshToken = await getSecureRefreshToken();
         if (refreshToken) {
           await logout(refreshToken);
         }

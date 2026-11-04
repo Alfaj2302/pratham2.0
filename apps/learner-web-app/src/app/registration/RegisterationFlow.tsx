@@ -56,6 +56,7 @@ import Image from 'next/image';
 import SwitchAccountDialog from '@shared-lib-v2/SwitchAccount/SwitchAccount';
 import { getInterestedToJoinFieldId } from '@shared-lib-v2/utils/helper';
 import { TenantName } from '@learner/utils/app.constant';
+import { setSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 
 type UserAccount = {
   name: string;
@@ -804,6 +805,7 @@ const RegisterationFlow = () => {
             } else {
               localStorage.removeItem('refreshTokenForAndroid');
             }
+            await setSecureRefreshToken(refreshToken);
 
             localStorage.setItem('token', token);
 

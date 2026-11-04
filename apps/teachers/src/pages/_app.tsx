@@ -29,6 +29,7 @@ import { Box, IconButton } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import { LanguageProvider } from '@shared-lib-v2/lib/context/LanguageContext';
 import { useChunkErrorReload } from '@shared-lib-v2/hooks/useChunkErrorReload';
+import '@shared-lib-v2/utils/API/secureAuthInterceptor';
 import { useLanguageFromStorage } from '@shared-lib-v2/hooks/useLanguageFromStorage';
 import Notification from '../components/Notification';
 import AllowNotification from '../components/AllowNotification';
