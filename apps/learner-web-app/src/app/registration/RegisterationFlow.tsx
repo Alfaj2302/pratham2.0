@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Box,
@@ -129,9 +129,13 @@ const RegisterationFlow = () => {
   const [mobile, setMobile] = useState('');
   const [tenantName, setTenantName] = useState('');
   // Pathways registration uses DynamicFormV3; other programs keep DynamicForm
-  const isPathwaysProgram =
-    tenantName?.toLowerCase() ===
-    TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase();
+  // `enroll` is known before the tenant is resolved, so the form fetch below
+  // can already tell it is building the Pathways form
+  const isPathwaysProgram = [tenantName, enroll].some(
+    (name) =>
+      name?.toLowerCase() ===
+      TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase()
+  );
   const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
   const [tenantUiConfig, setTenantUiConfig] = useState<any>(null);
 
@@ -143,16 +147,6 @@ const RegisterationFlow = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [addSchema, setAddSchema] = useState(null);
   const [addUiSchema, setAddUiSchema] = useState(null);
-  // Pathways asks for the Class 10 passing year through a year picker
-  const learnerFormConfig = useMemo(
-    () =>
-      isPathwaysProgram
-        ? applyYearPickerFields(addSchema, addUiSchema, [
-            'inWhichYearDidYouPassClass10',
-          ])
-        : { schema: addSchema, uiSchema: addUiSchema },
-    [isPathwaysProgram, addSchema, addUiSchema]
-  );
 
   // const [schema, setSchema] = useState(facilitatorSearchSchema);
   // const [uiSchema, setUiSchema] = useState(facilitatorSearchUISchema);
@@ -356,6 +350,17 @@ const RegisterationFlow = () => {
           'mobile',
           'parent_phone'
         );
+
+        // Pathways asks for the Class 10 passing year through a year picker
+        if (isPathwaysProgram) {
+          const yearPickerForm = applyYearPickerFields(
+            alterSchema,
+            updatedUiSchema,
+            ['inWhichYearDidYouPassClass10']
+          );
+          alterSchema = yearPickerForm.schema;
+          updatedUiSchema = yearPickerForm.uiSchema;
+        }
 
         setAddSchema(alterSchema);
         setAddUiSchema(updatedUiSchema);
@@ -1098,15 +1103,15 @@ const RegisterationFlow = () => {
             </Alert>
             {addSchema && addUiSchema && (
               <LearnerForm
-                schema={learnerFormConfig.schema}
+                schema={addSchema}
                 uiSchema={
                   mobileFromQuery
                     ? {
-                        ...(learnerFormConfig.uiSchema as any),
-                        mobile: { ...(learnerFormConfig.uiSchema as any)?.mobile, 'ui:disabled': true },
-                        parent_phone: { ...(learnerFormConfig.uiSchema as any)?.parent_phone, 'ui:disabled': true },
+                        ...(addUiSchema as any),
+                        mobile: { ...(addUiSchema as any)?.mobile, 'ui:disabled': true },
+                        parent_phone: { ...(addUiSchema as any)?.parent_phone, 'ui:disabled': true },
                       }
-                    : learnerFormConfig.uiSchema
+                    : addUiSchema
                 }
                 FormSubmitFunction={FormSubmitFunction}
                 prefilledFormData={{ ...formData, ...(mobileFromQuery ? { mobile: mobileFromQuery, parent_phone: mobileFromQuery } : {}) }}

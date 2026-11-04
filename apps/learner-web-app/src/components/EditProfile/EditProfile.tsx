@@ -145,16 +145,6 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
 
   const [addSchema, setAddSchema] = useState(null);
   const [addUiSchema, setAddUiSchema] = useState(null);
-  // Pathways asks for the Class 10 passing year through a year picker
-  const learnerFormConfig = useMemo(
-    () =>
-      isPathwaysProgram
-        ? applyYearPickerFields(addSchema, addUiSchema, [
-            'inWhichYearDidYouPassClass10',
-          ])
-        : { schema: addSchema, uiSchema: addUiSchema },
-    [isPathwaysProgram, addSchema, addUiSchema]
-  );
   // Complete-profile form shows the missing fields plus the saved fields that
   // control them (see getMissingFields); prefill whatever was already saved.
   const completeProfilePrefill = useMemo(
@@ -539,8 +529,18 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
               (item:any) => !['nda_policy', 'child_pocso_fraud_policy'].includes(item)
             );
           }
-          setAddSchema(alterSchema);
           alterUISchema.mobile = responseForm?.uiSchema?.mobile
+          // Pathways asks for the Class 10 passing year through a year picker
+          if (isPathwaysProgram) {
+            const yearPickerForm = applyYearPickerFields(
+              alterSchema,
+              alterUISchema,
+              ['inWhichYearDidYouPassClass10']
+            );
+            alterSchema = yearPickerForm.schema;
+            alterUISchema = yearPickerForm.uiSchema;
+          }
+          setAddSchema(alterSchema);
           console.log("alterUISchema", alterUISchema);
           setAddUiSchema(alterUISchema);
         }
@@ -962,8 +962,8 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                       )}
                     {addSchema && addUiSchema && (
                       <LearnerForm
-                        schema={learnerFormConfig.schema}
-                        uiSchema={learnerFormConfig.uiSchema}
+                        schema={addSchema}
+                        uiSchema={addUiSchema}
                         mobileAddUiSchema={mobileAddUiSchema}
                         mobileSchema={mobileSchema}
                         parentDataAddUiSchema={parentDataAddUiSchema}

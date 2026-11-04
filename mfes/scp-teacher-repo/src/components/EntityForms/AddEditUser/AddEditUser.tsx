@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
 import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
@@ -101,16 +101,6 @@ const AddEditUser = ({
   const [tempArray, setTempArray] = useState<any>([]);
   const [alteredSchema, setAlteredSchema] = useState<any>(null);
   const [alteredUiSchema, setAlteredUiSchema] = useState<any>(null);
-  // Pathways asks for the learner's Class 10 passing year through a year picker
-  const userFormConfig = useMemo(
-    () =>
-      isPathwaysLearnerForm
-        ? applyYearPickerFields(alteredSchema, alteredUiSchema, [
-            'inWhichYearDidYouPassClass10',
-          ])
-        : { schema: alteredSchema, uiSchema: alteredUiSchema },
-    [isPathwaysLearnerForm, alteredSchema, alteredUiSchema]
-  );
 
   useEffect(() => {
     let isEditSchema = _.cloneDeep(schema);
@@ -303,6 +293,17 @@ const AddEditUser = ({
       isEditUiSchema['ui:order'] = [...updatedOrder, ...remainingKeys];
 
       console.log('Updated ui:order', isEditUiSchema['ui:order']);
+    }
+
+    // Pathways asks for the learner's Class 10 passing year through a year picker
+    if (isPathwaysLearnerForm) {
+      const yearPickerForm = applyYearPickerFields(
+        isEditSchema,
+        isEditUiSchema,
+        ['inWhichYearDidYouPassClass10']
+      );
+      isEditSchema = yearPickerForm.schema;
+      isEditUiSchema = yearPickerForm.uiSchema;
     }
 
     setAlteredSchema(isEditSchema);
@@ -734,8 +735,8 @@ const AddEditUser = ({
               />
             )} */}
             <UserForm
-              schema={userFormConfig.schema}
-              uiSchema={userFormConfig.uiSchema}
+              schema={alteredSchema}
+              uiSchema={alteredUiSchema}
               t={t}
               FormSubmitFunction={FormSubmitFunction}
               prefilledFormData={prefilledFormData || {}}
