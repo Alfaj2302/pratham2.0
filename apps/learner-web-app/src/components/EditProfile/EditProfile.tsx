@@ -8,7 +8,8 @@ import axios from 'axios';
 
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
-import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
+import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
+import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
 import { TenantName } from '@learner/utils/app.constant';
 import {
   fetchForm,
@@ -541,13 +542,19 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
           alterUISchema.mobile = responseForm?.uiSchema?.mobile
           // Pathways asks for the Class 10 passing year through a year picker
           if (isPathwaysProgram) {
-            const yearPickerForm = applyYearPickerFields(
+            const yearPickerForm = applyYearPickerTopLabelFields(
               alterSchema,
               alterUISchema,
               ['inWhichYearDidYouPassClass10']
             );
             alterSchema = yearPickerForm.schema;
             alterUISchema = yearPickerForm.uiSchema;
+            // Class 10 drop downs show their label above the field
+            alterUISchema = applyMultiSelectTopLabelFields(alterUISchema, [
+              'fromWhichBoardDidYouPassClass10',
+              'whatDivision/PercentageDidYouGetInClass10',
+              "haveYouStudiedInPratham'sSecondChanceProgram",
+            ]);
           }
           setAddSchema(alterSchema);
           console.log("alterUISchema", alterUISchema);
