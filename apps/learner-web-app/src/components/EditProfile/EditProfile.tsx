@@ -8,7 +8,9 @@ import axios from 'axios';
 
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
-import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
+import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
+import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
 import { TenantName } from '@learner/utils/app.constant';
 import {
   fetchForm,
@@ -41,6 +43,7 @@ import {
   updateUser,
 } from '@learner/utils/API/userService';
 import Header from '../Header/Header';
+import ConsentCheckbox from '../ConsentCheckbox/ConsentCheckbox';
 
 //volunteer onboarding
 import VolunteerOnboard from '@shared-lib-v2/VolunteerOnboard/VolunteerOnboard';
@@ -125,6 +128,9 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
     localStorage.getItem('userProgram')?.toLowerCase() ===
       TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase();
   const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
+  // Enrolling into Pathways shows one field per row and asks for personal data consent
+  const isPathwaysEnrollment = isPathwaysProgram && !!enrolledProgram;
+  const [consentAccepted, setConsentAccepted] = useState(false);
   // let formData: any = {};
   const [loading, setLoading] = useState(true);
   const [invalidLinkModal, setInvalidLinkModal] = useState(false);
@@ -537,13 +543,22 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
           alterUISchema.mobile = responseForm?.uiSchema?.mobile
           // Pathways asks for the Class 10 passing year through a year picker
           if (isPathwaysProgram) {
-            const yearPickerForm = applyYearPickerFields(
+            const yearPickerForm = applyYearPickerTopLabelFields(
               alterSchema,
               alterUISchema,
               ['inWhichYearDidYouPassClass10']
             );
             alterSchema = yearPickerForm.schema;
             alterUISchema = yearPickerForm.uiSchema;
+            // Class 10 drop downs show their label above the field
+            alterUISchema = applyMultiSelectTopLabelFields(alterUISchema, [
+              'fromWhichBoardDidYouPassClass10',
+              'whatDivision/PercentageDidYouGetInClass10',
+              "haveYouStudiedInPratham'sSecondChanceProgram",
+            ]);
+            alterUISchema = applyTextFieldTopLabelFields(alterUISchema, [
+              'fromWhichBoardDidYouPassClass10Other',
+            ]);
           }
           setAddSchema(alterSchema);
           console.log("alterUISchema", alterUISchema);
@@ -577,7 +592,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
         }
 
         // Push grid option
-        if(['nda_policy','child_pocso_fraud_policy']?.includes(fieldKey)){
+        if(isPathwaysEnrollment || ['nda_policy','child_pocso_fraud_policy']?.includes(fieldKey)){
           enhancedSchema[fieldKey]['ui:options'].grid = { xs: 12, sm: 12, md: 12 };
         }
         else{
@@ -644,6 +659,10 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
     // Prevent double submission
     if (isSubmitting) {
       console.log('Already submitting, ignoring duplicate submission');
+      return;
+    }
+    // Finish Enroll stays disabled without consent; this also blocks an Enter-key submit
+    if (isPathwaysEnrollment && !consentAccepted) {
       return;
     }
 
@@ -998,7 +1017,15 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         createNew={false}
                       />
                     )}
+                    {isPathwaysEnrollment && addSchema && (
+                      <ConsentCheckbox
+                        checked={consentAccepted}
+                        onChange={setConsentAccepted}
+                        consentFormUrl={uiConfig?.consentFormUrl}
+                      />
+                    )}
                     <Button
+                      disabled={isPathwaysEnrollment && !consentAccepted}
                       sx={{
                         mt: 3,
                         backgroundColor: '#FFC107',
@@ -1006,6 +1033,10 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         fontWeight: 'bold',
                         '&:hover': {
                           backgroundColor: '#ffb300',
+                        },
+                        '&:disabled': {
+                          backgroundColor: '#E0E0E0',
+                          color: '#9E9E9E',
                         },
                       }}
                       form="dynamic-form-id"

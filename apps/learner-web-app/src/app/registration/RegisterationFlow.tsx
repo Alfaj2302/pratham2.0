@@ -23,7 +23,9 @@ import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
 import CreateAccountForm from '@learner/components/CreateAccountForm/CreateAccountForm';
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
-import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
+import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
+import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { FormContext } from '@shared-lib-v2/DynamicForm/components/DynamicFormConstant';
 import { useRouter } from 'next/navigation';
@@ -354,13 +356,22 @@ const RegisterationFlow = () => {
 
         // Pathways asks for the Class 10 passing year through a year picker
         if (isPathwaysProgram) {
-          const yearPickerForm = applyYearPickerFields(
+          const yearPickerForm = applyYearPickerTopLabelFields(
             alterSchema,
             updatedUiSchema,
             ['inWhichYearDidYouPassClass10']
           );
           alterSchema = yearPickerForm.schema;
           updatedUiSchema = yearPickerForm.uiSchema;
+          // Class 10 drop downs show their label above the field
+          updatedUiSchema = applyMultiSelectTopLabelFields(updatedUiSchema, [
+            'fromWhichBoardDidYouPassClass10',
+            'whatDivision/PercentageDidYouGetInClass10',
+            "haveYouStudiedInPratham'sSecondChanceProgram",
+          ]);
+          updatedUiSchema = applyTextFieldTopLabelFields(updatedUiSchema, [
+            'fromWhichBoardDidYouPassClass10Other',
+          ]);
         }
 
         setAddSchema(alterSchema);
