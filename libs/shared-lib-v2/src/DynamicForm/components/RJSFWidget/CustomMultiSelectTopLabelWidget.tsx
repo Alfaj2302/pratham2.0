@@ -146,7 +146,7 @@ const CustomMultiSelectTopLabelWidget = ({
             <MenuItem
               key={option.value}
               value={option.value}
-              sx={{ whiteSpace: 'normal', alignItems: 'flex-start' }}
+              sx={{ whiteSpace: 'normal', alignItems: 'center' }}
               disabled={
                 selectedValues.length >= maxSelections &&
                 !selectedValues.includes(option.value)

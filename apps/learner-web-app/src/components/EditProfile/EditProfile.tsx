@@ -10,6 +10,7 @@ import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
 import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
 import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
 import { TenantName } from '@learner/utils/app.constant';
 import {
   fetchForm,
@@ -554,6 +555,9 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
               'fromWhichBoardDidYouPassClass10',
               'whatDivision/PercentageDidYouGetInClass10',
               "haveYouStudiedInPratham'sSecondChanceProgram",
+            ]);
+            alterUISchema = applyTextFieldTopLabelFields(alterUISchema, [
+              'fromWhichBoardDidYouPassClass10Other',
             ]);
           }
           setAddSchema(alterSchema);

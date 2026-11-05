@@ -19,6 +19,7 @@ import CustomDateWidget from './RJSFWidget/CustomDateWidget';
 import CustomYearPickerWidget from './RJSFWidget/CustomYearPickerWidget';
 import CustomMultiSelectTopLabelWidget from './RJSFWidget/CustomMultiSelectTopLabelWidget';
 import CustomYearPickerTopLabelWidget from './RJSFWidget/CustomYearPickerTopLabelWidget';
+import CustomTextFieldTopLabelWidget from './RJSFWidget/CustomTextFieldTopLabelWidget';
 import SearchTextFieldWidget from './RJSFWidget/SearchTextFieldWidget';
 import CustomSingleSelectWidget from './RJSFWidget/CustomSingleSelectWidget';
 import CustomRadioWidget from './RJSFWidget/CustomRadioWidget';
@@ -979,6 +980,7 @@ const DynamicFormV3 = forwardRef(({
     CustomYearPickerWidget,
     CustomMultiSelectTopLabelWidget,
     CustomYearPickerTopLabelWidget,
+    CustomTextFieldTopLabelWidget,
     SearchTextFieldWidget,
     CustomSingleSelectWidget,
     CustomRadioWidget,

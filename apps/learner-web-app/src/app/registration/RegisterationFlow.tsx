@@ -25,6 +25,7 @@ import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
 import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
 import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
 import { fetchForm } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { FormContext } from '@shared-lib-v2/DynamicForm/components/DynamicFormConstant';
 import { useRouter } from 'next/navigation';
@@ -367,6 +368,9 @@ const RegisterationFlow = () => {
             'fromWhichBoardDidYouPassClass10',
             'whatDivision/PercentageDidYouGetInClass10',
             "haveYouStudiedInPratham'sSecondChanceProgram",
+          ]);
+          updatedUiSchema = applyTextFieldTopLabelFields(updatedUiSchema, [
+            'fromWhichBoardDidYouPassClass10Other',
           ]);
         }
 

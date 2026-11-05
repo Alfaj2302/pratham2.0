@@ -3,6 +3,7 @@ import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
 import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
 import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
 import Loader from '@/components/Loader';
 import { useTranslation } from 'react-i18next';
 import { useTranslation as useSharedTranslation } from '@shared-lib-v2/lib/context/LanguageContext';
@@ -310,6 +311,9 @@ const AddEditUser = ({
         'fromWhichBoardDidYouPassClass10',
         'whatDivision/PercentageDidYouGetInClass10',
         "haveYouStudiedInPratham'sSecondChanceProgram",
+      ]);
+      isEditUiSchema = applyTextFieldTopLabelFields(isEditUiSchema, [
+        'fromWhichBoardDidYouPassClass10Other',
       ]);
     }
 
