@@ -28,6 +28,7 @@ import { logEvent } from '@learner/utils/googleAnalytics';
 import SwitchAccountDialog from '@shared-lib-v2/SwitchAccount/SwitchAccount';
 import Loader from '@learner/components/Loader/Loader';
 import { useTranslation } from '@shared-lib';
+import { clearSecureRefreshToken, setSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 
 interface SSOAuthParams {
   accessToken: string;
@@ -181,19 +182,14 @@ const SSOContent = () => {
     if (typeof window !== 'undefined' && window.localStorage) {
       const token = response.access_token;
       const refreshToken = response?.refresh_token;
-      console.log('refreshToken', refreshToken);
       // Only store refreshToken if it has a valid value
       if (refreshToken) {
         localStorage.setItem('refreshTokenForAndroid', refreshToken);
-        if (data?.remember) {
-          localStorage.setItem('refreshToken', refreshToken);
-        } else {
-          localStorage.removeItem('refreshToken');
-        }
+        await setSecureRefreshToken(refreshToken);
       } else {
         // Clear refreshTokenForAndroid if no refresh token is provided
         localStorage.removeItem('refreshTokenForAndroid');
-        localStorage.removeItem('refreshToken');
+        clearSecureRefreshToken();
       }
       localStorage.setItem('token', token);
 

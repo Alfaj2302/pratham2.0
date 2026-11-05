@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { getSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 import { useRouter } from 'next/router';
 import { logout } from '../services/LoginService';
 import { telemetryFactory } from '@/utils/telemetry';
@@ -38,7 +39,8 @@ function Logout() {
       telemetryFactory.interact(telemetryInteract);
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        // Read before the synchronous storage clear below; the ciphertext is captured synchronously.
+        const refreshToken = await getSecureRefreshToken();
         const userId = localStorage.getItem('userId');
         if (refreshToken) {
           await logout(refreshToken);

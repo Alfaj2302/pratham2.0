@@ -37,6 +37,7 @@ const Players: React.FC<SunbirdPlayerProps> = ({
     identifier: queryIdentifier,
     firstName,
     lastName,
+    hideBackButton,
   } = router.query ?? {}; // Get identifier from the query
   const identifier = propIdentifier || queryIdentifier; // Prefer prop over query
   const [playerConfig, setPlayerConfig] = useState<PlayerConfig | undefined>(
@@ -175,6 +176,7 @@ const Players: React.FC<SunbirdPlayerProps> = ({
             configFunctionality={{ isGenerateCertificate, trackable }}
             firstName={firstName as string}
             lastName={lastName as string}
+            hideBackButton={hideBackButton === 'true'}
           />
         </Box>
       )}

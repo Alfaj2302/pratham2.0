@@ -6,8 +6,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const index = () => {
   const router = useRouter();
-  const { identifier } = router.query;
-  const sb_player = process.env.NEXT_PUBLIC_ADMIN_SBPLAYER + `?identifier=${identifier}`;
+  const { identifier, hideBackButton } = router.query;
+  // Set only when opened from the curriculum planner resource list, where this
+  // page's own Back control above makes the player's back button redundant.
+  const sb_player =
+    process.env.NEXT_PUBLIC_ADMIN_SBPLAYER +
+    `?identifier=${identifier}` +
+    (hideBackButton === 'true' ? '&hideBackButton=true' : '');
   if (typeof window !== "undefined" && window.localStorage) {
   localStorage.setItem("showHeader"  , "true")
   }

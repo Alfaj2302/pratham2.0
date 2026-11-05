@@ -83,7 +83,7 @@ Role-to-feature access and tenant-specific sidebar visibility are documented in
    `localStorage` (`token`, `refreshToken`, `userId`, `tenantId`, `role`).
 2. User is routed to the correct portal based on role + tenant (Learner App, SCP Teacher MFE,
    Admin App, Workspace MFE, or YouthNet MFE).
-3. **Token refresh**: an Axios response interceptor calls `POST /account/auth/refresh` on 401;
+3. **Token refresh**: an Axios response interceptor calls `POST /user/auth/refresh` on 401;
    on refresh failure the user is redirected to `/logout`.
 4. **SSO ingestion** (`/sso`, all three portals): accepts `accessToken`, `userId`, `tenantId`,
    `roleId`, `ssoProvider` as query params, validates with the middleware, then routes by

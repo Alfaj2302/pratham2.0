@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../theme';
 import { useChunkErrorReload } from '@shared-lib-v2/hooks/useChunkErrorReload';
+import '@shared-lib-v2/utils/API/secureAuthInterceptor';
 
 export default function App(props: AppProps) {
   useChunkErrorReload();

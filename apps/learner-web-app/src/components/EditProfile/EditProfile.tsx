@@ -136,6 +136,10 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
   const localFormData = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('formData') || '{}') : {};
   const [userFormData, setUserFormData] = useState<any>(localFormData);
   const [userData, setuserData] = useState<any>({});
+  // Complete-profile and enroll-program strip marital_status out of the form when it isn't
+  // required, but DynamicForm still needs the saved value to know whether "spouse" is a valid
+  // family member option - keep it separately so it survives those reduced prefilledFormData shapes.
+  const [maritalStatusValue, setMaritalStatusValue] = useState<string | undefined>(undefined);
   const [responseFormData, setResponseFormData] = useState<any>({});
   const localPayload = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('localPayload') || '{}') : {};
   const uiConfig =
@@ -318,6 +322,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
             useInfo?.result?.userData,
             responseFormCopy?.schema
           );
+          setMaritalStatusValue(mappedData?.marital_status);
 
           // console.log("responseFormForEnroll", responseFormForEnroll?.schema?.properties)
           const keyNames = Object.keys(responseFormForEnroll?.schema?.properties);
@@ -669,9 +674,13 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
       customFields.push(data);
     }
 
-    // Ensure "WHAT PROGRAM ARE YOU PART OF" is explicitly sent even when empty
+    // Ensure "WHAT PROGRAM ARE YOU PART OF" is explicitly sent even when empty,
+    // but only when it was actually part of the form rendered this submission -
+    // `responseFormData` is the tenant's full master schema and always has this
+    // field, so keying off it wiped the saved value on unrelated submits (e.g.
+    // a Complete Profile form that only asked for Middle Name).
     const programSchema =
-      responseFormData?.schema?.properties?.what_program_are_you_part_of;
+      (addSchema as any)?.properties?.what_program_are_you_part_of;
     const programFieldId = programSchema?.fieldId;
 
     const programFieldIndex = customFields.findIndex(
@@ -978,7 +987,19 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         parentDataSchema={parentDataSchema}
                         forEditedschema={responseFormData?.schema?.properties}
                         FormSubmitFunction={FormSubmitFunction}
-                        prefilledFormData={completeProfile && !enrolledProgram ? completeProfilePrefill : enrolledProgram && isModeOfLearningPresent ? { preferred_mode_of_learning: 'remote' } : userFormData}
+                        prefilledFormData={{
+                          ...(completeProfile && !enrolledProgram
+                            ? completeProfilePrefill
+                            : enrolledProgram && isModeOfLearningPresent
+                            ? { preferred_mode_of_learning: 'remote' }
+                            : userFormData),
+                          // Carry the already-known marital status through even on the reduced
+                          // shapes above, so the family-member-details gating in DynamicForm can
+                          // still hide "spouse" for a learner who is Unmarried.
+                          ...(maritalStatusValue
+                            ? { marital_status: maritalStatusValue }
+                            : {}),
+                        }}
                         hideSubmit={true}
                         type="learner"
                         isCompleteProfile={completeProfile}

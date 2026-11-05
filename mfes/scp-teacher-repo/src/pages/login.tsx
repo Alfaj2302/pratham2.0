@@ -40,6 +40,8 @@ import {
   isCaptchaError,
   preloadRecaptcha,
 } from '@shared-lib-v2/utils/recaptcha';
+import { setSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
+import { startSessionTimer } from '@shared-lib-v2/utils/sessionTimeout';
 
 const LoginPage = () => {
   const { t, i18n } = useTranslation();
@@ -241,11 +243,8 @@ const LoginPage = () => {
               localStorage.setItem('token', token);
             }
 
-            if (rememberMe) {
-              localStorage.setItem('refreshToken', refreshToken);
-            } else {
-              localStorage.removeItem('refreshToken');
-            }
+            await setSecureRefreshToken(refreshToken);
+            startSessionTimer();
 
             const userResponse = await getUserId();
 

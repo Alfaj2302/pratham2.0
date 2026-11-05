@@ -6,6 +6,8 @@ interface PlayerConfigProps {
   playerConfig: any;
   relatedData?: any;
   configFunctionality?: any;
+  /** Hides the content player's own back button inside the player iframe. */
+  hideBackButton?: boolean;
 }
 
 const basePath = process.env.NEXT_PUBLIC_ASSETS_CONTENT || '/sbplayer';
@@ -14,6 +16,7 @@ const ContentPlayerV2 = ({
   playerConfig,
   relatedData: { courseId, unitId, userId },
   configFunctionality,
+  hideBackButton,
 }: PlayerConfigProps) => {
 
   console.log("########h5p ContentPlayerV2",playerConfig);
@@ -232,6 +235,58 @@ const ContentPlayerV2 = ({
       };
     }
   }, [playerConfig, courseId, unitId, userId]);
+
+  // Hide the content player's own back button.
+  // Every renderer draws it as a button with aria-label="Go back" inside the
+  // <content-player> shadow root, and the bundle exposes no config flag for it.
+  // The rule is injected from here rather than from the iframe's index.html
+  // because everything under libs/content-player-v2 is a build artifact that a
+  // new player build replaces. The iframe is same-origin (same MFE) and the
+  // shadow root is open, so it is reachable; React owns only the mount point
+  // inside it, so the appended <style> survives the player's own re-renders.
+  useEffect(() => {
+    if (!hideBackButton) return;
+    const iframe = contentPlayerV2Ref.current;
+    if (!iframe) return;
+
+    let frame = 0;
+    let deadline = 0;
+
+    const inject = () => {
+      try {
+        const doc = iframe.contentDocument;
+        const shadow = (doc?.getElementById('player') as any)?.shadowRoot;
+        if (!shadow) {
+          // Shadow root is created in connectedCallback, once the player
+          // bundle has loaded and upgraded the element.
+          if (Date.now() < deadline) frame = requestAnimationFrame(inject);
+          return;
+        }
+        if (shadow.getElementById('hide-back-button')) return;
+        const style = doc!.createElement('style');
+        style.id = 'hide-back-button';
+        style.textContent = '[aria-label="Go back"] { display: none !important; }';
+        shadow.appendChild(style);
+      } catch (error) {
+        // Player assets served from another origin — not reachable from here.
+        console.warn('Could not hide player back button:', error);
+      }
+    };
+
+    const start = () => {
+      cancelAnimationFrame(frame);
+      deadline = Date.now() + 10000;
+      inject();
+    };
+
+    iframe.addEventListener('load', start);
+    start();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      iframe.removeEventListener('load', start);
+    };
+  }, [hideBackButton, playerConfig]);
 
   const toggleFullscreen = () => {
     const playerContainer: any =
