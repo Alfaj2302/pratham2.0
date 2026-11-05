@@ -11,7 +11,10 @@ const players: React.FC = () => {
   const router = useRouter();
   const { identifier } = router.query;
   const { t } = useTranslation();
-  const sb_player = process.env.NEXT_PUBLIC_TEACHER_SBPLAYER + `?identifier=${identifier}`;
+  //this page has its own Back header, so hide the player's own back/exit controls
+  const sb_player =
+    process.env.NEXT_PUBLIC_TEACHER_SBPLAYER +
+    `?identifier=${identifier}&hideBackButton=true`;
   if (typeof window !== "undefined" && window.localStorage) {
   localStorage.setItem("showHeader"  , "true")
   }
