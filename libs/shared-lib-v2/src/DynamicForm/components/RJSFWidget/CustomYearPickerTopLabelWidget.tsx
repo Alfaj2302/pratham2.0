@@ -2,7 +2,12 @@
 import React, { useState } from 'react';
 import { Box, FormControl, FormLabel } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import {
+  LocalizationProvider,
+  DesktopDatePicker as DatePicker,
+} from '@mui/x-date-pickers';
+// DesktopDatePicker on all devices: DatePicker switches to its mobile variant
+// on touch screens, which has no calendar icon.
 import dayjs from 'dayjs';
 import { useTranslation } from 'libs/shared-lib-v2/src/lib/context/LanguageContext';
 import {
