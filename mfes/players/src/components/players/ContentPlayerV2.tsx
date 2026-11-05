@@ -236,14 +236,10 @@ const ContentPlayerV2 = ({
     }
   }, [playerConfig, courseId, unitId, userId]);
 
-  // Hide the content player's own back button.
-  // Every renderer draws it as a button with aria-label="Go back" inside the
-  // <content-player> shadow root, and the bundle exposes no config flag for it.
-  // The rule is injected from here rather than from the iframe's index.html
-  // because everything under libs/content-player-v2 is a build artifact that a
-  // new player build replaces. The iframe is same-origin (same MFE) and the
-  // shadow root is open, so it is reachable; React owns only the mount point
-  // inside it, so the appended <style> survives the player's own re-renders.
+  // Hide the player's own back button and Exit, which leave this preview page.
+  // Injected from here because libs/content-player-v2 is a build artifact that
+  // the next player build would overwrite. Iframe is same-origin and the shadow
+  // root is open, so it is reachable from the parent.
   useEffect(() => {
     if (!hideBackButton) return;
     const iframe = contentPlayerV2Ref.current;
@@ -251,25 +247,41 @@ const ContentPlayerV2 = ({
 
     let frame = 0;
     let deadline = 0;
+    let observer: MutationObserver | null = null;
+
+    // The PDF contents sidebar's Exit has no aria-label, only text.
+    const hideTextExit = (shadow: ShadowRoot) => {
+      shadow.querySelectorAll('button').forEach((button) => {
+        if (button.textContent?.trim() === 'Exit') {
+          (button as HTMLElement).style.display = 'none';
+        }
+      });
+    };
 
     const inject = () => {
       try {
         const doc = iframe.contentDocument;
         const shadow = (doc?.getElementById('player') as any)?.shadowRoot;
         if (!shadow) {
-          // Shadow root is created in connectedCallback, once the player
-          // bundle has loaded and upgraded the element.
+          // Shadow root is created in connectedCallback, after the bundle loads.
           if (Date.now() < deadline) frame = requestAnimationFrame(inject);
           return;
         }
-        if (shadow.getElementById('hide-back-button')) return;
-        const style = doc!.createElement('style');
-        style.id = 'hide-back-button';
-        style.textContent = '[aria-label="Go back"] { display: none !important; }';
-        shadow.appendChild(style);
+        if (!shadow.getElementById('hide-back-button')) {
+          const style = doc!.createElement('style');
+          style.id = 'hide-back-button';
+          // "Menu" is the kebab whose only item is Exit.
+          style.textContent =
+            '[aria-label="Go back"], [aria-label="Menu"] { display: none !important; }';
+          shadow.appendChild(style);
+        }
+        hideTextExit(shadow);
+        observer?.disconnect();
+        observer = new MutationObserver(() => hideTextExit(shadow));
+        observer.observe(shadow, { childList: true, subtree: true });
       } catch (error) {
         // Player assets served from another origin — not reachable from here.
-        console.warn('Could not hide player back button:', error);
+        console.warn('Could not hide player back/exit controls:', error);
       }
     };
 
@@ -284,6 +296,7 @@ const ContentPlayerV2 = ({
 
     return () => {
       cancelAnimationFrame(frame);
+      observer?.disconnect();
       iframe.removeEventListener('load', start);
     };
   }, [hideBackButton, playerConfig]);

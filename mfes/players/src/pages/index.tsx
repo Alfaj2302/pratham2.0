@@ -125,6 +125,13 @@ const Players: React.FC<SunbirdPlayerProps> = ({
           "toolbar": "rgba(30,5,20,0.97)",
           "background": "#1a0512"
         }};
+        //drop the player's side menu and Exit in the same flow that hides the back button
+        if (hideBackButton === 'true') {
+          config.config = {
+            ...config.config,
+            sideMenu: { ...config?.config?.sideMenu, enable: false, showExit: false },
+          };
+        }
         setPlayerConfig(config);
       } catch (error) {
         console.error('Error loading content:', error);

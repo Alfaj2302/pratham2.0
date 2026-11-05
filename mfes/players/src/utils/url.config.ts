@@ -75,6 +75,7 @@ export interface Config {
     showRotateButton?: boolean;
   };
   sideMenu?: {
+    enable?: boolean;
     showShare?: boolean;
     showDownload?: boolean;
     showReplay?: boolean;
