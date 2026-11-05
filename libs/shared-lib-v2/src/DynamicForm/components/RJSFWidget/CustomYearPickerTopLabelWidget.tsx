@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, FormControl, FormLabel } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -47,6 +47,8 @@ const CustomYearPickerTopLabelWidget = ({
   const maxYear = Number(options?.maxYear) || new Date().getFullYear();
 
   const isDisabled = uiSchema?.['ui:disabled'] === true;
+  // Opened by clicking anywhere on the field, not only the calendar icon
+  const [open, setOpen] = useState(false);
 
   const yearValue = Number(value);
   const isValidYear =
@@ -107,6 +109,9 @@ const CustomYearPickerTopLabelWidget = ({
             disabled={isDisabled}
             value={selectedYear}
             onChange={handleYearChange}
+            open={open}
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
             views={['year']}
             openTo="year"
             yearsOrder="desc"
@@ -121,6 +126,8 @@ const CustomYearPickerTopLabelWidget = ({
                 error: hasError,
                 helperText: hasError ? errorText : '',
                 inputProps: { readOnly: true },
+                onClick: () => !isDisabled && setOpen(true),
+                sx: { '& .MuiInputBase-root': { cursor: 'pointer' } },
               },
             }}
           />
