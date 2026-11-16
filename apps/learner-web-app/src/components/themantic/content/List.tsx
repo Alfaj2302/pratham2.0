@@ -264,6 +264,7 @@ const List: React.FC<ListProps> = ({
             </Box>
 
           </Box>
+          <KnowledgePartners />
         {pageViews != null && (
           <Box
             sx={{
@@ -284,7 +285,6 @@ const List: React.FC<ListProps> = ({
             </SpeakableText>
           </Box>
         )}
-          <KnowledgePartners />
         </Box>
       </Box>
     </Layout>
