@@ -53,6 +53,7 @@ const AssessmentList = () => {
   const [centerData, setCenterData] = useState<{
     board: string;
     state: string;
+    stream: string[];
   } | null>(null);
   const [assessmentType, setAssessmentType] = useState<string>('pre');
   const [selectedSortOption, setSelectedSortOption] = useState<{
@@ -108,7 +109,15 @@ const AssessmentList = () => {
         cohort.customField.find((item: any) => item.label === 'BOARD')
           ?.selectedValues?.[0] || '';
 
-      setCenterData({ state: selectedState, board: selectedBoard });
+      const selectedStream: string[] =
+        cohort.customField.find((item: any) => item.label === 'STREAM')
+          ?.selectedValues || [];
+
+      setCenterData({
+        state: selectedState,
+        board: selectedBoard,
+        stream: selectedStream,
+      });
     }
   }, [classId, cohortsData]);
 
@@ -134,7 +143,8 @@ const AssessmentList = () => {
   useEffect(() => {
     const getDoIdForAssessmentReport = async (
       selectedState: string,
-      selectedBoard: string
+      selectedBoard: string,
+      selectedStream: string[]
     ) => {
       const filters = {
         program: getTenantProgramFilter(),
@@ -142,6 +152,7 @@ const AssessmentList = () => {
         status: ['Live'],
         primaryCategory: ['Practice Question Set'],
         evaluationType: ['offline'],
+        stream: selectedStream,
       };
       try {
         if (filters) {
@@ -216,7 +227,11 @@ const AssessmentList = () => {
 
     // Fetch when board info is available
     if (centerData && centerData?.board) {
-      getDoIdForAssessmentReport(centerData.state, centerData.board);
+      getDoIdForAssessmentReport(
+        centerData.state,
+        centerData.board,
+        centerData.stream
+      );
     } else {
       // If no board data, ensure loading is false
       setIsLoading(false);

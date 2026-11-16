@@ -336,6 +336,7 @@ export interface GetDoIdServiceParam {
     assessmentType?: string | string[];
     state?: string;
     evaluationType?: string | string[];
+    stream?: string[];
   };
 }
 

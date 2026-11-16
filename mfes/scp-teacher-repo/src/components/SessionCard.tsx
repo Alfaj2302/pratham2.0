@@ -294,6 +294,8 @@ const SessionsCard: React.FC<SessionsCardProps> = ({
         borderRadius: '8px',
         minHeight: '158px',
         position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <Box
@@ -475,7 +477,8 @@ const SessionsCard: React.FC<SessionsCardProps> = ({
         handleCloseModal={() => setMultiBatchConfirmOpen(false)}
         modalOpen={multiBatchConfirmOpen}
       />
-      <Box sx={{ position: 'absolute', bottom: '2px', width: '100%' }}>
+      {/* Footer sits in flow, not absolute, so it can't overlap the meeting link */}
+      <Box sx={{ marginTop: 'auto', paddingBottom: '2px', width: '100%' }}>
         {children}
       </Box>
       <Snackbar

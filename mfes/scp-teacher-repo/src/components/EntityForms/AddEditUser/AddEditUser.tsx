@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
 import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
-import { applyYearPickerFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerWidget';
+import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
+import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
 import Loader from '@/components/Loader';
 import { useTranslation } from 'react-i18next';
 import { useTranslation as useSharedTranslation } from '@shared-lib-v2/lib/context/LanguageContext';
@@ -297,13 +299,22 @@ const AddEditUser = ({
 
     // Pathways asks for the learner's Class 10 passing year through a year picker
     if (isPathwaysLearnerForm) {
-      const yearPickerForm = applyYearPickerFields(
+      const yearPickerForm = applyYearPickerTopLabelFields(
         isEditSchema,
         isEditUiSchema,
         ['inWhichYearDidYouPassClass10']
       );
       isEditSchema = yearPickerForm.schema;
       isEditUiSchema = yearPickerForm.uiSchema;
+      // Class 10 drop downs show their label above the field
+      isEditUiSchema = applyMultiSelectTopLabelFields(isEditUiSchema, [
+        'fromWhichBoardDidYouPassClass10',
+        'whatDivision/PercentageDidYouGetInClass10',
+        "haveYouStudiedInPratham'sSecondChanceProgram",
+      ]);
+      isEditUiSchema = applyTextFieldTopLabelFields(isEditUiSchema, [
+        'fromWhichBoardDidYouPassClass10Other',
+      ]);
     }
 
     setAlteredSchema(isEditSchema);
