@@ -157,7 +157,8 @@ const Assessments = () => {
   useEffect(() => {
     const getDoIdForAssessmentReport = async (
       selectedState: string,
-      selectedBoard: string
+      selectedBoard: string,
+      selectedStream: string[]
     ) => {
       // const stateName = localStorage.getItem('stateName');
 
@@ -169,6 +170,7 @@ const Assessments = () => {
         assessmentType: getAssessmentType(assessmentType),
         primaryCategory: ['Practice Question Set'],
         evaluationType: ['online'],
+        stream: selectedStream,
       };
       try {
         // if (stateName) {
@@ -232,6 +234,10 @@ const Assessments = () => {
         cohort.customField.find((item: any) => item.label === 'BOARD')
           ?.selectedValues?.[0] || '';
 
+      const selectedStream: string[] =
+        cohort.customField.find((item: any) => item.label === 'STREAM')
+          ?.selectedValues || [];
+
       setCenterData({ state: selectedState, board: selectedBoard });
 
       setLearnerList([]);
@@ -239,7 +245,7 @@ const Assessments = () => {
       setAssessmentList([]);
       console.log('selectedState', selectedBoard);
       if (selectedBoard) {
-        getDoIdForAssessmentReport(selectedState, selectedBoard);
+        getDoIdForAssessmentReport(selectedState, selectedBoard, selectedStream);
       }
     }
   }, [assessmentType, classId, cohortsData]);
