@@ -6,6 +6,7 @@ import customTheme from '../styles/CustomTheme';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useChunkErrorReload } from '@shared-lib-v2/hooks/useChunkErrorReload';
+import '@shared-lib-v2/utils/API/secureAuthInterceptor';
 import ImportRunningBanner from '../components/bulk-import/ImportRunningBanner';
 
 function CustomApp({ Component, pageProps }: AppProps) {

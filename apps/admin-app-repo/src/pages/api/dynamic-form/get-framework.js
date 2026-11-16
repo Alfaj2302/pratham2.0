@@ -5,8 +5,16 @@
 // indirect relationships (e.g. board -> medium -> stream) without any
 // category name being hardcoded into the traversal itself, and without
 // requiring the source category's terms to carry a direct association to
-// the target category.
-function findAssociatedTermNames(framework, startTerms, targetCategory, allowedNames) {
+// the target category. Terms of `sourceCategory` itself are never walked
+// through, so a selected board can't reach a sibling board (via a shared
+// medium/grade) and pick up that board's streams.
+function findAssociatedTermNames(
+  framework,
+  startTerms,
+  targetCategory,
+  allowedNames,
+  sourceCategory
+) {
   const allowedSet = Array.isArray(allowedNames) ? new Set(allowedNames) : null;
   const termsByIdentifier = {};
   (framework?.categories ?? []).forEach((category) => {
@@ -33,6 +41,10 @@ function findAssociatedTermNames(framework, startTerms, targetCategory, allowedN
         if (!allowedSet || allowedSet.has(assoc.name)) {
           found.set(assoc.name, true);
         }
+        return;
+      }
+
+      if (sourceCategory && assoc.category === sourceCategory) {
         return;
       }
 
@@ -113,7 +125,34 @@ export default function handler(req, res) {
                   if (filteredData) {
                     const hasAllowedValues =
                       Array.isArray(allowedValues) && allowedValues.length > 0;
-                    if (!directOnly && (hasAllowedValues || useAssociationGraph)) {
+                    const directOptions = filteredData.flatMap((data) =>
+                      (data?.associations ?? [])
+                        .filter((assoc) => assoc?.category === findcode)
+                        .map((assoc) => ({
+                          label: assoc.name,
+                          value: assoc.name,
+                        }))
+                    );
+                    if (
+                      !directOnly &&
+                      (hasAllowedValues || useAssociationGraph) &&
+                      directOptions.length > 0
+                    ) {
+                      // The selected term(s) carry their own direct
+                      // associations to the target category - use exactly
+                      // those. Walking the graph here would also pull in
+                      // targets reachable through terms shared with other
+                      // selections (e.g. a medium shared by two boards),
+                      // leaking another board's streams.
+                      options = hasAllowedValues
+                        ? directOptions.filter((option) =>
+                            allowedValues.includes(option.value)
+                          )
+                        : directOptions;
+                    } else if (
+                      !directOnly &&
+                      (hasAllowedValues || useAssociationGraph)
+                    ) {
                       // Target category isn't necessarily a direct association of
                       // the selected term(s) (e.g. stream is only associated with
                       // medium, not board directly) - walk the association graph
@@ -126,17 +165,11 @@ export default function handler(req, res) {
                         frameworkFilter,
                         filteredData,
                         findcode,
-                        hasAllowedValues ? allowedValues : null
+                        hasAllowedValues ? allowedValues : null,
+                        code
                       ).map((name) => ({ label: name, value: name }));
                     } else {
-                      options = filteredData?.flatMap((data) =>
-                        (data?.associations ?? []) // Ensure associations exist, default to empty array
-                          .filter((assoc) => assoc?.category === findcode)
-                          .map((assoc) => ({
-                            label: assoc.name,
-                            value: assoc.name,
-                          }))
-                      );
+                      options = directOptions;
                     }
                   }
                   options = options.filter(keepAllowed);

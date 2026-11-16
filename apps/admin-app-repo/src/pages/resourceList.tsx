@@ -170,6 +170,7 @@ console.log('preRequisitefetchedLearningResources', fetchedLearningResources);
                   appIcon={item?.appIcon}
                   identifier={item.identifier}
                   mimeType={item.mimeType}
+                  hideBackButton
                 />
               </Grid>
             ))}
@@ -193,6 +194,7 @@ console.log('preRequisitefetchedLearningResources', fetchedLearningResources);
                   appIcon={item?.appIcon}
                   identifier={item.identifier}
                   mimeType={item.mimeType}
+                  hideBackButton
                 />
               </Grid>
             ))}
@@ -216,6 +218,7 @@ console.log('preRequisitefetchedLearningResources', fetchedLearningResources);
                   appIcon={item?.appIcon}
                   identifier={item.identifier}
                   mimeType={item.mimeType}
+                  hideBackButton
                 />
               </Grid>
             ))}
@@ -242,6 +245,7 @@ console.log('preRequisitefetchedLearningResources', fetchedLearningResources);
                   appIcon={item?.appIcon}
                   identifier={item.identifier}
                   mimeType={item.mimeType}
+                  hideBackButton
                 />
               </Grid>
             ))}

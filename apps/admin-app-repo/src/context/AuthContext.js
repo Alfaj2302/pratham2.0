@@ -1,4 +1,8 @@
 // context/AuthContext.js
+import {
+  clearSecureRefreshToken,
+  getSecureRefreshToken,
+} from '@shared-lib-v2/utils/secureTokenStorage';
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -39,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutFun = async () => {
     try {
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = await getSecureRefreshToken();
       if (refreshToken) {
         await logout(refreshToken);
       }
@@ -47,6 +51,7 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
     }
     localStorage.removeItem("token");
+    clearSecureRefreshToken();
 
     router.replace("/login");
   };

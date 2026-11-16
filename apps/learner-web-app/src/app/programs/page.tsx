@@ -29,12 +29,30 @@ function ProgramsContent() {
   const [userId, setUserId] = useState<string | null>(null);
   const [isAndroidApp, setIsAndroidApp] = useState(true);
   const [isCheckingEnrollTenantId, setIsCheckingEnrollTenantId] = useState(false);
+  const [hideExploreTab, setHideExploreTab] = useState(false);
   useEffect(() => {
     const processData = async () => {
       // Safely access localStorage only on client side
       const storedUserId = localStorage.getItem('userId');
+
+      // Hide Explore tab for pratham.org users (email from user read API).
+      // Resolved before setUserId so the Explore tab never flashes for them.
+      let isPrathamOrgUser = false;
+      if (storedUserId) {
+        try {
+          const userDetails = await getUserDetails(storedUserId, true);
+          const email = userDetails?.result?.userData?.email || '';
+          isPrathamOrgUser = email.trim().toLowerCase().endsWith('@pratham.org');
+        } catch (error) {
+          console.error('Failed to fetch user email:', error);
+        }
+      }
+      setHideExploreTab(isPrathamOrgUser);
+      if (isPrathamOrgUser) {
+        setCurrentTab(1);
+      }
       setUserId(storedUserId);
-      
+
       // Check if user is on Android app
       const isAndroid = localStorage.getItem('isAndroidApp') === 'yes';
       setIsAndroidApp(isAndroid);
@@ -212,7 +230,7 @@ function ProgramsContent() {
 
       // Read tab from query params on mount
       const tabParam = searchParams.get('tab');
-      if (tabParam === 'my-programs') {
+      if (isPrathamOrgUser || tabParam === 'my-programs') {
         setCurrentTab(1);
       } else if (tabParam === 'explore') {
         setCurrentTab(0);
@@ -371,8 +389,10 @@ function ProgramsContent() {
               },
             }}
           >
-            <Tab label={t('LEARNER_APP.PROGRAMS.EXPLORE_PROGRAMS')} />
-            <Tab label={t('LEARNER_APP.PROGRAMS.MY_PROGRAMS')} />
+            {!hideExploreTab && (
+              <Tab value={0} label={t('LEARNER_APP.PROGRAMS.EXPLORE_PROGRAMS')} />
+            )}
+            <Tab value={1} label={t('LEARNER_APP.PROGRAMS.MY_PROGRAMS')} />
           </Tabs>
           {/* </Container> */}
         </Box>
@@ -385,7 +405,7 @@ function ProgramsContent() {
               : { xs: '100px', sm: '90px', md: '80px' },
           }}
         >
-          {currentTab === 0 && userId !== null && (
+          {currentTab === 0 && !hideExploreTab && userId !== null && (
             <>
               {/* Learner programs */}
               <Box sx={{ backgroundColor: '#fff', py: { xs: 2, md: 3 } }}>

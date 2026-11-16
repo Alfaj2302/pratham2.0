@@ -31,6 +31,7 @@ import { showToastMessage } from '../Toastify';
 import { LocationFilters } from './types';
 import { editEditUser } from '../../services/ProfileService';
 import { Role } from '../../utils/app.constant';
+import { getInterestedToJoinFieldId } from '../../utils/helper';
 
 interface AssignBatchModalProps {
   open: boolean;
@@ -102,18 +103,21 @@ const AssignBatchModal: React.FC<AssignBatchModalProps> = ({
           updateUserTenantStatus(userId, tenantId, 'active')
         )
       );
-      const userDetails = {
-        userData: {},
-        customFields: [
-          {
-            fieldId: 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
-            value: 'joined',
-          },
-        ],
-      };
-      await Promise.all(
-        selectedLearnerIds.map((userId) => editEditUser(userId, userDetails))
-      );
+      const interestedToJoinFieldId = getInterestedToJoinFieldId();
+      if (interestedToJoinFieldId) {
+        const userDetails = {
+          userData: {},
+          customFields: [
+            {
+              fieldId: interestedToJoinFieldId,
+              value: 'joined',
+            },
+          ],
+        };
+        await Promise.all(
+          selectedLearnerIds.map((userId) => editEditUser(userId, userDetails))
+        );
+      }
 
       await bulkCreateCohortMembers({
         userId: selectedLearnerIds,

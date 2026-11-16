@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Link, Typography, useRadioGroup } from '@mui/material';
 import SimpleModal from '@learner/components/SimpleModal/SimpleModal';
 import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
 import axios from 'axios';
 
 import DynamicForm from '@shared-lib-v2/DynamicForm/components/DynamicForm';
+import DynamicFormV3 from '@shared-lib-v2/DynamicForm/components/DynamicFormV3';
+import { applyYearPickerTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomYearPickerTopLabelWidget';
+import { applyMultiSelectTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomMultiSelectTopLabelWidget';
+import { applyTextFieldTopLabelFields } from '@shared-lib-v2/DynamicForm/components/RJSFWidget/CustomTextFieldTopLabelWidget';
+import { TenantName } from '@learner/utils/app.constant';
 import {
   fetchForm,
   splitUserData,
@@ -38,9 +43,11 @@ import {
   updateUser,
 } from '@learner/utils/API/userService';
 import Header from '../Header/Header';
+import ConsentCheckbox from '../ConsentCheckbox/ConsentCheckbox';
 
 //volunteer onboarding
 import VolunteerOnboard from '@shared-lib-v2/VolunteerOnboard/VolunteerOnboard';
+import { getInterestedToJoinFieldId } from '@shared-lib-v2/utils/helper';
 
 declare global {
   interface Window {
@@ -114,6 +121,16 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
       ? t('NAVAPATHAM.NAVAPATHAM')
       : localStorage.getItem('userProgram') || '';
   };
+  // Pathways learners fill their profile with DynamicFormV3; other programs keep DynamicForm
+  const isPathwaysProgram =
+    typeof window !== 'undefined' &&
+    window.localStorage &&
+    localStorage.getItem('userProgram')?.toLowerCase() ===
+      TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS.toLowerCase();
+  const LearnerForm = isPathwaysProgram ? DynamicFormV3 : DynamicForm;
+  // Enrolling into Pathways shows one field per row and asks for personal data consent
+  const isPathwaysEnrollment = isPathwaysProgram && !!enrolledProgram;
+  const [consentAccepted, setConsentAccepted] = useState(false);
   // let formData: any = {};
   const [loading, setLoading] = useState(true);
   const [invalidLinkModal, setInvalidLinkModal] = useState(false);
@@ -121,6 +138,10 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
   const localFormData = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('formData') || '{}') : {};
   const [userFormData, setUserFormData] = useState<any>(localFormData);
   const [userData, setuserData] = useState<any>({});
+  // Complete-profile and enroll-program strip marital_status out of the form when it isn't
+  // required, but DynamicForm still needs the saved value to know whether "spouse" is a valid
+  // family member option - keep it separately so it survives those reduced prefilledFormData shapes.
+  const [maritalStatusValue, setMaritalStatusValue] = useState<string | undefined>(undefined);
   const [responseFormData, setResponseFormData] = useState<any>({});
   const localPayload = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('localPayload') || '{}') : {};
   const uiConfig =
@@ -134,6 +155,25 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
 
   const [addSchema, setAddSchema] = useState(null);
   const [addUiSchema, setAddUiSchema] = useState(null);
+  // Complete-profile form shows the missing fields plus the saved fields that
+  // control them (see getMissingFields); prefill whatever was already saved.
+  const completeProfilePrefill = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.keys((addSchema as any)?.properties || {})
+          .filter((key) => {
+            const value = userFormData?.[key];
+            return (
+              value !== undefined &&
+              value !== null &&
+              value !== '' &&
+              !(Array.isArray(value) && value.length === 0)
+            );
+          })
+          .map((key) => [key, userFormData[key]])
+      ),
+    [addSchema, userFormData]
+  );
 
   // Mobile field states
   const [mobileAddUiSchema, setMobileAddUiSchema] = useState({});
@@ -279,7 +319,12 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
           const useInfo = await getUserDetails(userId, true);
           console.log('useInfo', useInfo?.result?.userData);
           setuserData(useInfo?.result?.userData);
-          const mappedData = mapUserData(useInfo?.result?.userData);
+          // Pass the form schema so custom fields outside mapUserData's fixed list prefill too
+          const mappedData = mapUserData(
+            useInfo?.result?.userData,
+            responseFormCopy?.schema
+          );
+          setMaritalStatusValue(mappedData?.marital_status);
 
           // console.log("responseFormForEnroll", responseFormForEnroll?.schema?.properties)
           const keyNames = Object.keys(responseFormForEnroll?.schema?.properties);
@@ -495,8 +540,27 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
               (item:any) => !['nda_policy', 'child_pocso_fraud_policy'].includes(item)
             );
           }
-          setAddSchema(alterSchema);
           alterUISchema.mobile = responseForm?.uiSchema?.mobile
+          // Pathways asks for the Class 10 passing year through a year picker
+          if (isPathwaysProgram) {
+            const yearPickerForm = applyYearPickerTopLabelFields(
+              alterSchema,
+              alterUISchema,
+              ['inWhichYearDidYouPassClass10']
+            );
+            alterSchema = yearPickerForm.schema;
+            alterUISchema = yearPickerForm.uiSchema;
+            // Class 10 drop downs show their label above the field
+            alterUISchema = applyMultiSelectTopLabelFields(alterUISchema, [
+              'fromWhichBoardDidYouPassClass10',
+              'whatDivision/PercentageDidYouGetInClass10',
+              "haveYouStudiedInPratham'sSecondChanceProgram",
+            ]);
+            alterUISchema = applyTextFieldTopLabelFields(alterUISchema, [
+              'fromWhichBoardDidYouPassClass10Other',
+            ]);
+          }
+          setAddSchema(alterSchema);
           console.log("alterUISchema", alterUISchema);
           setAddUiSchema(alterUISchema);
         }
@@ -528,7 +592,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
         }
 
         // Push grid option
-        if(['nda_policy','child_pocso_fraud_policy']?.includes(fieldKey)){
+        if(isPathwaysEnrollment || ['nda_policy','child_pocso_fraud_policy']?.includes(fieldKey)){
           enhancedSchema[fieldKey]['ui:options'].grid = { xs: 12, sm: 12, md: 12 };
         }
         else{
@@ -597,6 +661,10 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
       console.log('Already submitting, ignoring duplicate submission');
       return;
     }
+    // Finish Enroll stays disabled without consent; this also blocks an Enter-key submit
+    if (isPathwaysEnrollment && !consentAccepted) {
+      return;
+    }
 
     setIsSubmitting(true);
     console.log('formData', formData);
@@ -608,19 +676,22 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
     const { userData, customFields = [] } = splitUserData(payload);
     //custom field hardcoded for pending status
     const data = {
-      fieldId:
-        'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+      fieldId: getInterestedToJoinFieldId(),
       value: 'pending'
     }
     const storedUiConfig = JSON.parse(localStorage.getItem('uiConfig') || '{}');
     const userTenantStatus = storedUiConfig?.isTenantPendingStatus;
-    if (enrolledProgram && userTenantStatus) {
+    if (enrolledProgram && userTenantStatus && data.fieldId) {
       customFields.push(data);
     }
 
-    // Ensure "WHAT PROGRAM ARE YOU PART OF" is explicitly sent even when empty
+    // Ensure "WHAT PROGRAM ARE YOU PART OF" is explicitly sent even when empty,
+    // but only when it was actually part of the form rendered this submission -
+    // `responseFormData` is the tenant's full master schema and always has this
+    // field, so keying off it wiped the saved value on unrelated submits (e.g.
+    // a Complete Profile form that only asked for Middle Name).
     const programSchema =
-      responseFormData?.schema?.properties?.what_program_are_you_part_of;
+      (addSchema as any)?.properties?.what_program_are_you_part_of;
     const programFieldId = programSchema?.fieldId;
 
     const programFieldIndex = customFields.findIndex(
@@ -918,7 +989,7 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         </Box>
                       )}
                     {addSchema && addUiSchema && (
-                      <DynamicForm
+                      <LearnerForm
                         schema={addSchema}
                         uiSchema={addUiSchema}
                         mobileAddUiSchema={mobileAddUiSchema}
@@ -927,14 +998,34 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         parentDataSchema={parentDataSchema}
                         forEditedschema={responseFormData?.schema?.properties}
                         FormSubmitFunction={FormSubmitFunction}
-                        prefilledFormData={completeProfile && !enrolledProgram ? {}: enrolledProgram && isModeOfLearningPresent ? { preferred_mode_of_learning: 'remote' } : userFormData}
+                        prefilledFormData={{
+                          ...(completeProfile && !enrolledProgram
+                            ? completeProfilePrefill
+                            : enrolledProgram && isModeOfLearningPresent
+                            ? { preferred_mode_of_learning: 'remote' }
+                            : userFormData),
+                          // Carry the already-known marital status through even on the reduced
+                          // shapes above, so the family-member-details gating in DynamicForm can
+                          // still hide "spouse" for a learner who is Unmarried.
+                          ...(maritalStatusValue
+                            ? { marital_status: maritalStatusValue }
+                            : {}),
+                        }}
                         hideSubmit={true}
                         type="learner"
                         isCompleteProfile={completeProfile}
                         createNew={false}
                       />
                     )}
+                    {isPathwaysEnrollment && addSchema && (
+                      <ConsentCheckbox
+                        checked={consentAccepted}
+                        onChange={setConsentAccepted}
+                        consentFormUrl={uiConfig?.consentFormUrl}
+                      />
+                    )}
                     <Button
+                      disabled={isPathwaysEnrollment && !consentAccepted}
                       sx={{
                         mt: 3,
                         backgroundColor: '#FFC107',
@@ -942,6 +1033,10 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         fontWeight: 'bold',
                         '&:hover': {
                           backgroundColor: '#ffb300',
+                        },
+                        '&:disabled': {
+                          backgroundColor: '#E0E0E0',
+                          color: '#9E9E9E',
                         },
                       }}
                       form="dynamic-form-id"

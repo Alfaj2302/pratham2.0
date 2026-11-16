@@ -26,6 +26,7 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { Box, IconButton } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import { useChunkErrorReload } from '@shared-lib-v2/hooks/useChunkErrorReload';
+import '@shared-lib-v2/utils/API/secureAuthInterceptor';
 import { useLanguageFromStorage } from '@shared-lib-v2/hooks/useLanguageFromStorage';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });

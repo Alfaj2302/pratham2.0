@@ -1290,3 +1290,16 @@ export const eventBelongsToCohort = (event: any, cohortId: string) => {
   if (!singular) return true;
   return singular === cohortId;
 };
+
+// SCP and Pathways each capture "interested to join" in their own custom field
+const INTERESTED_TO_JOIN_FIELD_ID: Record<string, string> = {
+  'second chance program': 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+  pathways: '46c1b672-19fe-4ea6-ad13-a7b419340da6',
+};
+
+// Returns undefined for programs other than SCP and Pathways
+export const getInterestedToJoinFieldId = (): string | undefined => {
+  if (typeof window === 'undefined') return undefined;
+  const tenantName = localStorage.getItem('tenantName')?.toLowerCase() || '';
+  return INTERESTED_TO_JOIN_FIELD_ID[tenantName];
+};

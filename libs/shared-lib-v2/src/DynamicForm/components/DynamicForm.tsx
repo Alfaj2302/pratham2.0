@@ -293,6 +293,13 @@ const DynamicForm = forwardRef(({
   const originalMobileSchemaRef = useRef(null);
   const originalMobileUiSchemaRef = useRef(null);
 
+  // "Spouse" is only a valid family member option while marital_status is not Unmarried.
+  // Stash the untouched enum/enumNames once so they can be restored if marital_status changes back.
+  const originalFamilyMemberDetailsOptionsRef = useRef<{
+    enum: any[];
+    enumNames?: any[];
+  } | null>(null);
+
   //custom validation on formData for learner fields hide on dob
   useEffect(() => {
     if (type == 'learner' && !isReassign) {
@@ -849,6 +856,90 @@ const DynamicForm = forwardRef(({
     }
   }, [formData]);
 
+  // Once marital_status is Unmarried, "spouse" is no longer a valid family member: drop it from
+  // the Family Member Details choices (so it can't be selected) and clear any spouse selection/name
+  // already on the form (so it can't be retained or resubmitted).
+  useEffect(() => {
+    // formData can be null on first render for some consumers (createNew + null
+    // prefilledFormData). The deps array below reads formData?.* on every render, including
+    // Next.js static prerendering, so this must guard before that - not just inside the effect.
+    if (!formData) {
+      return;
+    }
+
+    const familyMemberDetailsSchema =
+      formSchema?.properties?.family_member_details;
+    if (
+      !familyMemberDetailsSchema ||
+      !Array.isArray(familyMemberDetailsSchema.enum)
+    ) {
+      return;
+    }
+
+    if (!originalFamilyMemberDetailsOptionsRef.current) {
+      originalFamilyMemberDetailsOptionsRef.current = {
+        enum: [...familyMemberDetailsSchema.enum],
+        enumNames: familyMemberDetailsSchema.enumNames
+          ? [...familyMemberDetailsSchema.enumNames]
+          : undefined,
+      };
+    }
+
+    const original = originalFamilyMemberDetailsOptionsRef.current;
+    const spouseIndex = original.enum.findIndex(
+      (optionValue) => String(optionValue).trim().toLowerCase() === 'spouse'
+    );
+    if (spouseIndex === -1) {
+      return;
+    }
+
+    const isUnmarried = String(formData?.marital_status ?? '')
+      .trim()
+      .toLowerCase()
+      .includes('unmarried');
+
+    const desiredEnum = isUnmarried
+      ? original.enum.filter((_option, index) => index !== spouseIndex)
+      : original.enum;
+    const desiredEnumNames = original.enumNames
+      ? isUnmarried
+        ? original.enumNames.filter((_option, index) => index !== spouseIndex)
+        : original.enumNames
+      : undefined;
+
+    if (
+      !_.isEqual(familyMemberDetailsSchema.enum, desiredEnum) ||
+      !_.isEqual(familyMemberDetailsSchema.enumNames, desiredEnumNames)
+    ) {
+      setFormSchema((prevSchema) => {
+        if (!prevSchema?.properties?.family_member_details) return prevSchema;
+        return {
+          ...prevSchema,
+          properties: {
+            ...prevSchema.properties,
+            family_member_details: {
+              ...prevSchema.properties.family_member_details,
+              enum: desiredEnum,
+              ...(desiredEnumNames ? { enumNames: desiredEnumNames } : {}),
+            },
+          },
+        };
+      });
+    }
+
+    if (isUnmarried && formData?.family_member_details === 'spouse') {
+      setFormData((prev) => ({
+        ...prev,
+        family_member_details: undefined,
+        spouse_name: undefined,
+      }));
+    }
+  }, [
+    formData?.marital_status,
+    formData?.family_member_details,
+    formSchema?.properties?.family_member_details,
+  ]);
+
   const widgets = {
     CustomMultiSelectWidget,
     AutoCompleteMultiSelectWidget,
@@ -1186,7 +1277,26 @@ const DynamicForm = forwardRef(({
     const initialApis = extractApiProperties(schema, 'initial');
     // // console.log('initialApis', initialApis);
     // console.log('dependentFields', dependentApis);
-    if (dependentApis.length > 0 && initialApis.length > 0) {
+    // A prefilled dependent field can be controlled by a field with a static
+    // enum and no `api` (e.g. BatchFlow's stream -> board, where board's api
+    // is replaced by the center's own values), leaving no `initial` APIs at
+    // all - its options still need fetching here or the saved value can't
+    // render on edit.
+    const hasPrefilledStaticControlledDependent = dependentApis.some(
+      (field) => {
+        const controllingKey = field?.api?.dependent;
+        return (
+          controllingKey &&
+          !schema.properties[controllingKey]?.api &&
+          temp_prefilled_form[controllingKey] !== undefined &&
+          temp_prefilled_form[field.key] !== undefined
+        );
+      }
+    );
+    if (
+      dependentApis.length > 0 &&
+      (initialApis.length > 0 || hasPrefilledStaticControlledDependent)
+    ) {
       let initialKeys = initialApis.map((item) => item.key);
       let dependentKeys = dependentApis.map((item) => item.key);
       dependentKeys = [...initialKeys, ...dependentKeys];

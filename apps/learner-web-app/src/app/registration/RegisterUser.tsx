@@ -44,6 +44,7 @@ import { useSearchParams } from 'next/navigation';
 import { getTenantInfo } from '@learner/utils/API/ProgramService';
 import Image from 'next/image';
 import SwitchAccountDialog from '@shared-lib-v2/SwitchAccount/SwitchAccount';
+import { setSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 
 type UserAccount = {
   name: string;
@@ -485,6 +486,7 @@ const RegisterUser = () => {
             const token = response.result.access_token;
             const refreshToken = response?.result?.refresh_token;
             localStorage.setItem('token', token);
+            await setSecureRefreshToken(refreshToken);
 
             const userResponseData = await getUserId();
             setUserResponse(userResponseData);

@@ -9,6 +9,7 @@ import ClientLayout from './ClientLayout';
 import GoogleAnalyticsTracker from '@learner/components/GoogleAnalyticsTracker/GoogleAnalyticsTracker';
 import { FooterWrapper } from '@learner/components/Footer';
 import ChunkReloadGuard from '@shared-lib-v2/lib/ChunkReloadGuard/ChunkReloadGuard';
+import SecureAuthGuard from '@shared-lib-v2/lib/SecureAuthGuard/SecureAuthGuard';
 
 export const metadata = {
   title: 'Welcome to learner-web-app',
@@ -76,6 +77,7 @@ export default function RootLayout({
       </head>
       <body>
           <ChunkReloadGuard />
+          <SecureAuthGuard />
           <ClientLayout>
 
           <MuiThemeProviderWithLanguage>

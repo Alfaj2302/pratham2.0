@@ -30,6 +30,7 @@ import TenantService from '@/services/TenantService';
 import MenuWrapper from '../config/MenuWrapper';
 import { LanguageProvider } from '@shared-lib-v2/lib/context/LanguageContext';
 import { useChunkErrorReload } from '@shared-lib-v2/hooks/useChunkErrorReload';
+import '@shared-lib-v2/utils/API/secureAuthInterceptor';
 import { useLanguageFromStorage } from '@shared-lib-v2/hooks/useLanguageFromStorage';
 import { PUBLIC_ROUTES } from '@/config/routesConfig';
 

@@ -37,6 +37,7 @@ const Players: React.FC<SunbirdPlayerProps> = ({
     identifier: queryIdentifier,
     firstName,
     lastName,
+    hideBackButton,
   } = router.query ?? {}; // Get identifier from the query
   const identifier = propIdentifier || queryIdentifier; // Prefer prop over query
   const [playerConfig, setPlayerConfig] = useState<PlayerConfig | undefined>(
@@ -124,6 +125,13 @@ const Players: React.FC<SunbirdPlayerProps> = ({
           "toolbar": "rgba(30,5,20,0.97)",
           "background": "#1a0512"
         }};
+        //drop the player's side menu and Exit in the same flow that hides the back button
+        if (hideBackButton === 'true') {
+          config.config = {
+            ...config.config,
+            sideMenu: { ...config?.config?.sideMenu, enable: false, showExit: false },
+          };
+        }
         setPlayerConfig(config);
       } catch (error) {
         console.error('Error loading content:', error);
@@ -175,6 +183,7 @@ const Players: React.FC<SunbirdPlayerProps> = ({
             configFunctionality={{ isGenerateCertificate, trackable }}
             firstName={firstName as string}
             lastName={lastName as string}
+            hideBackButton={hideBackButton === 'true'}
           />
         </Box>
       )}

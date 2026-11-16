@@ -88,12 +88,24 @@ export const getUserId = async (): Promise<any> => {
     throw error;
   }
 };
-export const resetPassword = async (newPassword: any): Promise<any> => {
+// The API verifies oldPassword itself, so callers must not log in to check it first
+export const resetPassword = async (
+  newPassword: any,
+  oldPassword?: any,
+  username?: string
+): Promise<any> => {
   const apiUrl: string = API_ENDPOINTS.resetPassword;
   try {
-    const response = await post(apiUrl, {
+    const payload: Record<string, any> = {
       newPassword: await encryptPassword(newPassword),
-    });
+    };
+    if (oldPassword) {
+      payload.oldPassword = await encryptPassword(oldPassword);
+    }
+    if (username) {
+      payload.username = username;
+    }
+    const response = await post(apiUrl, payload);
     return response?.data;
   } catch (error) {
     console.error('error in reset', error);

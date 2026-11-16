@@ -131,7 +131,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ onSubmit }) => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleToggleConfirmPasswordVisibility}>
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),

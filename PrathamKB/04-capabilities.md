@@ -14,7 +14,7 @@
 - **Related Repos/MFEs**: `mfes/authentication`, `mfes/login`, `mfes/forget-password`,
   `apps/admin-app-repo`, `apps/teachers`, `apps/learner-web-app`, `libs/shared-lib-v2`
   (`AuthService`)
-- **Primary APIs**: `POST /account/login`, `POST /account/auth/refresh`, `POST /user/send-otp`,
+- **Primary APIs**: `POST /account/login`, `POST /user/auth/refresh`, `POST /user/send-otp`,
   `POST /user/verify-otp`
 - **Related Programs**: All
 - **Known Issues**:

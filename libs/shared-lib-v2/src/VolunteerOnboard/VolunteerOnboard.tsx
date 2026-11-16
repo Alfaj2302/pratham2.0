@@ -24,6 +24,7 @@ import { fetchActiveAcademicYearId } from '../DynamicForm/utils/helper';
 import { post } from '../DynamicForm/services/RestClient';
 import API_ENDPOINTS from '../DynamicForm/utils/API/APIEndpoints';
 import { readUserIdTrue } from '../DynamicForm/services/NotificationService';
+import { getInterestedToJoinFieldId } from '../utils/helper';
 
 interface VolunteerOnboardProps {
   t: any;
@@ -476,13 +477,12 @@ const VolunteerOnboard: React.FC<VolunteerOnboardProps> = ({
         const { userData, customFields = [] } = splitUserData(submitPayload);
         //custom field hardcoded for pending status
         const data = {
-          fieldId:
-            'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+          fieldId: getInterestedToJoinFieldId(),
           value: 'pending'
         }
         const storedUiConfig = JSON.parse(localStorage.getItem('uiConfig') || '{}');
         const userTenantStatus = storedUiConfig?.isTenantPendingStatus;
-        if (enrolledProgram && userTenantStatus) {
+        if (enrolledProgram && userTenantStatus && data.fieldId) {
           customFields.push(data);
         }
         if(localStorage.getItem('temp_program_type') == 'VolunteerOnboarding'){

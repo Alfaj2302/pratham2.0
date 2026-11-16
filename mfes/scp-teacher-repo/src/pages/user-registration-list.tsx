@@ -13,6 +13,7 @@ import MoreOptionsBottomSheet from '../components/UserRegistration/MoreOptionsBo
 import LocationDropdowns from '../components/UserRegistration/LocationDropdowns';
 import { fetchUserList } from '../services/ManageUser';
 import { editEditUser } from '../services/ProfileService';
+import { getInterestedToJoinFieldId } from '../utils/helper';
 import { getZatpatTestIdentifiers, getUserAssessmentStatus } from '../services/AssesmentService';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withRole from '../components/withRole';
@@ -631,11 +632,16 @@ const UserRegistrationList = () => {
       return;
     }
 
+    const interestedToJoinFieldId = getInterestedToJoinFieldId();
+    if (!interestedToJoinFieldId) {
+      return;
+    }
+
     const userDetails = {
       userData: {},
       customFields: [
         {
-          fieldId: 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+          fieldId: interestedToJoinFieldId,
           value: 'no',
         },
       ],
@@ -659,11 +665,16 @@ const UserRegistrationList = () => {
       return;
     }
 
+    const interestedToJoinFieldId = getInterestedToJoinFieldId();
+    if (!interestedToJoinFieldId) {
+      return;
+    }
+
     const userDetails = {
       userData: {},
       customFields: [
         {
-          fieldId: 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+          fieldId: interestedToJoinFieldId,
           value: 'yes',
         },
       ],

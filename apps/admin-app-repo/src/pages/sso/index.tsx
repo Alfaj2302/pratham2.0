@@ -28,6 +28,8 @@ import useSubmittedButtonStore from '@/utils/useSharedState';
 import TenantService from '@/services/TenantService';
 import { transformLabel } from '@/utils/helper';
 import useStore from '@/store/store';
+import { setSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
+import { startSessionTimer } from '@shared-lib-v2/utils/sessionTimeout';
 
 interface SSOAuthParams {
   accessToken: string;
@@ -206,11 +208,8 @@ const SSOContent = () => {
       const token = response.access_token;
       const refreshToken = response?.refresh_token;
       localStorage.setItem('token', token);
-      if (data?.remember) {
-        localStorage.setItem('refreshToken', refreshToken);
-      } else {
-        localStorage.removeItem('refreshToken');
-      }
+      await setSecureRefreshToken(refreshToken);
+      startSessionTimer();
 
       const userResponse = await getUserId();
       console.log('userResponse=========>', userResponse);
@@ -484,87 +483,86 @@ const SSOContent = () => {
           localStorage.setItem('adminInfo', JSON.stringify(userInfo.userData));
         }
 
-        // YOUTHNET (Vocational Training / smartclassroom) has no academic years — redirect directly
-        if (tenantData?.tenantName == TenantName.YOUTHNET) {
-          if (
-            userInfo?.userData?.role === Role.SCTA ||
-            userInfo?.userData?.role === Role.CCTA ||
-            roleName === Role.SCTA ||
-            roleName === Role.CCTA
-          ) {
-            router.push('/workspace');
-          } else if (
-            userInfo?.userData?.role === Role.ADMIN ||
-            userInfo?.userData?.role === Role.CENTRAL_ADMIN
-          ) {
-            router.push('/user-leader');
-          }
-        } else {
-          const getAcademicYearList = async () => {
-            const academicYearList = await getAcademicYear();
-            if (academicYearList) {
-              localStorage.setItem(
-                'academicYearList',
-                JSON.stringify(academicYearList)
-              );
-              const extractedAcademicYears = academicYearList?.map(
-                ({ id, session, isActive }: { id: string; session: string; isActive: boolean }) => ({ id, session, isActive })
-              );
-              const activeSession = extractedAcademicYears?.find(
-                (item: { id: string; session: string; isActive: boolean }) => item.isActive
-              );
-              const activeSessionId = activeSession ? activeSession.id : '';
-              localStorage.setItem('academicYearId', activeSessionId);
-              localStorage.setItem('session', activeSession?.session ?? '');
-              if (activeSessionId) {
-                setIsActiveYearSelected(true);
-                if (
-                  userInfo?.userData?.role === Role.SCTA ||
-                  userInfo?.userData?.role === Role.CCTA
+        // Vocational Training has academic years too, so it goes through the
+        // same flow as every other tenant — only its landing routes differ.
+        const getAcademicYearList = async () => {
+          const academicYearList = await getAcademicYear();
+          if (academicYearList) {
+            localStorage.setItem(
+              'academicYearList',
+              JSON.stringify(academicYearList)
+            );
+            const extractedAcademicYears = academicYearList?.map(
+              ({ id, session, isActive }: { id: string; session: string; isActive: boolean }) => ({ id, session, isActive })
+            );
+            const activeSession = extractedAcademicYears?.find(
+              (item: { id: string; session: string; isActive: boolean }) => item.isActive
+            );
+            const activeSessionId = activeSession ? activeSession.id : '';
+            localStorage.setItem('academicYearId', activeSessionId);
+            localStorage.setItem('session', activeSession?.session ?? '');
+            if (activeSessionId) {
+              setIsActiveYearSelected(true);
+              if (
+                userInfo?.userData?.role === Role.SCTA ||
+                userInfo?.userData?.role === Role.CCTA
+              ) {
+                const { locale } = router;
+                if (tenantData?.tenantName == TenantName.YOUTHNET) {
+                  router.push('/workspace');
+                } else if (
+                  !isSecondChanceTenant(tenantData?.tenantName)
                 ) {
-                  const { locale } = router;
+                  router.push('/faqs');
+                } else {
+                  if (locale) {
+                    router.push('/course-planner', undefined, { locale: locale });
+                  } else router.push('/course-planner');
+                }
+              } else {
+                const { locale } = router;
+                if (locale) {
                   if (
-                    !isSecondChanceTenant(tenantData?.tenantName)
+                    userInfo?.userData?.role === Role.CENTRAL_ADMIN &&
+                    isSecondChanceTenant(tenantData?.tenantName)
                   ) {
-                    router.push('/faqs');
-                  } else {
-                    if (locale) {
-                      router.push('/course-planner', undefined, { locale: locale });
-                    } else router.push('/course-planner');
+                    router.push('/programs', undefined, { locale: locale });
+                  } else if (
+                    userInfo?.userData?.role === Role.ADMIN &&
+                    isSecondChanceTenant(tenantData?.tenantName)
+                  ) {
+                    router.push('/centers', undefined, { locale: locale });
+                  } else if (
+                    (userInfo?.userData?.role === Role.ADMIN ||
+                      userInfo?.userData?.role === Role.CENTRAL_ADMIN) &&
+                    tenantData?.tenantName == TenantName.YOUTHNET
+                  ) {
+                    router.push('/user-leader', undefined, { locale: locale });
                   }
                 } else {
-                  const { locale } = router;
-                  if (locale) {
-                    if (
-                      userInfo?.userData?.role === Role.CENTRAL_ADMIN &&
-                      isSecondChanceTenant(tenantData?.tenantName)
-                    ) {
-                      router.push('/programs', undefined, { locale: locale });
-                    } else if (
-                      userInfo?.userData?.role === Role.ADMIN &&
-                      isSecondChanceTenant(tenantData?.tenantName)
-                    ) {
-                      router.push('/centers', undefined, { locale: locale });
-                    }
-                  } else {
-                    if (
-                      userInfo?.userData?.role === Role.CENTRAL_ADMIN &&
-                      isSecondChanceTenant(tenantData?.tenantName)
-                    ) {
-                      router.push('/programs');
-                    } else if (
-                      userInfo?.userData?.role === Role.ADMIN &&
-                      isSecondChanceTenant(tenantData?.tenantName)
-                    ) {
-                      router.push('/centers');
-                    }
+                  if (
+                    userInfo?.userData?.role === Role.CENTRAL_ADMIN &&
+                    isSecondChanceTenant(tenantData?.tenantName)
+                  ) {
+                    router.push('/programs');
+                  } else if (
+                    userInfo?.userData?.role === Role.ADMIN &&
+                    isSecondChanceTenant(tenantData?.tenantName)
+                  ) {
+                    router.push('/centers');
+                  } else if (
+                    (userInfo?.userData?.role === Role.ADMIN ||
+                      userInfo?.userData?.role === Role.CENTRAL_ADMIN) &&
+                    tenantData?.tenantName == TenantName.YOUTHNET
+                  ) {
+                    router.push('/user-leader');
                   }
                 }
               }
             }
-          };
-          await getAcademicYearList();
-        }
+          }
+        };
+        await getAcademicYearList();
       }
 
       const telemetryInteract = {

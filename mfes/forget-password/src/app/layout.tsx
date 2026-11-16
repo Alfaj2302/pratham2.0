@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import MuiThemeProvider from '../theme/MuiThemeProvider';
 import { LanguageProvider } from '@shared-lib-v2/lib/context/LanguageContext';
 import ChunkReloadGuard from '@shared-lib-v2/lib/ChunkReloadGuard/ChunkReloadGuard';
+import SecureAuthGuard from '@shared-lib-v2/lib/SecureAuthGuard/SecureAuthGuard';
 
 export const metadata: Metadata = {
   title: 'Welcome to forget password',
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ChunkReloadGuard />
+        <SecureAuthGuard />
         <LanguageProvider>
           <MuiThemeProvider>{children}</MuiThemeProvider>
         </LanguageProvider>

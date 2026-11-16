@@ -13,6 +13,12 @@ interface ResourceCardProps {
   identifier: string;
   appIcon?: string;
   mimeType?: string;
+  /**
+   * Hides the player's own back button when opening the content.
+   * Set only on the curriculum planner resource list, where the player page
+   * already shows its own Back control.
+   */
+  hideBackButton?: boolean;
 }
 
 const ResourceCard: React.FC<ResourceCardProps> = ({
@@ -21,16 +27,20 @@ const ResourceCard: React.FC<ResourceCardProps> = ({
   resource,
   identifier,
   appIcon,
-  mimeType
+  mimeType,
+  hideBackButton
 }) => {
-  
+
 
   const openPlayers = () => {
     sessionStorage.setItem("previousPage", window.location.href);
     if (resource === "Course") {
       router.push(`/course-hierarchy/${identifier}`);
     } else {
-      router.push(`/play/content/${identifier}`);
+      router.push({
+        pathname: `/play/content/${identifier}`,
+        ...(hideBackButton ? { query: { hideBackButton: 'true' } } : {}),
+      });
     }
   };
 

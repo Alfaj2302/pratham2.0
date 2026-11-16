@@ -7,6 +7,7 @@ import { resetFirstBatchCheck } from '@learner/utils/helpers/vtBatchHelper';
 import { Loader, useTranslation } from '@shared-lib';
 import { Telemetry } from '@shared-lib-v2/DynamicForm/utils/app.constant';
 import { telemetryFactory } from '@shared-lib-v2/DynamicForm/utils/telemetry';
+import { getSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 
 function Logout() {
   const router = useRouter();
@@ -15,7 +16,8 @@ function Logout() {
   useEffect(() => {
     const userLogout = async () => {
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        // Read before the synchronous storage clear below; the ciphertext is captured synchronously.
+        const refreshToken = await getSecureRefreshToken();
         if (refreshToken) {
           await logout(refreshToken);
         }

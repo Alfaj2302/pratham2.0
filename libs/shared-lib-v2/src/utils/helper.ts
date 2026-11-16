@@ -253,3 +253,25 @@ export const extractWorkingVillageIds = (users: any[]): number[] => {
   return Array.from(new Set(villageIds)); // Remove duplicates
 };
 
+
+// SCP and Pathways each capture "interested to join" in their own custom field
+export const INTERESTED_TO_JOIN_FIELD_ID: Record<string, string> = {
+  'Second Chance Program': 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+  Pathways: '46c1b672-19fe-4ea6-ad13-a7b419340da6',
+};
+
+// Returns undefined for programs other than SCP and Pathways
+export const getInterestedToJoinFieldId = (
+  programName?: string
+): string | undefined => {
+  let name = programName;
+  if (!name && typeof window !== 'undefined') {
+    try {
+      name = JSON.parse(localStorage.getItem('enrolledProgramData') || '{}')?.name;
+    } catch {
+      name = undefined;
+    }
+    name = name || localStorage.getItem('userProgram') || '';
+  }
+  return name ? INTERESTED_TO_JOIN_FIELD_ID[name] : undefined;
+};

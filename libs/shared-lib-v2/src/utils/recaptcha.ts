@@ -26,7 +26,21 @@ const captchaTokenError = (message: string) => {
   return error;
 };
 
+// Hide the floating reCAPTCHA v3 badge across the whole app. Google permits this
+// as long as the reCAPTCHA attribution text is shown in the user flow.
+// visibility:hidden (not display:none) keeps reCAPTCHA's risk analysis working.
+const RECAPTCHA_BADGE_STYLE_ID = 'google-recaptcha-badge-hide';
+const hideRecaptchaBadge = (): void => {
+  if (document.getElementById(RECAPTCHA_BADGE_STYLE_ID)) return;
+  const style = document.createElement('style');
+  style.id = RECAPTCHA_BADGE_STYLE_ID;
+  style.textContent =
+    '.grecaptcha-badge { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }';
+  document.head.appendChild(style);
+};
+
 const loadRecaptcha = (siteKey: string): Promise<any> => {
+  hideRecaptchaBadge();
   if (window.grecaptcha?.execute) {
     return Promise.resolve(window.grecaptcha);
   }

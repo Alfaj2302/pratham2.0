@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="910" viewBox="0 0 1600 910" font-family="'Nunito Sans','Segoe UI',Roboto,Arial,sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="910" fill="#ffffff"/>
+
+  <!-- Layer labels -->
+  <g font-size="14" font-weight="800" fill="#a35a12" letter-spacing="1">
+    <text x="40" y="86">CHANNELS</text>
+    <text x="40" y="210">HOST APPS</text>
+    <text x="40" y="380">MICRO-</text>
+    <text x="40" y="400">FRONTENDS</text>
+    <text x="40" y="526">SHARED &amp;</text>
+    <text x="40" y="546">OFFLINE</text>
+    <text x="40" y="646">API LAYER</text>
+    <text x="40" y="746">BACKEND</text>
+    <text x="40" y="766">SERVICES</text>
+    <text x="40" y="861">HOSTING</text>
+  </g>
+  <g font-size="12.5" fill="#5b6478">
+    <text x="40" y="230">Next.js 14 · React 18</text>
+    <text x="40" y="247">TypeScript · MUI 5</text>
+    <text x="40" y="420">Nx monorepo</text>
+  </g>
+
+  <!-- Row 1: Channels -->
+  <g fill="#fff" stroke="#1e2a47" stroke-width="1.5">
+    <rect x="260" y="40" width="420" height="80" rx="10"/>
+    <rect x="700" y="40" width="420" height="80" rx="10"/>
+    <rect x="1140" y="40" width="420" height="80" rx="10"/>
+  </g>
+  <g font-size="17" font-weight="700" fill="#1e2a47" text-anchor="middle">
+    <text x="470" y="75">Learners</text>
+    <text x="910" y="75">Teachers / Facilitators</text>
+    <text x="1350" y="75">Admins / Content team</text>
+  </g>
+  <g font-size="13" fill="#5b6478" text-anchor="middle">
+    <text x="470" y="99">Web · <tspan fill="#2f6f6a" font-weight="700">Android app</tspan> (React Native WebView shell)</text>
+    <text x="910" y="99">Web · <tspan fill="#2f6f6a" font-weight="700">Android app</tspan> (React Native WebView shell)</text>
+    <text x="1350" y="99">Web</text>
+  </g>
+
+  <!-- Arrows row1 -> row2 -->
+  <g stroke="#8a93a6" stroke-width="2" marker-end="url(#arr)">
+    <line x1="470" y1="122" x2="470" y2="166"/>
+    <line x1="910" y1="122" x2="910" y2="166"/>
+    <line x1="1350" y1="122" x2="1350" y2="166"/>
+  </g>
+
+  <!-- Row 2: Host apps -->
+  <g>
+    <rect x="260" y="170" width="420" height="90" rx="10" fill="#1e2a47"/>
+    <rect x="700" y="170" width="420" height="90" rx="10" fill="#1e2a47"/>
+    <rect x="1140" y="170" width="420" height="90" rx="10" fill="#1e2a47"/>
+  </g>
+  <g font-size="18" font-weight="700" fill="#fff" text-anchor="middle">
+    <text x="470" y="207">Learner Web App</text>
+    <text x="910" y="207">Teacher App</text>
+    <text x="1350" y="207">Admin App</text>
+  </g>
+  <g font-size="13" fill="#c9d0e0" text-anchor="middle">
+    <text x="470" y="232">Programs · courses · POS / Thematic · offline progress</text>
+    <text x="910" y="232">Centers · attendance · sessions · SCP / YouthNet</text>
+    <text x="1350" y="232">Users · centers · course planner · tenants</text>
+  </g>
+
+  <!-- Arrows row2 -> MFEs -->
+  <g stroke="#8a93a6" stroke-width="2" marker-end="url(#arr)">
+    <line x1="470" y1="262" x2="470" y2="296"/>
+    <line x1="910" y1="262" x2="910" y2="296"/>
+    <line x1="1350" y1="262" x2="1350" y2="296"/>
+  </g>
+
+  <!-- Row 3: Micro-frontends -->
+  <rect x="260" y="300" width="1300" height="150" rx="12" fill="#e8f1ef" stroke="#2f6f6a" stroke-width="1.5"/>
+  <text x="280" y="330" font-size="15" font-weight="700" fill="#2f6f6a">Independent Next.js zones (own basePath) · routed by host middleware · deployed independently</text>
+  <g fill="#fff" stroke="#2f6f6a" stroke-width="1.2">
+    <rect x="280" y="350" width="168" height="80" rx="8"/>
+    <rect x="462" y="350" width="168" height="80" rx="8"/>
+    <rect x="644" y="350" width="168" height="80" rx="8"/>
+    <rect x="826" y="350" width="168" height="80" rx="8"/>
+    <rect x="1008" y="350" width="168" height="80" rx="8"/>
+    <rect x="1190" y="350" width="168" height="80" rx="8"/>
+    <rect x="1372" y="350" width="168" height="80" rx="8"/>
+  </g>
+  <g font-size="15.5" font-weight="700" fill="#1e2a47" text-anchor="middle">
+    <text x="364" y="384">Players</text>
+    <text x="546" y="384">Workspace</text>
+    <text x="728" y="384">Taxonomy</text>
+    <text x="910" y="384">SCP Teacher</text>
+    <text x="1092" y="384">YouthNet</text>
+    <text x="1274" y="384">Survey Forms</text>
+    <text x="1456" y="384">Authentication</text>
+  </g>
+  <g font-size="12.5" fill="#5b6478" text-anchor="middle">
+    <text x="364" y="406">PDF · Video · EPUB</text>
+    <text x="364" y="421">QuML · H5P</text>
+    <text x="546" y="406">Authoring · review</text>
+    <text x="546" y="421">bulk import</text>
+    <text x="728" y="406">Frameworks</text>
+    <text x="728" y="421">&amp; taxonomy</text>
+    <text x="910" y="406">PWA · Module</text>
+    <text x="910" y="421">Federation</text>
+    <text x="1092" y="406">Program</text>
+    <text x="1092" y="421">module</text>
+    <text x="1274" y="406">Surveys ·</text>
+    <text x="1274" y="421">observations</text>
+    <text x="1456" y="406">Login · SSO</text>
+    <text x="1456" y="421">password reset</text>
+  </g>
+
+  <!-- Row 4: Shared & offline -->
+  <g fill="#fdf3e4" stroke="#a35a12" stroke-width="1.3">
+    <rect x="260" y="485" width="420" height="85" rx="10"/>
+    <rect x="700" y="485" width="420" height="85" rx="10"/>
+    <rect x="1140" y="485" width="420" height="85" rx="10"/>
+  </g>
+  <g font-size="16" font-weight="700" fill="#1e2a47" text-anchor="middle">
+    <text x="470" y="518">shared-lib-v2</text>
+    <text x="910" y="518">Content &amp; editor wrappers</text>
+    <text x="1350" y="518">Offline layer</text>
+  </g>
+  <g font-size="13" fill="#5b6478" text-anchor="middle">
+    <text x="470" y="543">Dynamic RJSF forms · layout · theme · i18n (10 langs)</text>
+    <text x="910" y="543">Sunbird players · collection &amp; question editors</text>
+    <text x="1350" y="543">Service worker · IndexedDB sync queue · cache</text>
+  </g>
+
+  <!-- Arrows -> API layer -->
+  <g stroke="#8a93a6" stroke-width="2" marker-end="url(#arr)">
+    <line x1="910" y1="572" x2="910" y2="606"/>
+  </g>
+
+  <!-- Row 5: API layer -->
+  <rect x="260" y="610" width="1300" height="64" rx="10" fill="#2f6f6a"/>
+  <text x="910" y="638" font-size="16.5" font-weight="700" fill="#fff" text-anchor="middle">Axios + interceptors · React Query · Zustand</text>
+  <text x="910" y="660" font-size="13" fill="#d6ebe7" text-anchor="middle">JWT bearer + auto-refresh · tenantid / academicyearid headers on every call · Next.js API proxy for Sunbird</text>
+
+  <!-- Arrows -> backend -->
+  <g stroke="#8a93a6" stroke-width="2" marker-end="url(#arr)">
+    <line x1="382" y1="676" x2="382" y2="706"/>
+    <line x1="646" y1="676" x2="646" y2="706"/>
+    <line x1="910" y1="676" x2="910" y2="706"/>
+    <line x1="1174" y1="676" x2="1174" y2="706"/>
+    <line x1="1438" y1="676" x2="1438" y2="706"/>
+  </g>
+
+  <!-- Row 6: Backend -->
+  <g fill="#eef0f4" stroke="#9aa3b5" stroke-width="1.2">
+    <rect x="260" y="710" width="244" height="80" rx="10"/>
+    <rect x="524" y="710" width="244" height="80" rx="10"/>
+    <rect x="788" y="710" width="244" height="80" rx="10"/>
+    <rect x="1052" y="710" width="244" height="80" rx="10"/>
+    <rect x="1316" y="710" width="244" height="80" rx="10"/>
+  </g>
+  <g font-size="15.5" font-weight="700" fill="#1e2a47" text-anchor="middle">
+    <text x="382" y="743">Middleware / User svc</text>
+    <text x="646" y="743">Sunbird</text>
+    <text x="910" y="743">Telemetry</text>
+    <text x="1174" y="743">Program APIs</text>
+    <text x="1438" y="743">Cloud services</text>
+  </g>
+  <g font-size="12.5" fill="#5b6478" text-anchor="middle">
+    <text x="382" y="766">Auth · tenants · cohorts · forms</text>
+    <text x="646" y="766">Content · frameworks</text>
+    <text x="910" y="766">Learning analytics</text>
+    <text x="1174" y="766">Course planner · surveys</text>
+    <text x="1438" y="766">AWS S3 · Firebase FCM · GA4</text>
+  </g>
+
+  <!-- Row 7: Hosting -->
+  <rect x="260" y="825" width="1300" height="56" rx="10" fill="#fff" stroke="#1e2a47" stroke-width="1.3" stroke-dasharray="6 4"/>
+  <text x="910" y="859" font-size="15" fill="#1e2a47" text-anchor="middle"><tspan font-weight="700">Docker (Node 20) × 3 images</tspan> — learner · teacher · admin  ·  PM2 runs each zone  ·  GitHub Actions → AWS ECR (Mumbai)  ·  dev / qa / prod</text>
+</svg>

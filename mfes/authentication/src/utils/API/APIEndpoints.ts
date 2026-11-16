@@ -4,7 +4,7 @@ const API_ENDPOINTS = {
 
 
   accountLogin: `${baseurl}/account/login`,
-  authRefresh: `${baseurl}/account/auth/refresh`,
+  authRefresh: `${baseurl}/user/auth/refresh`,
   authLogout: `${baseurl}/account/auth/logout`,
   userAuth: `${baseurl}/user/auth`,
   resetPassword: `${baseurl}/user/reset-password`,

@@ -32,6 +32,7 @@ import { getAssessmentStatus } from '@learner/utils/API/AssesmentService';
 import { getCohortList } from '@learner/utils/API/CohortService';
 import SimpleModal from '@learner/components/SimpleModal/SimpleModal';
 import { resolveProgramEntryRoute } from '@learner/utils/helpers/vtBatchHelper';
+import { clearSecureRefreshToken, getSecureRefreshToken, setSecureRefreshToken } from '@shared-lib-v2/utils/secureTokenStorage';
 
 const Login = dynamic(
   () => import('@login/Components/LoginComponent/LoginComponent'),
@@ -350,15 +351,11 @@ const LoginPageContent = () => {
       // Only store refreshToken if it has a valid value
       if (refreshToken) {
         localStorage.setItem('refreshTokenForAndroid', refreshToken);
-        if (data?.remember) {
-          localStorage.setItem('refreshToken', refreshToken);
-        } else {
-          localStorage.removeItem('refreshToken');
-        }
+        await setSecureRefreshToken(refreshToken);
       } else {
         // Clear refreshTokenForAndroid if no refresh token is provided
         localStorage.removeItem('refreshTokenForAndroid');
-        localStorage.removeItem('refreshToken');
+        clearSecureRefreshToken();
       }
       localStorage.setItem('token', token);
 
@@ -809,7 +806,7 @@ const LoginPageContent = () => {
         preserveLocalStorage();
 
         const access_token = localStorage.getItem('token');
-        const refresh_token = localStorage.getItem('refreshToken');
+        const refresh_token = await getSecureRefreshToken();
         if (access_token) {
           const response = {
             result: {

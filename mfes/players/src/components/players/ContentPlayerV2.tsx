@@ -6,6 +6,8 @@ interface PlayerConfigProps {
   playerConfig: any;
   relatedData?: any;
   configFunctionality?: any;
+  /** Hides the content player's own back button inside the player iframe. */
+  hideBackButton?: boolean;
 }
 
 const basePath = process.env.NEXT_PUBLIC_ASSETS_CONTENT || '/sbplayer';
@@ -14,6 +16,7 @@ const ContentPlayerV2 = ({
   playerConfig,
   relatedData: { courseId, unitId, userId },
   configFunctionality,
+  hideBackButton,
 }: PlayerConfigProps) => {
 
   console.log("########h5p ContentPlayerV2",playerConfig);
@@ -232,6 +235,71 @@ const ContentPlayerV2 = ({
       };
     }
   }, [playerConfig, courseId, unitId, userId]);
+
+  // Hide the player's own back button and Exit, which leave this preview page.
+  // Injected from here because libs/content-player-v2 is a build artifact that
+  // the next player build would overwrite. Iframe is same-origin and the shadow
+  // root is open, so it is reachable from the parent.
+  useEffect(() => {
+    if (!hideBackButton) return;
+    const iframe = contentPlayerV2Ref.current;
+    if (!iframe) return;
+
+    let frame = 0;
+    let deadline = 0;
+    let observer: MutationObserver | null = null;
+
+    // The PDF contents sidebar's Exit has no aria-label, only text.
+    const hideTextExit = (shadow: ShadowRoot) => {
+      shadow.querySelectorAll('button').forEach((button) => {
+        if (button.textContent?.trim() === 'Exit') {
+          (button as HTMLElement).style.display = 'none';
+        }
+      });
+    };
+
+    const inject = () => {
+      try {
+        const doc = iframe.contentDocument;
+        const shadow = (doc?.getElementById('player') as any)?.shadowRoot;
+        if (!shadow) {
+          // Shadow root is created in connectedCallback, after the bundle loads.
+          if (Date.now() < deadline) frame = requestAnimationFrame(inject);
+          return;
+        }
+        if (!shadow.getElementById('hide-back-button')) {
+          const style = doc!.createElement('style');
+          style.id = 'hide-back-button';
+          // "Menu" is the kebab whose only item is Exit.
+          style.textContent =
+            '[aria-label="Go back"], [aria-label="Menu"] { display: none !important; }';
+          shadow.appendChild(style);
+        }
+        hideTextExit(shadow);
+        observer?.disconnect();
+        observer = new MutationObserver(() => hideTextExit(shadow));
+        observer.observe(shadow, { childList: true, subtree: true });
+      } catch (error) {
+        // Player assets served from another origin — not reachable from here.
+        console.warn('Could not hide player back/exit controls:', error);
+      }
+    };
+
+    const start = () => {
+      cancelAnimationFrame(frame);
+      deadline = Date.now() + 10000;
+      inject();
+    };
+
+    iframe.addEventListener('load', start);
+    start();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      iframe.removeEventListener('load', start);
+    };
+  }, [hideBackButton, playerConfig]);
 
   const toggleFullscreen = () => {
     const playerContainer: any =

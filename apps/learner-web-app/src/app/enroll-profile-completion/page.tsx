@@ -14,6 +14,7 @@ import SignupSuccess from '@learner/components/SignupSuccess /SignupSuccess ';
 import { ContentSearch } from '@learner/utils/API/contentService';
 import { enrollUserTenant } from '@learner/utils/API/EnrollmentService';
 import { getCohortList } from '@learner/utils/API/CohortService';
+import { getInterestedToJoinFieldId } from '@shared-lib-v2/utils/helper';
 import { useTranslation } from '@shared-lib';
 declare global {
   interface Window {
@@ -128,12 +129,13 @@ const EnrollProfileCompletionInner = () => {
               await enrollUserTenant({ userId: enrollUserId, tenantId: enrollTenantId, roleId: enrollRoleId });
             }
             console.log('Enrolled into tenant:', enrollTenantId);
-            if (userTenantStatus) {
+            const interestedToJoinFieldId = getInterestedToJoinFieldId(tenantName);
+            if (userTenantStatus && interestedToJoinFieldId) {
               try {
                 await updateUser(enrollUserId, {
                   userData: {},
                   customFields: [{
-                    fieldId: 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+                    fieldId: interestedToJoinFieldId,
                     value: 'pending',
                   }],
                 });
@@ -245,11 +247,12 @@ const EnrollProfileCompletionInner = () => {
             console.log('Enrolled into tenant:', enrollTenantId);
             // Always update user with pending custom field after enrollment
             try {
-              if (userTenantStatus) {
+              const interestedToJoinFieldId = getInterestedToJoinFieldId(tenantName);
+              if (userTenantStatus && interestedToJoinFieldId) {
               await updateUser(storedUserId, {
                 userData: {},
                 customFields: [{
-                  fieldId: 'f8dc1d5f-9b2b-412e-a22a-351bd8f14963',
+                  fieldId: interestedToJoinFieldId,
                   value: 'pending',
                 }],
               });

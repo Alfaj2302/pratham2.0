@@ -11,7 +11,7 @@ import OtpVerificationComponent from '@learner/components/OtpVerificationCompone
 import { maskMobileNumber } from '@learner/utils/helper';
 import { useRouter } from 'next/navigation';
 import PasswordResetSuccess from '@forget-password/Components/PasswordResetSuccess/PasswordResetSuccess';
-import { login, resetPassword } from '@learner/utils/API/LoginService';
+import { resetPassword } from '@learner/utils/API/LoginService';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Layout from '../../components/Layout';
 import { checkAuth } from '@shared-lib-v2/utils/AuthService';
@@ -36,49 +36,32 @@ const ChangePassword = () => {
     newPassword: string,
     confirmPassword: string
   ) => {
-    try {
-      let userIdName = localStorage.getItem('userIdName');
-      if(oldPassword== newPassword)
-      {
- showToastMessage(
-   'New password cannot be the same as the current password.',
-   'error'
- );
- return;
-      }
-      else if (userIdName) {
-        try {
-          const response = await login({
-            username: userIdName,
-            password: oldPassword,
-          });
-          try {
-            if (response) {
-              console.log('hii');
-              const response = await resetPassword(newPassword);
-              console.log('Password reset response:', response);
-              setResetPasswordSuccessModal(true);
-            } else {
-              showToastMessage(
-                'The old password you entered is incorrect',
-                'error'
-              );
-            }
-          } catch (error) {
-            console.log('error');
-          }
-        } catch (error) {
-          showToastMessage(
-            'The old password you entered is incorrect',
-            'error'
-          );
-        }
-      }
+    const userIdName = localStorage.getItem('userIdName');
 
-      //   const response = await resetPassword(newPassword);
-      //   console.log('Password reset response:', response);
-    } catch (error) {}
-    // Add API call logic here
+    if (oldPassword === newPassword) {
+      showToastMessage(
+        'New password cannot be the same as the current password.',
+        'error'
+      );
+      return;
+    }
+
+    if (!userIdName) {
+      showToastMessage('Something went wrong, please login again.', 'error');
+      return;
+    }
+
+    try {
+      // The API verifies oldPassword, so there is no login call to check it
+      await resetPassword(newPassword, oldPassword, userIdName);
+      setResetPasswordSuccessModal(true);
+    } catch (error: any) {
+      showToastMessage(
+        error?.response?.data?.params?.err ||
+          'The old password you entered is incorrect',
+        'error'
+      );
+    }
   };
 
   const handleForgotPassword = async () => {
