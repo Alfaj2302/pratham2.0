@@ -653,7 +653,25 @@ const CrossCenterScheduleWizard: React.FC<CrossCenterScheduleWizardProps> = ({
           startDatetime,
           endDatetime,
           metadata: metaData,
-          ...(onlineMeetingFields ?? {}),
+          // Edit sends only `meetingDetails` (provider nested inside): the
+          // top-level `onlineProvider`/`isMeetingNew` pair is create-only and
+          // makes the update API demand an `onlineDetails` object it rejects.
+          ...(mode === sessionMode.ONLINE
+            ? {
+                meetingDetails: {
+                  id: editingEvent?.meetingDetails?.id || '',
+                  onlineProvider:
+                    editingEvent?.meetingDetails?.onlineProvider ||
+                    (meetingLink.includes('zoom')
+                      ? t('CENTER_SESSION.ZOOM')
+                      : t('CENTER_SESSION.GOOGLEMEET')),
+                  password: meetingPasscode || '',
+                  providerGenerated:
+                    editingEvent?.meetingDetails?.providerGenerated || false,
+                  url: meetingLink,
+                },
+              }
+            : {}),
         };
 
         const response = await editEvent(editingEvent.eventRepetitionId, apiBody);
