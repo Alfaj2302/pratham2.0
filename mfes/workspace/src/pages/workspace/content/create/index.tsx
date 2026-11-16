@@ -27,6 +27,7 @@ import QuizOutlinedIcon from '@mui/icons-material/QuizOutlined';
 import PsychologyOutlinedIcon from '@mui/icons-material/PsychologyOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import VideoLibraryOutlinedIcon from '@mui/icons-material/VideoLibraryOutlined';
+import ViewQuiltOutlinedIcon from '@mui/icons-material/ViewQuiltOutlined';
 import Image from 'next/image';
 import WorkspaceText from '../../../../components/WorkspaceText';
 import { getLocalStoredUserId } from '../../../../services/LocalStorageService';
@@ -174,6 +175,12 @@ const CreatePage = () => {
           query: { editorforlargecontent: 'true' }, // No change needed
         }); // Removed an extra comma
       },
+    },
+    {
+      title: 'Manage Course Shell',
+      description: 'Create and manage course shells',
+      icon: <ViewQuiltOutlinedIcon fontSize="large" />,
+      onClick: () => router.push('/workspace/content/shell-manage'),
     },
 ...(isSCP
       ? [
