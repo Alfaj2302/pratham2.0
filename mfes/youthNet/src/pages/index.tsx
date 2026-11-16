@@ -54,6 +54,15 @@ const Index = () => {
   const [selectedCenterId, setSelectedCenterId] = useState<string>('');
   const [cohortDataLoaded, setCohortDataLoaded] = useState<boolean>(false);
 
+  // Trainers (Instructor) have their own landing page — this dashboard's
+  // content is Lead/Mobilizer-oriented, so redirect away if a Trainer lands
+  // here directly (bookmark, back-button) instead of via the login redirect.
+  useEffect(() => {
+    if (YOUTHNET_USER_ROLE.INSTRUCTOR === getLoggedInUserRole()) {
+      router.replace('/l2-interested-queue');
+    }
+  }, []);
+
   useEffect(() => {
     const fetchCohortData = async () => {
       try {

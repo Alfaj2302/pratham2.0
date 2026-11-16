@@ -329,7 +329,9 @@
     "ENROLLMENT_NUMBER": "ನೋಂದಣಿ ಸಂಖ್ಯೆ",
     "SELECT_OPTION": "ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ",
     "PROFILE_UPDATE_SUCCESSFULLY": "ಪ್ರೊಫೈಲ್ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ",
-    "UNABLE_TO_PROFILE_UPDATE_": "ಪ್ರೊಫೈಲ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ಆಗುತ್ತಿಲ್ಲ"
+    "UNABLE_TO_PROFILE_UPDATE_": "ಪ್ರೊಫೈಲ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ಆಗುತ್ತಿಲ್ಲ",
+    "MOCK_TEST": "ಅಣಕು ಪರೀಕ್ಷೆ",
+    "UNIT_TEST": "ಯೂನಿಟ್  ಪರೀಕ್ಷೆ"
   },
   "FIELDS": {
     "DESIGNATION": "ಹುದ್ದೆ",
@@ -569,6 +571,8 @@
     "SUBJECTS_I_TEACH": "ನಾನು ಕಲಿಸುವ ವಿಷಯಗಳು",
     "GENDER": "ಲಿಂಗ",
     "UNIT_NAME": "ಯುನಿಟ್  ಹೆಸರು",
+    "BATCH_NAME": "ಬ್ಯಾಚ್ ಹೆಸರು",
+    "ASSESSMENTS": "ಮೌಲ್ಯಮಾಪನಗಳು",
     "UNIT_CODE": "ಯುನಿಟ್  ಕೋಡ್",
     "ENROLLMENT_NUMBER": "ನೋಂದಣಿ ಸಂಖ್ಯೆ",
     "BLOCK_NAME": "ಬ್ಲಾಕ್ ಹೆಸರು",
@@ -985,7 +989,20 @@
     "IMAGE_UPLOADED": "ಚಿತ್ರ ಅಪ್‌ಲೋಡ್‌ ಆಗಿದೆ",
     "VIEW": "ವೀಕ್ಷಿಸಿ",
     "REUPLOAD": "ಮರು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
-    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ಸ್ವರೂಪ: jpg, jpeg. ಗಾತ್ರ: {{mb}} MB {{count}} ಚಿತ್ರಗಳವರೆಗೆ"
+    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ಸ್ವರೂಪ: jpg, jpeg. ಗಾತ್ರ: {{mb}} MB {{count}} ಚಿತ್ರಗಳವರೆಗೆ",
+    "BATCH": "ಬ್ಯಾಚ್",
+    "ATTEMPT_DETAILS": "ಪ್ರಯತ್ನದ ವಿವರಗಳು",
+    "ATTEMPT_SUMMARY": "ಪ್ರಯತ್ನದ ಸಾರಾಂಶ",
+    "CORRECT": "ಸರಿ",
+    "INCORRECT": "ತಪ್ಪು",
+    "SCORE": "ಅಂಕ",
+    "TIME": "ಸಮಯ",
+    "ATTEMPTED_ON": "ಪ್ರಯತ್ನಿಸಿದ ದಿನಾಂಕ",
+    "PERCENTAGE": "ಶೇಕಡಾವಾರು",
+    "NO_ANSWER": "ಉತ್ತರವಿಲ್ಲ",
+    "ATTEMPT_NOT_FOUND": "ಮೌಲ್ಯಮಾಪನ ಪ್ರಯತ್ನ ಕಂಡುಬಂದಿಲ್ಲ",
+    "SUBMITTING": "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+    "UPDATING": "ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ..."
   },
   "MOBILIZER": {
     "MOBILIZER": "ಮೆಂಟರ್",

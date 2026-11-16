@@ -39,9 +39,19 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
   onSubmissionSuccess,
   setAssessmentTrackingData,
   parentId,
-  customMaxImages = 4
+  customMaxImages = 4,
+  maxFileSizeMb = 5,
+  recommendedMaxImages = null,
+  formatHintKey = 'AI.FORMAT_JPG_SIZE_5MB_UP_TO_4_IMAGES',
+  showResubmitWarning = false,
 }) => {
   const { t } = useTranslation();
+  // `customMaxImages: null` means no hard cap, which is what the mobile app does:
+  // it only *recommends* a ceiling (see recommendedMaxImages).
+  const hasImageCap = typeof customMaxImages === 'number';
+  const imageCap = hasImageCap ? (customMaxImages as number) : Infinity;
+  const isAtImageCap = uploadedImages.length >= imageCap;
+  const maxSizeBytes = maxFileSizeMb * 1024 * 1024;
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -82,9 +92,21 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
     if (!files || files.length === 0) return;
 
     // Check if adding new files would exceed the limit
-    if (uploadedImages.length + files.length > customMaxImages) {
-      showToast(`You can only upload up to ${customMaxImages} images`, 'warning');
+    if (uploadedImages.length + files.length > imageCap) {
+      showToast(`You can only upload up to ${imageCap} images`, 'warning');
       return;
+    }
+
+    // Soft limit: warn but still upload, matching the mobile dialog's
+    // "We recommend uploading up to 20 images" notice.
+    if (
+      recommendedMaxImages !== null &&
+      uploadedImages.length + files.length > recommendedMaxImages
+    ) {
+      showToast(
+        t('LEARNER_APP.VT_ASSESSMENT.RECOMMEND_UP_TO_20_IMAGES'),
+        'warning'
+      );
     }
 
     setIsUploading(true);
@@ -104,10 +126,11 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
           continue;
         }
 
-        // Validate file size (5MB)
-        const maxSize = 5 * 1024 * 1024;
-        if (file.size > maxSize) {
-          showToast(`File exceeds 5MB limit. Please select a smaller image.`);
+        // Validate file size
+        if (file.size > maxSizeBytes) {
+          showToast(
+            `File exceeds ${maxFileSizeMb}MB limit. Please select a smaller image.`
+          );
           continue;
         }
 
@@ -153,8 +176,8 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
 
   const handleCameraCapture = async (imageData: string, fileName: string) => {
     // Check if adding new image would exceed the limit
-    if (uploadedImages.length >= customMaxImages) {
-      showToast(`You can only upload up to ${customMaxImages} images`, 'warning');
+    if (isAtImageCap) {
+      showToast(`You can only upload up to ${imageCap} images`, 'warning');
       setIsCameraOpen(false);
       return;
     }
@@ -163,11 +186,10 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
     try {
       const file = dataUrlToFile(imageData, fileName);
 
-      // Validate file size (5MB)
-      const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
+      // Validate file size
+      if (file.size > maxSizeBytes) {
         showToast(
-          `File "${fileName}" exceeds 5MB limit. Please capture a smaller image.`,
+          `File "${fileName}" exceeds ${maxFileSizeMb}MB limit. Please capture a smaller image.`,
           'error'
         );
         setIsCameraOpen(false);
@@ -336,7 +358,7 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
                 fontWeight: 400,
               }}
             >
-              {t('AI.FORMAT_JPG_SIZE_5MB_UP_TO_4_IMAGES')}
+              {t(formatHintKey)}
             </Typography>
           </Box>
 
@@ -362,7 +384,7 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
               {/* Take Photo Button */}
               <Button
                 onClick={!isUploading ? handleTakePhoto : undefined}
-                disabled={isUploading || uploadedImages.length >= customMaxImages}
+                disabled={isUploading || isAtImageCap}
                 variant="outlined"
                 startIcon={<PhotoCameraIcon />}
                 sx={{
@@ -385,15 +407,15 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
               >
                 {isUploading
                   ? 'Uploading...'
-                  : uploadedImages.length >= customMaxImages
-                    ? `Max ${customMaxImages} Images`
+                  : isAtImageCap
+                    ? `Max ${imageCap} Images`
                     : 'Take A Photo'}
               </Button>
 
               {/* Upload Photo Button */}
               <Button
                 onClick={!isUploading ? handleChooseFromGallery : undefined}
-                disabled={isUploading || uploadedImages.length >= customMaxImages}
+                disabled={isUploading || isAtImageCap}
                 variant="outlined"
                 startIcon={<CloudUploadIcon />}
                 sx={{
@@ -416,11 +438,18 @@ const UploadOptionsPopup: React.FC<UploadOptionsPopupProps> = ({
               >
                 {isUploading
                   ? 'Uploading...'
-                  : uploadedImages.length >= customMaxImages
-                    ? `Max ${customMaxImages} Images`
+                  : isAtImageCap
+                    ? `Max ${imageCap} Images`
                     : 'Upload A Photo'}
               </Button>
             </Box>
+
+            {/* One-shot flows warn before upload that there is no second chance. */}
+            {showResubmitWarning && (
+              <Alert severity="warning" sx={{ fontSize: '14px' }}>
+                {t('LEARNER_APP.VT_ASSESSMENT.CANNOT_BE_RESUBMITTED')}
+              </Alert>
+            )}
 
             {/* Guidelines Section */}
             <Box

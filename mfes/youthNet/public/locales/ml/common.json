@@ -273,7 +273,9 @@
     "ENTER_CHARACTER": "കുറച്ചുകൂടി ഒരു അക്ഷരം നൽകുക",
     "CONTACT_NUMBER": "ബന്ധപ്പെടാനുള്ള നമ്പർ",
     "ENROLLMENT_NUMBER": "എൻറോൾമെന്റ് നമ്പർ",
-    "SELECT_OPTION": "വ്യത്യസ്തത തിരഞ്ഞെടുക്കുക"
+    "SELECT_OPTION": "വ്യത്യസ്തത തിരഞ്ഞെടുക്കുക",
+    "MOCK_TEST": "മോക്ക് ടെസ്റ്റ്",
+    "UNIT_TEST": "യൂണിറ്റ് ടെസ്റ്റ്"
   },
   "FIELDS": {
     "DESIGNATION": "പദവി",
@@ -489,6 +491,8 @@
     "SUBJECTS_I_TEACH": "ഞാൻ പാഠം പഠിപ്പിക്കുന്ന വിഷയങ്ങൾ",
     "GENDER": "ലിംഗം",
     "UNIT_NAME": "അംഗത്തിന്റെ പേര്",
+    "BATCH_NAME": "ബാച്ചിന്റെ പേര്",
+    "ASSESSMENTS": "അവലോകനങ്ങൾ",
     "UNIT_CODE": "അംഗത്തിന്റെ കോഡ്",
     "ENROLLMENT_NUMBER": "പ്രീപ്രോഗ്രാം നമ്പർ",
     "BLOCK_NAME": "ബ്ലോക്ക് പേര്",
@@ -579,7 +583,30 @@
     "NUMBER_OUT_OF_COMPLETED": "{{completedCount}}/{{totalCount}} പൂർത്തിയായത്",
     "NO_SUBTOPIC_SELECTED": "തലവിഭാഗം തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല",
     "NO_SUBJECT_FOUND": "വിദ്യാഭ്യാസ വിഷയം കണ്ടെത്തിയില്ല",
-    "NO_ASSIGNED": "ഒന്നും നിയോഗിച്ചിട്ടില്ല"
+    "NO_ASSIGNED": "ഒന്നും നിയോഗിച്ചിട്ടില്ല",
+    "BATCH": "ബാച്ച്",
+    "ATTEMPT_DETAILS": "ശ്രമത്തിന്റെ വിവരങ്ങൾ",
+    "ATTEMPT_SUMMARY": "ശ്രമ സംഗ്രഹം",
+    "CORRECT": "ശരി",
+    "INCORRECT": "തെറ്റ്",
+    "SCORE": "സ്കോർ",
+    "TIME": "സമയം",
+    "ATTEMPTED_ON": "ശ്രമിച്ച തീയതി",
+    "PERCENTAGE": "ശതമാനം",
+    "NO_ANSWER": "ഉത്തരമില്ല",
+    "ATTEMPT_NOT_FOUND": "മൂല്യനിർണ്ണയ ശ്രമം കണ്ടെത്തിയില്ല",
+    "SUBMITTING": "സമർപ്പിക്കുന്നു...",
+    "UPDATING": "അപ്ഡേറ്റ് ചെയ്യുന്നു...",
+    "ASSESSMENTS_FOUND": "{{count}} മൂല്യനിർണ്ണയം കണ്ടെത്തി",
+    "DOWNLOAD_SUCCESS": "ചോദ്യപേപ്പർ വിജയകരമായി ഡൗൺലോഡ് ചെയ്തു",
+    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ഫോർമാറ്റ്: jpg, jpeg. വലുപ്പം: {{mb}} MB, {{count}} ചിത്രങ്ങൾ വരെ",
+    "MANUAL_ASSESSMENT_LIST": "മാനുവൽ മൂല്യനിർണ്ണയ പട്ടിക",
+    "OUT_OF": "ൽ",
+    "REUPLOAD": "വീണ്ടും അപ്‌ലോഡ് ചെയ്യുക",
+    "SEARCH_LEARNER": "പഠിതാവിനെ തിരയുക..",
+    "SUBMIT_MARKS": "മാർക്ക് സമർപ്പിക്കുക",
+    "UPDATE_MARKS": "മാർക്ക് പുതുക്കുക",
+    "VIEW": "കാണുക"
   },
   "MANAGER_OVERVIEW": {
     "COURSE_LIST_TITLE": "കോഴ്‌സ് ലിസ്റ്റ്",
@@ -699,5 +726,19 @@
     "MANDATORY_ENTRIES": "നിർബന്ധിത ({{count}} എൻട്രികൾ)",
     "NON_MANDATORY_ENTRIES": "നിർബന്ധമല്ലാത്ത ({{count}} എൻട്രികൾ)",
     "NO_COURSE_ENTRIES": "ഈ ജീവനക്കാരന് കോഴ്‌സ് എൻട്രികളില്ല"
+  },
+  "AI": {
+    "ASSESSMENT_SHEETS": "മൂല്യനിർണ്ണയ ഷീറ്റുകൾ",
+    "CLICK_IMAGE_AND_UPLOAD_TO_PORTAL": "• ഒരു ചിത്രം എടുത്ത് പോർട്ടലിലേക്ക് അപ്‌ലോഡ് ചെയ്യുക",
+    "DOWNLOAD_QUESTION_PAPER": "ചോദ്യപേപ്പർ ഡൗൺലോഡ് ചെയ്യുക",
+    "ENSURE_ALL_TEXT_CLEAR_VISIBLE": "• എല്ലാ എഴുത്തും വ്യക്തമായും പൂർണ്ണമായും കാണാമെന്ന് ഉറപ്പാക്കുക",
+    "ENSURE_GOOD_LIGHTING_AVOID_SHADOWS": "• നല്ല വെളിച്ചം ഉറപ്പാക്കുക; നിഴലും തിളക്കവും ഒഴിവാക്കുക",
+    "HOLD_PHONE_STRAIGHT_ABOVE_PAPER": "• ഫോൺ കടലാസിന് നേരെ മുകളിൽ പിടിക്കുക",
+    "IF_ANSWER_SHEET_MULTIPLE_PAGES": "• ഉത്തരക്കടലാസിൽ ഒന്നിലധികം പേജുകൾ ഉണ്ടെങ്കിൽ, ഓരോ പേജിന്റെയും ചിത്രം വെവ്വേറെ എടുത്ത് അപ്‌ലോഡ് ചെയ്യുക",
+    "MARKS_APPROVED_SCORE": "മാർക്ക് അംഗീകരിച്ചു: {{score}}/{{maxScore}}",
+    "NO_LEARNERS_FOUND_MATCHING_SEARCH": "നിങ്ങളുടെ തിരയലുമായി പൊരുത്തപ്പെടുന്ന പഠിതാക്കളെ കണ്ടെത്തിയില്ല.",
+    "PLACE_PAPER_ON_FLAT_CLEAN_SURFACE": "• കടലാസ് പരന്നതും വൃത്തിയുള്ളതുമായ പ്രതലത്തിൽ വയ്ക്കുക",
+    "READ_LESS": "കുറച്ച് വായിക്കുക",
+    "READ_MORE": "കൂടുതൽ വായിക്കുക"
   }
 }

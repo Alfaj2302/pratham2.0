@@ -5,8 +5,14 @@ export const CustomObjectFieldTemplate = ({ properties }: any) => {
     return (
       <Grid container spacing={2}>
         {properties.map((prop: any) => {
-          const gridOptions = prop.content?.props?.uiSchema?.['ui:options']?.grid || {};
-  
+          const fieldUiSchema = prop.content?.props?.uiSchema;
+          // Hidden fields (e.g. via skipAndHide) render nothing visible —
+          // skip their Grid item so its spacing doesn't leave a blank gap.
+          if (prop.hidden || fieldUiSchema?.['ui:widget'] === 'hidden') {
+            return null;
+          }
+          const gridOptions = fieldUiSchema?.['ui:options']?.grid || {};
+
           return (
             <Grid
               item

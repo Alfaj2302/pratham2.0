@@ -165,7 +165,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
               // this class is left off explicitly instead of relying on that.
               className={isFullWidthPage ? undefined : 'ynet-app-shell'}
               sx={{
-                background: theme.palette.warning['A400'],
+                backgroundColor: '#F3F5F8',
+                minHeight: '100vh',
               }}
             >
               <QueryClientProvider client={client}>

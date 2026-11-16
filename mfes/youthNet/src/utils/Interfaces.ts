@@ -319,6 +319,10 @@ export interface GetDoIdServiceParam {
     state?: string;
     evaluationType?: string | string[];
     leafNodes?: string | string[];
+    // Restricts the search to specific assessment do_ids. The Manual Assessment (Trainer) list uses
+    // this to fetch exactly the assessments attached to the selected batch (its ASSESSMENTS
+    // customField) rather than every Live offline assessment in the program.
+    identifier?: string | string[];
   };
 }
 
@@ -372,6 +376,48 @@ export interface UpdateCohortMemberStatusParams {
   statusReason?: string;
   membershipId: string | number;
   dynamicBody?: Record<string, any>;
+}
+
+// My Teaching Center (Trainer) — Learner progress status. Distinct from the
+// cohort-membership lifecycle `Status` enum (dropout/active/archived) in
+// app.constant.ts; this is a separate, learner-progress-specific value.
+export type LearnerProgressStatus =
+  | 'in_training'
+  | 'course_completed'
+  | 'placed'
+  | 'retention_complete'
+  | 'dropout';
+
+// Confirmed against a real /user/read/{userId}?fieldvalue=true response:
+// the Trainer's own profile carries both DOMAIN and SKILLS customFields
+// directly, as plain human-readable strings (SKILLS uses the exact same
+// fieldId a Batch's own SKILLS customField uses) — no separate "course id"
+// concept or lookup is involved for this flow.
+export interface TrainerAssignedTaxonomy {
+  domains: string[];
+  skills: string[];
+}
+
+export interface MyTeachingCenterBatch {
+  cohortId: string;
+  name: string;
+  // Raw parentId off the batch record (reused as cohort/create's parentId
+  // when creating a new batch under the same Center). centerName is a
+  // separate lookup (BatchListService.getCenterName) — not filled in by
+  // the batch mapping itself, only where a caller (Batch Details page)
+  // fetches and merges it in.
+  centerId?: string;
+  centerName?: string;
+  domain: string;
+  skill: string;
+  // TYPE_OF_BATCH value (regular/remote/hybrid) — prefills Edit Batch.
+  batchType?: string;
+  startDate?: string;
+  endDate?: string;
+  // The batch's selected Assessment do_ids (ASSESSMENTS customField).
+  assessmentIds: string[];
+  learnerCount?: number;
+  status?: string;
 }
 
 export interface LearnerListProps {

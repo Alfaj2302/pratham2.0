@@ -329,7 +329,9 @@
     "ENROLLMENT_NUMBER": "వినియోగదారు పేరు",
     "SELECT_OPTION": "ఎంపికను ఎంచుకోండి",
     "PROFILE_UPDATE_SUCCESSFULLY": "ప్రొఫైల్ విజయవంతంగా నవీకరించబడింది",
-    "UNABLE_TO_PROFILE_UPDATE_": "ప్రొఫైల్‌ను అప్‌డేట్ చేయలేకపోతున్నాను"
+    "UNABLE_TO_PROFILE_UPDATE_": "ప్రొఫైల్‌ను అప్‌డేట్ చేయలేకపోతున్నాను",
+    "MOCK_TEST": "మాక్ టెస్ట్",
+    "UNIT_TEST": "యూనిట్ టెస్ట్"
   },
   "FIELDS": {
     "DESIGNATION": "హోదా",
@@ -569,6 +571,8 @@
     "SUBJECTS_I_TEACH": "నేను బోధించే విషయాలు",
     "GENDER": "లింగం",
     "UNIT_NAME": "యూనిట్ పేరు",
+    "BATCH_NAME": "బ్యాచ్ పేరు",
+    "ASSESSMENTS": "మదింపులు (అసెస్మెంట్లు)",
     "UNIT_CODE": "యూనిట్ కోడ్",
     "ENROLLMENT_NUMBER": "వినియోగదారు పేరు",
     "BLOCK_NAME": "బ్లాక్ పేరు",
@@ -985,7 +989,20 @@
     "IMAGE_UPLOADED": "చిత్రం అప్‌లోడ్ చేయబడింది",
     "VIEW": "వీక్షణ",
     "REUPLOAD": "తిరిగి అప్‌లోడ్ చేయండి",
-    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ఫార్మాట్: jpg, jpeg. పరిమాణం: {{mb}} MB. గరిష్టంగా {{count}} చిత్రాలు."
+    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ఫార్మాట్: jpg, jpeg. పరిమాణం: {{mb}} MB. గరిష్టంగా {{count}} చిత్రాలు.",
+    "BATCH": "బ్యాచ్",
+    "ATTEMPT_DETAILS": "ప్రయత్న వివరాలు",
+    "ATTEMPT_SUMMARY": "ప్రయత్న సారాంశం",
+    "CORRECT": "సరైనది",
+    "INCORRECT": "తప్పు",
+    "SCORE": "స్కోరు",
+    "TIME": "సమయం",
+    "ATTEMPTED_ON": "ప్రయత్నించిన తేదీ",
+    "PERCENTAGE": "శాతం",
+    "NO_ANSWER": "సమాధానం లేదు",
+    "ATTEMPT_NOT_FOUND": "మూల్యాంకన ప్రయత్నం కనుగొనబడలేదు",
+    "SUBMITTING": "సమర్పిస్తోంది...",
+    "UPDATING": "నవీకరిస్తోంది..."
   },
   "MOBILIZER": {
     "MOBILIZER": "గురువు",

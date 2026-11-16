@@ -25,12 +25,16 @@ export interface userListParam {
   filters: {
     role?: string;
     tenantStatus?: string[];
-    states?: string;
+    state?: string;
     district?: string[];
     block?: string[];
     fromDate?: string;
     toDate?: string;
     village?: string[];
+    l2_interested?: string;
+    domain?: string;
+    courses?: string[];
+    name?: string;
   };
   fields?: any;
   sort?: object;

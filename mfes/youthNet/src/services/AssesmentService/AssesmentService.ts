@@ -1,3 +1,10 @@
+// LEGACY — volunteer / village Manual Assessment flow only (`src/pages/manual-assessments`).
+//
+// This file overlaps with `src/services/AssesmentService.ts` (the flat one), which exports its own
+// `searchAiAssessment` and `getOfflineAssessmentDetails`. The flat file is the canonical assessment
+// service: new code — including the Assessments and Manual Assessment (Trainer) flows — must import
+// from `services/AssesmentService`, not from this directory.
+
 import { post } from '@shared-lib';
 import {
   GetDoIdServiceParam,

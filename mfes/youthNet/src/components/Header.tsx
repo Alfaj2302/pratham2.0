@@ -25,7 +25,13 @@ import { TENANT_DATA } from '../utils/app.config';
 import { getUserDetails } from '../services/ProfileService';
 import { getAcademicYear } from '../services/AcademicYearService';
 import { AcademicYear } from '../utils/Interfaces';
-import SwitchAccountDialog from '@shared-lib-v2/SwitchAccount/SwitchAccount';
+import SwitchAccountDialog, {
+  getVisibleTenants,
+} from '@shared-lib-v2/SwitchAccount/SwitchAccount';
+import {
+  getSwitchAccountLandingPath,
+  isPragyanpathLead,
+} from '@shared-lib-v2/SwitchAccount/switchAccountNavigation';
 import Loader from '@shared-lib-v2/DynamicForm/components/Loader';
 
 interface HeaderProps {
@@ -99,20 +105,15 @@ const Header: React.FC<HeaderProps> = ({ toggleDrawer, openDrawer }) => {
           setTenantData(filteredTenantData);
 
           
-          // Show switch button only when a tenant has both Lead and Instructor roles
-          const shouldShowButton = filteredTenantData.some((tenant: any) => {
-            const roles = Array.isArray(tenant?.roles) ? tenant.roles : [];
-            if (roles.length < 2) return false;
-
-            const normalizedRoles = new Set(
-              roles.map((role: any) => role?.roleName?.trim().toLowerCase())
-            );
-
-            return (
-              normalizedRoles.has('lead') &&
-              normalizedRoles.has('instructor')
-            );
-          });
+          // Show switch button when there is more than one selectable
+          // Program/Role combination (same filtering the dialog applies)
+          const visibleTenants = getVisibleTenants(
+            filteredTenantData,
+            window.location.host
+          );
+          const shouldShowButton =
+            visibleTenants.length > 1 ||
+            visibleTenants.some((tenant) => (tenant?.roles?.length ?? 0) > 1);
           setShowSwitchButton(shouldShowButton);
         } catch (error) {
           console.error('Error parsing tenantData:', error);
@@ -234,14 +235,8 @@ const Header: React.FC<HeaderProps> = ({ toggleDrawer, openDrawer }) => {
       setUserRoleStore(roleName);
       setAccessToken(token);
 
-      const tenant = localStorage.getItem('tenantName');
-      if (
-        tenant?.toLocaleLowerCase() ===
-          TENANT_DATA?.SECOND_CHANCE_PROGRAM?.toLowerCase() ||
-        tenant?.toLocaleLowerCase() === TENANT_DATA?.PRATHAM_SCP?.toLowerCase() ||
-        tenant?.toLocaleLowerCase() === TENANT_DATA?.YOUTHNET?.toLowerCase() ||
-        tenant?.toLocaleLowerCase() === TENANT_DATA?.PRAGYANPATH?.toLowerCase()
-      ) {
+      const landingPath = getSwitchAccountLandingPath(tenantName, roleName);
+      if (landingPath) {
         try {
           const userDetails = await getUserDetails(currentUserId, true);
           console.log(userDetails);
@@ -294,29 +289,14 @@ const Header: React.FC<HeaderProps> = ({ toggleDrawer, openDrawer }) => {
 
             // Route based on tenant and role
             // Using replace() to prevent back navigation to old program
-            if ( tenant?.toLocaleLowerCase() === TENANT_DATA?.SECOND_CHANCE_PROGRAM?.toLowerCase()) {
-              window.location.replace('/scp-teacher-repo/dashboard');
-            } else if (tenant?.toLocaleLowerCase() === TENANT_DATA?.YOUTHNET?.toLowerCase()) {
-              window.location.replace('/youthnet');
-            } else if (tenant?.toLocaleLowerCase() === TENANT_DATA?.PRAGYANPATH?.toLowerCase()) {
-              if (activeSessionId) {
-                localStorage.setItem('academicYearId', activeSessionId);
-              }
-              
-              // Check if user has Lead role for PRAGYANPATH
-              const hasLead = tenantData?.some((tenant: any) => 
-                tenant.roles.some((role: any) => role.roleName.toLowerCase().includes("lead"))
-              );
-              
-              if (hasLead && roleName.toLowerCase().includes('lead')) {
-                // For Lead role, set managrUserId for manager dashboard
-                localStorage.setItem('managrUserId', currentUserId);
-                window.location.replace('/youthnet/manager-dashboard');
-              } else {
-                // For other roles, redirect to youthNet MFE
-                window.location.replace('/youthnet');
-              }
+            if (activeSessionId) {
+              localStorage.setItem('academicYearId', activeSessionId);
             }
+            if (isPragyanpathLead(tenantName, roleName)) {
+              // For Lead role, set managrUserId for manager dashboard
+              localStorage.setItem('managrUserId', currentUserId);
+            }
+            window.location.replace(landingPath);
             console.log('userDetails', userDetails);
           }
         } catch (error) {

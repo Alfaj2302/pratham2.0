@@ -36,21 +36,47 @@ const CustomSingleSelectWidget = ({
       required={required}
       error={rawErrors.length > 0}
       disabled={
-        isDisabled 
+        isDisabled
         //bug fix for if zero value then no disable it not reflect in required if disable
         // ||
         // enumOptions.length === 0 ||
         // (enumOptions.length === 1 && enumOptions[0]?.value === 'Select')
       }
     >
-      <InputLabel id={`${id}-label`}>{label}</InputLabel>
+      <InputLabel
+        id={`${id}-label`}
+        sx={{
+          color: 'rgba(0, 0, 0, 0.6)', // same as TextField label (text.secondary)
+          '&.Mui-error': {
+            color: 'rgba(0, 0, 0, 0.6)', // override error red
+          },
+          '&.Mui-disabled': {
+            color: 'rgba(0, 0, 0, 0.6)',
+          }
+        }}
+      >
+        {label}
+      </InputLabel>
       <Select
         id={id}
         labelId={`${id}-label`}
         value={value}
         onChange={handleChange}
         displayEmpty
-        label={value !== undefined && value !== null && value !== '' ? label : ''}
+        sx={{
+          // match TextField outline: grey by default, black on hover
+          '& .MuiOutlinedInput-notchedOutline, &.Mui-error .MuiOutlinedInput-notchedOutline':
+            {
+              borderColor: 'rgba(0, 0, 0, 0.23)',
+            },
+          '&:hover:not(.Mui-disabled):not(.Mui-focused) .MuiOutlinedInput-notchedOutline, &.Mui-error:hover:not(.Mui-disabled):not(.Mui-focused) .MuiOutlinedInput-notchedOutline':
+            {
+              borderColor: 'rgba(0, 0, 0, 0.87)',
+            },
+        }}
+        label={
+          value !== undefined && value !== null && value !== '' ? label : ''
+        }
       >
         {isEmptyOptionIncluded && (
           <MenuItem value="">

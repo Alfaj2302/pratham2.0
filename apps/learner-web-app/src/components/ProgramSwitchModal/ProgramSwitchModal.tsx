@@ -18,6 +18,11 @@ import { getAssessmentStatus } from '@learner/utils/API/AssesmentService';
 import { getCohortList } from '@learner/utils/API/CohortService';
 import SimpleModal from '@learner/components/SimpleModal/SimpleModal';
 import { setUserProgram as setActiveUserProgram } from '@learner/utils/hooks/useUserProgram';
+import {
+  clearActiveVtBatchCache,
+  resolveProgramEntryRoute,
+  skipFirstBatchCheck,
+} from '@learner/utils/helpers/vtBatchHelper';
 
 type RegistrationTestStatus =
   | 'clear'
@@ -268,6 +273,13 @@ const ProgramSwitchModal: React.FC<ProgramSwitchModalProps> = ({
   const handleProgramSwitch = async (program: TenantData) => {
     try {
       localStorage.removeItem('learnerCourseFilters');
+      // The L2 Courses tab keeps its own filter state; it is scoped to the
+      // previous program's batch, so it must clear with the rest.
+      localStorage.removeItem('l2CourseFilters');
+      // Forces a fresh batch lookup the next time the learner enters VT.
+      clearActiveVtBatchCache();
+      // Where a VT learner lands is decided below, once the switch completes.
+      skipFirstBatchCheck();
 
       const userId = localStorage.getItem('userId');
       const token = localStorage.getItem('token');
@@ -363,11 +375,19 @@ const ProgramSwitchModal: React.FC<ProgramSwitchModalProps> = ({
         return;
       }
 
+      // Coming back into VT with a batch goes straight to L2 Courses. Reuses the
+      // lookup Layout already started for the new program, so no extra call.
+      const entryRoute = await resolveProgramEntryRoute(
+        userId,
+        tenantName,
+        landingPage || '/home'
+      );
+
       // Close modal
       onClose();
 
       // Navigate to landing page to avoid unauthorized issues
-      router.push(landingPage || '/home');
+      router.push(entryRoute);
     } catch (error) {
       console.error('Failed to switch program:', error);
     }
@@ -376,6 +396,8 @@ const ProgramSwitchModal: React.FC<ProgramSwitchModalProps> = ({
   const handleShowAllPrograms = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     localStorage.removeItem('learnerCourseFilters');
+    localStorage.removeItem('l2CourseFilters');
+    clearActiveVtBatchCache();
     onClose();
     router.push('/programs');
   };

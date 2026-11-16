@@ -175,7 +175,20 @@
     "DELETE_FROM_BATCH_WARNING": "ಮೇಲಿನ  ಸೆಂಟರ್ ಗಳ ಬ್ಯಾಚ್‌ಗಳಿಂದ ಬಳಕೆದಾರರನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ನೀವು ಬಯಸುವಿರಾ?",
     "SAVE": "ಉಳಿಸಿ",
     "SAVING": "ಉಳಿಸಲಾಗುತ್ತಿದೆ...",
-    "MAP_NEW": "ಹೊಸದನ್ನು ಜೋಡಿಸಿ"
+    "MAP_NEW": "ಹೊಸದನ್ನು ಜೋಡಿಸಿ",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found"
   },
   "LOGIN_PAGE": {
     "USERNAME": "ಯೂಸರ್ ಹೆಸರು",
@@ -253,7 +266,9 @@
     "SKILLING_CENTERS": "ಕೌಶಲ್ಯ ಕೇಂದ್ರ",
     "CURRICULUM_PLANNER": "ಪಠ್ಯಕ್ರಮ ಯೋಜಕ",
     "BATCH": "ಬ್ಯಾಚ್",
-    "MOBILIZER": "ಮೆಂಟರ್"
+    "MOBILIZER": "ಮೆಂಟರ್",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "ರಾಜ್ಯ",
@@ -393,7 +408,18 @@
     "DISTRICT_CODE": "ಜಿಲ್ಲೆ ಕೋಡ್",
     "BLOCK_CODE": "ಬ್ಲಾಗ್ ಕೋಡ್",
     "CODE": "ಕೋಡ್",
-    "MASTER": "ಮಾಸ್ಟರ್"
+    "MASTER": "ಮಾಸ್ಟರ್",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "ಸಂಸ್ಥೆಯ ಹೆಸರು",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "ಸೆಂಟರ್",
@@ -890,5 +916,16 @@
     "WORKING_LOCATION_REQUIRED_AT_LEAST_ONE": "ಕೆಲಸದ ಸ್ಥಳದ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಬ್ಲಾಕ್‌ಗಳಲ್ಲಿ ಕನಿಷ್ಠ ಒಂದು ಗ್ರಾಮವನ್ನು  ಆಯ್ಕೆಮಾಡಿ.",
     "MOBILIZER_NAME": "ಮೆಂಟರ್ ಹೆಸರು",
     "EDIT_MOBILIZER": "ಮೊಬಲೈಜರ್ ಎಡಿಟ್ ಮಾಡಿ"
-  }
+  },
+  "PLACEMENT PROPERTY": "Placement Property",
+  "PLACEMENT PROPERTY NAME": "Placement Property Name",
+  "PINCODE": "Pincode",
+  "DOMAIN": "Domain",
+  "INDUSTRY TYPE": "Industry Type",
+  "PLACEMENT PROPERTY CONTACT": "Placement Property Contact",
+  "PLACEMENT PROPERTY EMAIL": "Placement Property Email",
+  "MEDICAL INSURACE": "Medical Insurance",
+  "MEDICAL ASSISTANCE": "Medical Assistance",
+  "PROPERTY SANITISED": "Property Sanitised",
+  "TRANSPORTATION FACILITY": "Transportation Facility"
 }

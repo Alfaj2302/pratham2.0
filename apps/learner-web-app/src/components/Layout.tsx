@@ -12,6 +12,7 @@ import {
   Home,
   AssignmentOutlined,
   AssignmentTurnedInOutlined,
+  FactCheckOutlined,
   Logout,
   KeyboardArrowDown,
 } from '@mui/icons-material';
@@ -23,6 +24,33 @@ import ProgramSwitchModal from './ProgramSwitchModal/ProgramSwitchModal';
 import { checkAuth } from '@shared-lib-v2/utils/AuthService';
 import MuiThemeProvider from '@learner/assets/theme/MuiThemeProvider';
 import { TenantName } from '../utils/app.constant';
+import { useVtAssessmentEligibility } from '@learner/utils/hooks/useVtAssessmentEligibility';
+import { useUserProgram } from '@learner/utils/hooks/useUserProgram';
+import {
+  consumeFirstBatchCheck,
+  hasL2TabBeenShown,
+  markL2TabShown,
+} from '@learner/utils/helpers/vtBatchHelper';
+
+// Vocational Training only. The L2 Courses entry is injected here in code rather
+// than driven by the tenant's uiConfig.navbarItems, because it must also depend on
+// the learner having an active batch — something tenant config cannot express.
+// The page itself holds the Courses and Assessment tabs.
+const VT_ASSESSMENT_ROUTE = '/l2-courses';
+
+// L2 Courses stays highlighted on its own sub-pages (an assessment category,
+// question set detail, answersheet) and on content opened from its Courses
+// tab, which lands on /content-details/... with returnUrl=/l2-courses.
+const isVtAssessmentPage = (currentPage: string) => {
+  const isL2Route = (path: string) =>
+    path === VT_ASSESSMENT_ROUTE ||
+    path.startsWith(`${VT_ASSESSMENT_ROUTE}/`) ||
+    path.startsWith(`${VT_ASSESSMENT_ROUTE}?`);
+  if (isL2Route(currentPage)) return true;
+  if (typeof window === 'undefined') return false;
+  const returnUrl = new URLSearchParams(window.location.search).get('returnUrl');
+  return !!returnUrl && isL2Route(returnUrl);
+};
 
 // Custom DrawerItem interface
 interface NewDrawerItemProp extends DrawerItemProp {
@@ -42,6 +70,7 @@ const getDynamicNavConfig = ({
   isMobile,
   handleLogoutModal,
   handleProfileClick,
+  showVtAssessment,
 }: {
   router: any;
   t: any;
@@ -52,6 +81,7 @@ const getDynamicNavConfig = ({
   isMobile: boolean;
   handleLogoutModal: () => void;
   handleProfileClick: () => void;
+  showVtAssessment: boolean;
 }): NewDrawerItemProp[] => {
   const storedConfig =
     typeof window !== 'undefined'
@@ -63,15 +93,28 @@ const getDynamicNavConfig = ({
   console.log('navbarItems:', navbarItems);
   const navLinks: NewDrawerItemProp[] = [];
 
+  const buildVtAssessmentLink = (): NewDrawerItemProp => ({
+    title: t('LEARNER_APP.VT_ASSESSMENT.L2_COURSES'),
+    icon: <FactCheckOutlined sx={{ width: 28, height: 28 }} />,
+    to: () => handleNavClick(() => router.push(VT_ASSESSMENT_ROUTE)),
+    isActive: isVtAssessmentPage(currentPage),
+    customStyle: getLinkStyle(isVtAssessmentPage(currentPage)),
+  });
+
   // Check if navbarItems exists and has entries
   if (!Array.isArray(navbarItems) || navbarItems.length === 0) {
-    // Return empty array if no navbar items configured
+    if (showVtAssessment) {
+      navLinks.push(buildVtAssessmentLink());
+    }
     return navLinks;
   }
 
   // Sort navigation items by order and generate navigation items
   const sortedNavItems = [...navbarItems].sort((a, b) => (a.order || 0) - (b.order || 0));
-  
+
+  let profileLinkIndex = -1;
+  let lastCourseLinkIndex = -1;
+
   sortedNavItems.forEach((item) => {
     const { key, route, order } = item;
     
@@ -81,6 +124,13 @@ const getDynamicNavConfig = ({
       return;
     }
     
+    // The Assessment entry is injected below. Drop a tenant-config `assessment`
+    // item only when we are the ones injecting it, so a non-VT tenant that
+    // configures its own Assessment nav item keeps rendering it.
+    if (showVtAssessment && key.toLowerCase() === 'assessment') {
+      return;
+    }
+
     // Skip Survey item if isVolunteer is not true in localStorage
     if (key.toLowerCase() === 'survey') {
       const isVolunteer = typeof window !== 'undefined'
@@ -122,6 +172,17 @@ const getDynamicNavConfig = ({
       }
     };
 
+    const keyLower = key.toLowerCase();
+    if (keyLower === 'profile') {
+      profileLinkIndex = navLinks.length;
+    }
+    // L2 Courses sits directly after the L1 Courses entry, so the two course
+    // menus read as a pair. Tracks the last matching item in case a tenant
+    // configures more than one course entry.
+    if (keyLower.includes('course')) {
+      lastCourseLinkIndex = navLinks.length;
+    }
+
     // Add navigation item maintaining exact sequence by order
     navLinks.push({
       title: t(`LEARNER_APP.COMMON.${key}`),
@@ -131,6 +192,18 @@ const getDynamicNavConfig = ({
       customStyle: getLinkStyle(currentPage === route),
     });
   });
+
+  if (showVtAssessment) {
+    // Preferred slot is immediately after L1 Courses. Falls back to just before
+    // Profile, then to the end, for tenants with no course entry in their navbar.
+    let insertAt = navLinks.length;
+    if (lastCourseLinkIndex !== -1) {
+      insertAt = lastCourseLinkIndex + 1;
+    } else if (profileLinkIndex !== -1) {
+      insertAt = profileLinkIndex;
+    }
+    navLinks.splice(insertAt, 0, buildVtAssessmentLink());
+  }
 
   // Add logout for mobile
   if (isMobile) {
@@ -161,6 +234,34 @@ const App: React.FC<LayoutProps> = ({ children, ...props }) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // Resolved once per page load; inert for every non-VT program.
+  const {
+    loading: vtEligibilityLoading,
+    eligible: showVtAssessment,
+    batch: vtBatch,
+  } = useVtAssessmentEligibility();
+  const userProgram = useUserProgram();
+
+  // When the L2 Courses tab turns on for a batch for the first time, the
+  // learner is sent to it only if that happens on the first check after a page
+  // load (a refresh). If it turns on during in-app navigation it is just
+  // enabled. Either way the tab is recorded as shown, so a later refresh never
+  // redirects for a tab that was already enabled.
+  useEffect(() => {
+    // userProgram is read in this render (not from localStorage) so `loading`
+    // belongs to the same program; on the hydration render it is still null.
+    if (userProgram !== TenantName.YOUTHNET || vtEligibilityLoading) return;
+    const isFirstCheck = consumeFirstBatchCheck();
+    if (!showVtAssessment || !vtBatch) return;
+    const userId = localStorage.getItem('userId');
+    if (!userId || hasL2TabBeenShown(userId, vtBatch)) return;
+    markL2TabShown(userId, vtBatch);
+    // Already on L2 Courses (or content opened from it): no need to move.
+    if (isFirstCheck && !isVtAssessmentPage(pathname)) {
+      router.replace(VT_ASSESSMENT_ROUTE);
+    }
+  }, [userProgram, vtEligibilityLoading, showVtAssessment, vtBatch, pathname, router]);
 
   const handleClose = () => setAnchorEl(null);
   const handleProfileClick = () => {
@@ -218,10 +319,11 @@ const App: React.FC<LayoutProps> = ({ children, ...props }) => {
     isMobile,
     handleLogoutModal,
     handleProfileClick,
+    showVtAssessment,
   });
 
   setDefaultNavLinks(navLinks);
-}, [t, router, isMobile]);
+}, [t, router, isMobile, showVtAssessment, pathname]);
 
   useEffect(() => {
     let currentPage = '';
@@ -242,10 +344,11 @@ const App: React.FC<LayoutProps> = ({ children, ...props }) => {
       isMobile,
       handleLogoutModal,
       handleProfileClick,
+      showVtAssessment,
     });
 
     setDefaultNavLinks(navLinks);
-  }, [t, router, isMobile]);
+  }, [t, router, isMobile, showVtAssessment, pathname]);
 
   const onLanguageChange = (val: string) => setLanguage(val);
 

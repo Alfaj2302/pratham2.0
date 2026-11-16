@@ -12,6 +12,11 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import LinkIcon from '@mui/icons-material/Link';
 import LocalLibraryOutlinedIcon from '@mui/icons-material/LocalLibraryOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import {
@@ -65,6 +70,7 @@ interface NavItemProps {
   endIcon?: boolean;
   sx?: Record<string, unknown>;
   className?: string;
+  locked?: boolean;
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -78,14 +84,16 @@ const NavItem: React.FC<NavItemProps> = ({
   endIcon = false,
   sx = {},
   className = 'fs-14',
+  locked = false,
 }) => {
   const theme = useTheme<any>();
   const button = (
     <Button
       className={className}
-      onClick={onClick}
+      onClick={locked ? undefined : onClick}
+      disabled={locked}
       startIcon={!endIcon ? icon : undefined}
-      endIcon={endIcon ? icon : undefined}
+      endIcon={endIcon ? icon : locked ? <LockOutlinedIcon fontSize="small" /> : undefined}
       sx={{
         gap: '10px',
         width: '100%',
@@ -100,6 +108,7 @@ const NavItem: React.FC<NavItemProps> = ({
           : '0px 18px !important',
         color: isActive ? activeColor : color ?? theme.palette.warning.A200,
         fontWeight: isActive ? '600' : 500,
+        '&.Mui-disabled': { opacity: 0.5, color: color ?? theme.palette.warning.A200 },
         '& .MuiButton-startIcon': collapsed ? { margin: 0 } : undefined,
         '& .MuiButton-endIcon': collapsed ? { margin: 0 } : undefined,
         '&:hover': {
@@ -376,10 +385,29 @@ const MenuDrawer: React.FC<DrawerProps> = ({
   const isVillagesAndYouths = router.pathname.includes('/villages');
   const isSurveys = router.pathname.includes('/surveys');
   const isManualAssessments = router.pathname.includes('/manual-assessments');
+  // Distinct from isManualAssessments above: '/manual-assessment-trainer' (singular, Trainer
+  // flow) does not contain '/manual-assessments' (plural, volunteer flow), so the two
+  // highlights stay mutually exclusive, as does '/assessments'.
+  const isManualAssessmentTrainer = router.pathname.includes(
+    '/manual-assessment-trainer'
+  );
+  const isTrainerMapping = router.pathname.includes('/trainer-mapping');
+  const isCenterHead =
+    typeof window !== 'undefined' && window.localStorage.getItem('role') === Role.LEAD;
   const isManagerDashboard = router.pathname === '/manager-dashboard';
   const isIndividualVolunteerDashboard = router.pathname === '/individual-volunteer';
   const isOrganisationDashboard = router.pathname === '/organisation';
   const isOrganisationVolunteerDashboard = router.pathname === '/organisation-volunteer';
+
+  const isTrainer =
+    typeof window !== 'undefined' && window.localStorage.getItem('role') === Role.TEACHER;
+  const isPlacementRetentionCoordinator =
+    typeof window !== 'undefined' &&
+    window.localStorage.getItem('role') === Role.PLACEMENT_RETENTION_COORDINATOR;
+  const isL2InterestedQueue = router.pathname.includes('/l2-interested-queue');
+  const isMyTeachingCenter = router.pathname.includes('/my-teaching-center');
+  const isPlacements = router.pathname.includes('/placements');
+  const isRetention = router.pathname.includes('/retention');
 
   return (
     <Drawer
@@ -559,7 +587,7 @@ const MenuDrawer: React.FC<DrawerProps> = ({
           </Box>
         )}
 
-        {tenantName === TENANT_DATA.YOUTHNET && (
+        {tenantName === TENANT_DATA.YOUTHNET && !isTrainer && !isPlacementRetentionCoordinator && (
           <Box>
             <NavItem
               collapsed={collapsed}
@@ -585,6 +613,20 @@ const MenuDrawer: React.FC<DrawerProps> = ({
               }
               sx={{ marginTop: '25px' }}
             />
+
+            {isCenterHead && (
+              <NavItem
+                collapsed={collapsed}
+                isActive={isTrainerMapping}
+                icon={<BadgeOutlinedIcon sx={{ fontSize: '24px !important' }} />}
+                onClick={() => {
+                  closeDrawer();
+                  router.push('/trainer-mapping');
+                }}
+                label={t('TRAINER_MAPPING.NAV_LABEL')}
+                sx={{ marginTop: '25px' }}
+              />
+            )}
 
             <NavItem
               collapsed={collapsed}
@@ -632,6 +674,102 @@ const MenuDrawer: React.FC<DrawerProps> = ({
                 sx={{ marginTop: '15px' }}
               />
             </Box>
+          </Box>
+        )}
+
+        {tenantName === TENANT_DATA.YOUTHNET && isTrainer && (
+          <Box>
+            <NavItem
+              collapsed={collapsed}
+              isActive={isL2InterestedQueue}
+              icon={<AssignmentIndOutlinedIcon sx={{ fontSize: '24px !important' }} />}
+              onClick={() => {
+                closeDrawer();
+                router.push('/l2-interested-queue');
+              }}
+              label={t('DASHBOARD.L2_INTERESTED_QUEUE')}
+              sx={{ marginTop: '25px' }}
+            />
+
+            <NavItem
+              collapsed={collapsed}
+              isActive={isMyTeachingCenter}
+              icon={<LocalLibraryOutlinedIcon sx={{ fontSize: '24px !important' }} />}
+              onClick={() => {
+                closeDrawer();
+                router.push('/my-teaching-center');
+              }}
+              label={t('DASHBOARD.MY_TEACHING_CENTERS')}
+              sx={{ marginTop: '25px' }}
+            />
+
+            {!isEliminatedFromBuild('Assessments', 'feature') && isActiveYear && (
+              <NavItem
+                collapsed={collapsed}
+                isActive={isAssessments}
+                icon={
+                  <Image
+                    src={assessment}
+                    alt="Assessment Icon"
+                    width={24}
+                    height={24}
+                  />
+                }
+                onClick={() => {
+                  closeDrawer();
+                  router.push('/assessments');
+                }}
+                label={t('ASSESSMENTS.ASSESSMENTS')}
+                sx={{ marginTop: '25px' }}
+              />
+            )}
+
+            {!isEliminatedFromBuild('ManualAssessmentTrainer', 'feature') &&
+              isActiveYear && (
+                <NavItem
+                  collapsed={collapsed}
+                  isActive={isManualAssessmentTrainer}
+                  icon={<EditNoteIcon sx={{ fontSize: '24px !important' }} />}
+                  onClick={() => {
+                    closeDrawer();
+                    router.push('/manual-assessment-trainer');
+                  }}
+                  label={t('ASSESSMENTS.MANUAL_ASSESSMENT')}
+                  sx={{ marginTop: '25px' }}
+                />
+              )}
+          </Box>
+        )}
+
+        {tenantName === TENANT_DATA.YOUTHNET && isPlacementRetentionCoordinator && (
+          <Box>
+            <NavItem
+              collapsed={collapsed}
+              isActive={isPlacements}
+              icon={<WorkOutlineIcon sx={{ fontSize: '24px !important' }} />}
+              onClick={() => {
+                closeDrawer();
+                router.push('/placements');
+              }}
+              label={t('DASHBOARD.PLACEMENTS')}
+              sx={{ marginTop: '25px' }}
+            />
+          </Box>
+        )}
+
+        {tenantName === TENANT_DATA.YOUTHNET && isPlacementRetentionCoordinator && (
+          <Box>
+            <NavItem
+              collapsed={collapsed}
+              isActive={isRetention}
+              icon={<TrackChangesIcon sx={{ fontSize: '24px !important' }} />}
+              onClick={() => {
+                closeDrawer();
+                router.push('/retention');
+              }}
+              label={t('DASHBOARD.RETENTION')}
+              sx={{ marginTop: '25px' }}
+            />
           </Box>
         )}
 

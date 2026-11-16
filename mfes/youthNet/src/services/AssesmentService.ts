@@ -194,7 +194,10 @@ export const getDoIdForAssessmentDetails = async ({
         assessmentType: filters.assessmentType,
         status: ['Live'],
         primaryCategory: ['Practice Question Set'],
-        ...(filters?.evaluationType && { evaluationType: filters.evaluationType})
+        ...(filters?.evaluationType && { evaluationType: filters.evaluationType}),
+        // Restricts the search to a known set of assessment do_ids — used by the Trainer flows to
+        // scope results to the assessments actually attached to the selected batch.
+        ...(filters?.identifier && { identifier: filters.identifier })
       },
     },
   };
@@ -358,6 +361,10 @@ export const getOfflineAssessmentDetails = async ({
     requestFilters.evaluationType = filters.evaluationType;
   }
 
+  if (filters.identifier) {
+    requestFilters.identifier = filters.identifier;
+  }
+
   const data = {
     request: {
       filters: requestFilters,
@@ -516,5 +523,64 @@ export const hierarchyContent = async (content_do_id: string) => {
   } catch (error) {
     console.error('Error fetching hierarchy content:', error);
     return null;
+  }
+};
+
+// Fetches a single assessment attempt for a learner, used by the Assessments attempt-detail page
+// (/assessments/user/[userId]/attempt/[assessmentTrackingId]/[assessmentId]).
+// Ported from scp-teacher-repo; `contentId`, `courseId` and `unitId` all carry the assessment id,
+// matching the shape the tracking search expects there.
+export const getAssessmentAttemptDetails = async (
+  userId: string,
+  assessmentId: string
+): Promise<any> => {
+  const apiUrl: string = API_ENDPOINTS.assessmentSearch;
+  const data = {
+    userId: userId,
+    contentId: assessmentId,
+    courseId: assessmentId,
+    unitId: assessmentId,
+  };
+
+  try {
+    const response = await post(apiUrl, data);
+    return response?.data?.data;
+  } catch (error) {
+    console.error('Error in getAssessmentAttemptDetails Service', error);
+    throw error;
+  }
+};
+
+// Finds the parent Course for a set of assessment do_ids, by searching Courses whose `leafNodes`
+// contain them. The Manual Assessment (Trainer) flow needs the owning course id (`parentId`) because
+// the assessment-tracking calls key off course + unit, not the assessment id alone.
+//
+// Mirrors the Course lookup the existing volunteer manual-assessments flow performs, but lives here
+// in the canonical service rather than the legacy AssesmentService/ directory.
+export const getCoursesForAssessments = async (
+  assessmentIds: string[],
+  program: string | string[]
+): Promise<any[]> => {
+  if (!assessmentIds?.length) return [];
+
+  const apiUrl = `${URL_CONFIG.API.COMPOSITE_SEARCH}`;
+  const data = {
+    request: {
+      filters: {
+        program,
+        status: ['Live'],
+        primaryCategory: ['Course'],
+        leafNodes: assessmentIds,
+      },
+      fields: ['name', 'identifier', 'primaryCategory', 'children', 'leafNodes'],
+    },
+  };
+
+  try {
+    const response = await post(apiUrl, data);
+    return response?.data?.result?.content || [];
+  } catch (error) {
+    console.error('Error in getCoursesForAssessments Service', error);
+    return [];
   }
 };
