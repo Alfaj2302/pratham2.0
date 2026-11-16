@@ -1,8 +1,13 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import {
+  LocalizationProvider,
+  DesktopDatePicker as DatePicker,
+} from '@mui/x-date-pickers';
+// DesktopDatePicker on all devices: DatePicker switches to its mobile variant
+// on touch screens, which has no calendar icon.
 import dayjs from 'dayjs';
 import { useTranslation } from 'libs/shared-lib-v2/src/lib/context/LanguageContext';
 
@@ -59,6 +64,8 @@ const CustomYearPickerWidget = ({
   const maxYear = Number(options?.maxYear) || new Date().getFullYear();
 
   const isDisabled = uiSchema?.['ui:disabled'] === true;
+  // Opened by clicking anywhere on the field, not only the calendar icon
+  const [open, setOpen] = useState(false);
 
   const yearValue = Number(value);
   const isValidYear =
@@ -111,6 +118,9 @@ const CustomYearPickerWidget = ({
           label={t(`FORM.${label}`, { defaultValue: label })}
           value={selectedYear}
           onChange={handleYearChange}
+          open={open}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
           views={['year']}
           openTo="year"
           yearsOrder="desc"
@@ -125,6 +135,8 @@ const CustomYearPickerWidget = ({
               helperText: hasError ? errorText : '',
               required,
               inputProps: { readOnly: true },
+              onClick: () => !isDisabled && setOpen(true),
+              sx: { '& .MuiInputBase-root': { cursor: 'pointer' } },
             },
           }}
         />

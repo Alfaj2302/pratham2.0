@@ -193,7 +193,8 @@ export const getDoIdForAssessmentDetails = async ({
         assessmentType: filters.assessmentType,
         status: ['Live'],
         primaryCategory: ['Practice Question Set'],
-        ...(filters?.evaluationType && { evaluationType: filters.evaluationType})
+        ...(filters?.evaluationType && { evaluationType: filters.evaluationType}),
+        ...(filters?.stream?.length && { stream: filters.stream }),
       },
     },
   };
@@ -351,6 +352,10 @@ export const getOfflineAssessmentDetails = async ({
 
   if (filters.evaluationType) {
     requestFilters.evaluationType = filters.evaluationType;
+  }
+
+  if (filters.stream?.length) {
+    requestFilters.stream = filters.stream;
   }
 
   const data = {
