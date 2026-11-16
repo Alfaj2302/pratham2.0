@@ -1,5 +1,6 @@
 import { getAcademicYear } from '@learner/utils/API/AcademicYearService';
 import { getCohortList } from '@learner/utils/API/CohortService';
+import { TenantName } from '@learner/utils/app.constant';
 
 export interface VtBatchCustomField {
   label?: string;
@@ -29,8 +30,9 @@ const findActiveBatch = (response: any): VtBatch | null => {
 
 let cachedLookup: { key: string; promise: Promise<VtBatch | null> } | null = null;
 
-// Survives reloads so the lookup runs when the learner enters VT, not every
-// page load. ProgramSwitchModal clears it, so re-entering VT re-checks.
+// Last resolved batch. Reloads still re-fetch (see getActiveVtBatch), so a batch
+// assigned mid-session shows up on a refresh of any page. ProgramSwitchModal
+// clears it, so re-entering VT re-checks.
 export const VT_BATCH_STORAGE_KEY = 'vtActiveBatch';
 
 const readStoredBatch = (key: string): { batch: VtBatch | null } | null => {
@@ -63,7 +65,10 @@ export const getActiveVtBatch = (
     return cachedLookup.promise;
   }
 
-  const stored = forceRefresh ? null : readStoredBatch(key);
+  // No lookup yet in memory means this is the first one since a page load
+  // (refresh or login), so fetch fresh on whatever page the learner is on.
+  // In-app navigation after that reuses the in-memory result.
+  const stored = forceRefresh || !cachedLookup ? null : readStoredBatch(key);
   if (stored) {
     const promise = Promise.resolve(stored.batch);
     cachedLookup = { key, promise };
@@ -80,6 +85,82 @@ export const getActiveVtBatch = (
   });
   cachedLookup = { key, promise };
   return promise;
+};
+
+// Records that the L2 Courses tab has already been enabled for this batch,
+// whether the learner was redirected to it or it just appeared during in-app
+// navigation. A refresh redirects only when the tab was not enabled before.
+// Not kept by preserveLocalStorage(), so it resets on logout and the next
+// login redirects.
+const L2_TAB_SHOWN_STORAGE_KEY = 'vtL2TabShown';
+
+const getL2TabShownKey = (userId: string, batch: VtBatch) =>
+  `${userId}:${batch.cohortId ?? ''}`;
+
+/** True once the L2 Courses tab has been enabled for this learner's batch. */
+export const hasL2TabBeenShown = (userId: string, batch: VtBatch): boolean => {
+  try {
+    return localStorage.getItem(L2_TAB_SHOWN_STORAGE_KEY) === getL2TabShownKey(userId, batch);
+  } catch {
+    return false;
+  }
+};
+
+export const markL2TabShown = (userId: string, batch: VtBatch) => {
+  try {
+    localStorage.setItem(L2_TAB_SHOWN_STORAGE_KEY, getL2TabShownKey(userId, batch));
+  } catch {
+    // Storage unavailable — the redirect may repeat, which is harmless.
+  }
+};
+
+// Only the batch check that resolves first after a page load (refresh, or the
+// first VT page after login) may auto-redirect; a check that resolves later,
+// during in-app navigation, just enables the tab. Module scope, so a reload
+// re-arms it.
+let firstBatchCheckPending = true;
+
+/** True for the first resolved batch check of this page load only. */
+export const consumeFirstBatchCheck = (): boolean => {
+  const pending = firstBatchCheckPending;
+  firstBatchCheckPending = false;
+  return pending;
+};
+
+/**
+ * Re-arm on logout, so logging back in without a reload counts as a fresh load:
+ * the batch is fetched again and the first check may redirect.
+ */
+export const resetFirstBatchCheck = () => {
+  firstBatchCheckPending = true;
+  cachedLookup = null;
+};
+
+/**
+ * Stop Layout from redirecting on its next check. ProgramSwitchModal sets the
+ * new program before it finishes, so Layout would check the batch on the old
+ * page and race the modal's own navigation; the modal decides instead.
+ */
+export const skipFirstBatchCheck = () => {
+  firstBatchCheckPending = false;
+};
+
+/**
+ * Where a learner entering a program should go: L2 Courses for a VT learner
+ * with a batch, otherwise the program's landing page. Resolved before
+ * navigating, so the learner never sees the landing page first. The redirect
+ * is recorded, so Layout doesn't repeat it on the next refresh.
+ */
+export const resolveProgramEntryRoute = async (
+  userId: string | null | undefined,
+  program: string | null | undefined,
+  landingPage: string
+): Promise<string> => {
+  if (!userId || program !== TenantName.YOUTHNET) return landingPage;
+  const batch = await getActiveVtBatch(userId, { programKey: program });
+  if (!batch) return landingPage;
+  markL2TabShown(userId, batch);
+  return '/l2-courses';
 };
 
 /** Drop the batch so the next VT visit re-checks. */

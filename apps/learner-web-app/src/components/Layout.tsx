@@ -25,6 +25,12 @@ import { checkAuth } from '@shared-lib-v2/utils/AuthService';
 import MuiThemeProvider from '@learner/assets/theme/MuiThemeProvider';
 import { TenantName } from '../utils/app.constant';
 import { useVtAssessmentEligibility } from '@learner/utils/hooks/useVtAssessmentEligibility';
+import { useUserProgram } from '@learner/utils/hooks/useUserProgram';
+import {
+  consumeFirstBatchCheck,
+  hasL2TabBeenShown,
+  markL2TabShown,
+} from '@learner/utils/helpers/vtBatchHelper';
 
 // Vocational Training only. The L2 Courses entry is injected here in code rather
 // than driven by the tenant's uiConfig.navbarItems, because it must also depend on
@@ -230,7 +236,32 @@ const App: React.FC<LayoutProps> = ({ children, ...props }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Resolved once per page load; inert for every non-VT program.
-  const { eligible: showVtAssessment } = useVtAssessmentEligibility();
+  const {
+    loading: vtEligibilityLoading,
+    eligible: showVtAssessment,
+    batch: vtBatch,
+  } = useVtAssessmentEligibility();
+  const userProgram = useUserProgram();
+
+  // When the L2 Courses tab turns on for a batch for the first time, the
+  // learner is sent to it only if that happens on the first check after a page
+  // load (a refresh). If it turns on during in-app navigation it is just
+  // enabled. Either way the tab is recorded as shown, so a later refresh never
+  // redirects for a tab that was already enabled.
+  useEffect(() => {
+    // userProgram is read in this render (not from localStorage) so `loading`
+    // belongs to the same program; on the hydration render it is still null.
+    if (userProgram !== TenantName.YOUTHNET || vtEligibilityLoading) return;
+    const isFirstCheck = consumeFirstBatchCheck();
+    if (!showVtAssessment || !vtBatch) return;
+    const userId = localStorage.getItem('userId');
+    if (!userId || hasL2TabBeenShown(userId, vtBatch)) return;
+    markL2TabShown(userId, vtBatch);
+    // Already on L2 Courses (or content opened from it): no need to move.
+    if (isFirstCheck && !isVtAssessmentPage(pathname)) {
+      router.replace(VT_ASSESSMENT_ROUTE);
+    }
+  }, [userProgram, vtEligibilityLoading, showVtAssessment, vtBatch, pathname, router]);
 
   const handleClose = () => setAnchorEl(null);
   const handleProfileClick = () => {
