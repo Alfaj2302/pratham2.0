@@ -785,6 +785,7 @@ export interface GetUserProjectStatusParams {
 export interface PasswordCreateProps {
   handleResetPassword: (password: string) => void;
   editPassword?: boolean;
+  submitLabel?: string;
 }
 
 export interface AcademicYear {

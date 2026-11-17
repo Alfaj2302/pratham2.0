@@ -63,6 +63,11 @@ const UserId = () => {
   const [openProfileEditModal, setOpenProfileEditModal] = React.useState(false);
   const [userData, setUserData] = useState<any>({});
   const [isSelfProfile, setIsSelfProfile] = useState(false);
+  // Password action derived from User Read API `temporaryPassword`.
+  // 'loading' -> no button rendered until the API resolves.
+  const [passwordAction, setPasswordAction] = useState<
+    'loading' | 'set' | 'reset'
+  >('loading');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,6 +79,7 @@ const UserId = () => {
       if (userId === storedUserId) {
         userData = JSON.parse(localStorage.getItem('userData') || '{}');
         setIsSelfProfile(true);
+        fetchPasswordAction(userId);
       } else if (userId) {
         const data = await getUserDetails(userId, true);
         userData = data?.result.userData || {};
@@ -105,6 +111,26 @@ const UserId = () => {
           subjectsITeach: getFieldValue('SUBJECTS_I_TEACH'),
           myMainSubjects: getFieldValue('MY_MAIN_SUBJECTS'),
         });
+      }
+    };
+
+    const fetchPasswordAction = async (id: string) => {
+      setPasswordAction('loading');
+      try {
+        const data = await getUserDetails(id, true);
+        const readUserData = data?.result?.userData;
+        if (!readUserData) {
+          // API failed: fall back to the existing Reset Password flow.
+          setPasswordAction('reset');
+          return;
+        }
+        const isTemporaryPassword =
+          readUserData.temporaryPassword === true ||
+          readUserData.temporaryPassword === 'true';
+        setPasswordAction(isTemporaryPassword ? 'set' : 'reset');
+      } catch (error) {
+        console.error('Error fetching temporaryPassword flag', error);
+        setPasswordAction('reset');
       }
     };
 
@@ -264,30 +290,38 @@ const UserId = () => {
             {t('LOGIN_PAGE.OTHER_SETTING')}
           </Box>
           <Box sx={{ mt: 2.5 }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              sx={{
-                '&.Mui-disabled': {
-                  backgroundColor: theme?.palette?.primary?.main,
-                },
-                minWidth: '84px',
-                padding: theme.spacing(1),
-                fontWeight: '500',
-                width: '188px',
-                height: '40px',
-                '@media (max-width: 430px)': {
-                  width: '100%',
-                },
-                whiteSpace: 'nowrap',
-              }}
-              onClick={() => {
-                router.push('/edit-password');
-              }}
-              className="one-line-text"
-            >
-              {t('LOGIN_PAGE.RESET_PASSWORD')}
-            </Button>
+            {passwordAction !== 'loading' && (
+              <Button
+                variant="outlined"
+                color="primary"
+                sx={{
+                  '&.Mui-disabled': {
+                    backgroundColor: theme?.palette?.primary?.main,
+                  },
+                  minWidth: '84px',
+                  padding: theme.spacing(1),
+                  fontWeight: '500',
+                  width: '188px',
+                  height: '40px',
+                  '@media (max-width: 430px)': {
+                    width: '100%',
+                  },
+                  whiteSpace: 'nowrap',
+                }}
+                onClick={() => {
+                  router.push(
+                    passwordAction === 'set'
+                      ? '/set-password'
+                      : '/edit-password'
+                  );
+                }}
+                className="one-line-text"
+              >
+                {passwordAction === 'set'
+                  ? t('LOGIN_PAGE.SET_PASSWORD')
+                  : t('LOGIN_PAGE.RESET_PASSWORD')}
+              </Button>
+            )}
           </Box>
         </Box>
       ) : null}

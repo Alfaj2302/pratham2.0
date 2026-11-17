@@ -595,6 +595,7 @@
     "WRITE_TO_US_AT": "ہمیں لکھیں"
   },
   "LOGIN_PAGE": {
+    "SET_PASSWORD": "پاس ورڈ سیٹ کریں",
     "USERNAME_PASSWORD_NOT_CORRECT": "صارف نام یا پاس ورڈ درست نہیں ہے۔",
     "DEVICE_FINGERPRINT_SUCCESS": "ڈیوائس کا فنگر پرنٹ کامیابی کے ساتھ تیار ہو گیا۔",
     "DEVICE_FINGERPRINT_ERROR": "ڈیوائس فنگر پرنٹ بنانے میں خرابی ہے۔",

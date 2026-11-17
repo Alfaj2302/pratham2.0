@@ -78,7 +78,7 @@ const EditForgotPassword = () => {
   return (
     <Box>
       <Header />
-      <Box sx={{ px: '16px', mt: 2 }}>
+      <Box sx={{ px: '16px', mt: 2, pb: '20px' }}>
         <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <WestIcon
             onClick={handleBackEvent}
