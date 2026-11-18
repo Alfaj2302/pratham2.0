@@ -46,6 +46,8 @@ const API_ENDPOINTS = {
   suggestUsername: `${baseurl}/user/suggestUsername`,
   userTenantStatus: (userId: string, tenantId: string) =>
     `${baseurl}/user-tenant/status?userId=${userId}&tenantId=${tenantId}`,
+  userRoleStatus: (tenantId: string) =>
+    `${baseurl}/rbac/usersRoles/${tenantId}`,
   cohortUpdateUser: (userId: string | string[]) =>
     `${baseurl}/cohort/update/${userId}`,
   formReadWithContext: (context: string, contextType: string) =>

@@ -32,6 +32,7 @@ import { Button } from '@mui/material';
 import SimpleModal from '@/components/SimpleModal';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { deleteUser } from '@shared-lib-v2/MapUser/DeleteUser';
+import { reactivateUserRoleAndTenant } from '@shared-lib-v2/MapUser/UserRoleArchival';
 import DeleteDetails from '@/components/DeleteDetails';
 import editIcon from '../../public/images/editIcon.svg';
 import deleteIcon from '../../public/images/deleteIcon.svg';
@@ -68,7 +69,6 @@ import {
   updateCohortMemberStatus,
 } from '@/services/CohortService/cohortService';
 import { getCohortList } from '@/services/GetCohortList';
-import { updateUserTenantStatus } from '@/services/UserService';
 import { updateUser } from '@shared-lib-v2/DynamicForm/services/CreateUserService';
 import { sendCredentialService } from '@/services/NotificationService';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -595,20 +595,7 @@ const Mobilizer = () => {
 
       setIsRestoreInProgress(true);
       try {
-        // Step 1: Update user tenant status
-        const tenantStatusResp = await updateUserTenantStatus(userID, tenantId, {
-          status: 'active',
-        });
-        if (tenantStatusResp?.responseCode !== 200) {
-          console.error('Failed to activate mobilizer (tenant status):', tenantStatusResp);
-          showToastMessage(
-            tenantStatusResp?.params?.errmsg || 'Failed to activate user',
-            'error'
-          );
-          return;
-        }
-
-        // Step 2: Update cohort membership status
+        // Step 1: Update cohort membership status
         const cohortMemberResp = await updateCohortMemberStatus({
           memberStatus: 'active',
           membershipId,
@@ -617,6 +604,22 @@ const Mobilizer = () => {
           console.error('Failed to activate cohort membership:', cohortMemberResp);
           showToastMessage(
             cohortMemberResp?.params?.errmsg || 'Failed to activate center membership',
+            'error'
+          );
+          return;
+        }
+
+        // Step 2: User Role Archival API (status active), then Tenant Status
+        // Update API when the tenant membership is not active
+        const tenantStatusResp = await reactivateUserRoleAndTenant({
+          userId: userID,
+          roleId: RoleId.MOBILIZER,
+          tenantId,
+        });
+        if (tenantStatusResp?.responseCode !== 200) {
+          console.error('Failed to activate mobilizer (role/tenant status):', tenantStatusResp);
+          showToastMessage(
+            tenantStatusResp?.params?.errmsg || 'Failed to activate user',
             'error'
           );
           return;

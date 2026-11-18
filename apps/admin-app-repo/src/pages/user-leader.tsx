@@ -59,6 +59,7 @@ import { FormContext } from '@/components/DynamicForm/DynamicFormConstant';
 import ConfirmationPopup from '@/components/ConfirmationPopup';
 import DeleteDetails from '@/components/DeleteDetails';
 import { deleteUser } from '@shared-lib-v2/MapUser/DeleteUser';
+import { reactivateUserRoleAndTenant } from '@shared-lib-v2/MapUser/UserRoleArchival';
 import {
   calculateAge,
   calculateAgeFromDate,
@@ -79,7 +80,6 @@ import { API_ENDPOINTS } from '@/utils/API/APIEndpoints';
 import { updateUser } from '@/services/CreateUserService';
 import { splitUserData } from '@shared-lib-v2/DynamicForm/components/DynamicFormCallback';
 import { enrollUserTenant } from '@shared-lib-v2/MapUser/MapService';
-import { updateUserTenantStatus } from '@/services/UserService';
 import { sendCredentialService } from '@/services/NotificationService';
 import { buildProgramMappingEmailRequest } from '@shared-lib-v2/DynamicForm/utils/notifications/programMapping';
 import useStore from '@/store/store';
@@ -281,9 +281,12 @@ const UserLeader = () => {
         }
       }
 
-      // After successful center activation, update user status
-      const resp = await updateUserTenantStatus(userID, tenantId, {
-        status: 'active',
+      // After successful center activation: User Role Archival API (status
+      // active), then Tenant Status Update API when tenant is not active
+      const resp = await reactivateUserRoleAndTenant({
+        userId: userID,
+        roleId: RoleId.TEAM_LEADER,
+        tenantId,
       });
 
       if (resp?.responseCode === 200) {

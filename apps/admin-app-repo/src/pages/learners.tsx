@@ -47,7 +47,11 @@ import {
 import { FormContext } from '@/components/DynamicForm/DynamicFormConstant';
 import ConfirmationPopup from '@/components/ConfirmationPopup';
 import DeleteDetails from '@/components/DeleteDetails';
-import { updateUserTenantStatus } from '@/services/UserService';
+import {
+  archiveUserRoleAndTenant,
+  getTenantRoleSummary,
+  reactivateUserRoleAndTenant,
+} from '@shared-lib-v2/MapUser/UserRoleArchival';
 import {
   calculateAgeFromDate,
   fetchUserData,
@@ -94,6 +98,7 @@ const Learner = () => {
   const [isReassign, setIsReassign] = useState(false);
   const [open, setOpen] = useState(false);
   const [archiveToActiveOpen, setArchiveToActiveOpen] = useState(false);
+  const [selectedUserDetails, setSelectedUserDetails] = useState<any>(null);
   const [checked, setChecked] = useState(false);
   const [userID, setUserId] = useState('');
   const [centerSelectiveValue, setCenterSelectiveValue] = useState('');
@@ -431,6 +436,12 @@ const Learner = () => {
 
   const userDelete = async () => {
     try {
+      // Latest user details (reuse the User Read result fetched on dialog open)
+      const roleSummary = await getTenantRoleSummary(
+        userID,
+        tenantId,
+        selectedUserDetails?.userData?.userId === userID ? selectedUserDetails : undefined
+      );
       let membershipIds = null;
 
       // Attempt to get the cohort list
@@ -460,28 +471,38 @@ const Learner = () => {
 
             if (updateResponse?.responseCode !== 200) {
               console.error(
-                `Failed to archive user with membershipId ${membershipId}:`,
+                `Failed to update user with membershipId ${membershipId}:`,
                 updateResponse
               );
+              showToastMessage(
+                updateResponse?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+                'error'
+              );
+              return;
             } else {
               console.log(
-                `User with membershipId ${membershipId} successfully archived.`
+                `User with membershipId ${membershipId} successfully updated.`
               );
             }
           } catch (error) {
             console.error(
-              `Error archiving user with membershipId ${membershipId}:`,
+              `Error updating user with membershipId ${membershipId}:`,
               error
             );
+            showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
+            return;
           }
         }
       }
 
-      // Always attempt to delete the user
-      console.log('Proceeding to self-delete...');
-      const resp = await updateUserTenantStatus(userID, tenantId, {
-        reason: reason,
-        status: 'archived',
+      // User Role Archival API, then Tenant Status Update API only when
+      // this was the last active role in the current tenant
+      const resp = await archiveUserRoleAndTenant({
+        userId: userID,
+        roleId,
+        tenantId,
+        reason,
+        summary: roleSummary,
       });
       if (resp?.responseCode === 200) {
         // setResponse((prev) => ({
@@ -497,6 +518,7 @@ const Learner = () => {
         console.log('Team leader successfully archived.');
       } else {
         console.error('Failed to archive team leader:', resp);
+        showToastMessage(resp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'), 'error');
       }
 
       return resp;
@@ -534,29 +556,39 @@ const Learner = () => {
 
             if (updateResponse?.responseCode !== 200) {
               console.error(
-                `Failed to archive user with membershipId ${membershipId}:`,
+                `Failed to update user with membershipId ${membershipId}:`,
                 updateResponse
               );
+              showToastMessage(
+                updateResponse?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+                'error'
+              );
+              return;
             } else {
               console.log(
-                `User with membershipId ${membershipId} successfully archived.`
+                `User with membershipId ${membershipId} successfully updated.`
               );
             }
           } catch (error) {
             console.error(
-              `Error archiving user with membershipId ${membershipId}:`,
+              `Error updating user with membershipId ${membershipId}:`,
               error
             );
+            showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
+            return;
           }
         }
       }
 
-      // Always attempt to delete the user
-      console.log('Proceeding to self-delete...');
-      const resp = await updateUserTenantStatus(userID, tenantId, {
-        status: 'active',
+      // User Role Archival API (status active), then Tenant Status Update API
+      // when the tenant membership is not active
+      const resp = await reactivateUserRoleAndTenant({
+        userId: userID,
+        roleId,
+        tenantId,
+        userDetails:
+          selectedUserDetails?.userData?.userId === userID ? selectedUserDetails : undefined,
       });
-      showToastMessage(t("LEARNERS.ACTIVATE_USER_SUCCESS"), "success");
 
 
       if (resp?.responseCode === 200) {
@@ -571,9 +603,11 @@ const Learner = () => {
         // }));
         searchData(prefilledFormData, currentPage);
 
+        showToastMessage(t("LEARNERS.ACTIVATE_USER_SUCCESS"), "success");
         console.log('learner successfully aactive.');
       } else {
-        console.error('Failed to archive team leader:', resp);
+        console.error('Failed to activate learner:', resp);
+        showToastMessage(resp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'), 'error');
       }
 
       return resp;
@@ -641,6 +675,7 @@ const Learner = () => {
           selectedUserId,
           true
         );
+        setSelectedUserDetails(selectedUserDetails?.userData ? selectedUserDetails : null);
         // console.log('selectedUserDetails:', selectedUserDetails);
 
         const findVillage = selectedUserDetails?.userData?.customFields.find((item) => {
@@ -698,6 +733,7 @@ const Learner = () => {
           selectedUserId,
           true
         );
+        setSelectedUserDetails(selectedUserDetails?.userData ? selectedUserDetails : null);
         const findVillage = selectedUserDetails?.userData?.customFields.find((item) => {
           if (item.label === 'VILLAGE') {
             return item;

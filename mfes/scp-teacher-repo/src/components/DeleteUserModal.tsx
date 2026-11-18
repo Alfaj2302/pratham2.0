@@ -1,7 +1,11 @@
 import { updateFacilitator } from '@/services/ManageUser';
-import { updateCohortMemberStatus, updateUserTenantStatus } from '@/services/MyClassDetailsService';
+import { updateCohortMemberStatus } from '@/services/MyClassDetailsService';
+import {
+  archiveUserRoleAndTenant,
+  getTenantRoleSummary,
+} from '@shared-lib-v2/MapUser/UserRoleArchival';
 import manageUserStore from '@/store/manageUserStore';
-import { Role, Status } from '@/utils/app.constant';
+import { Role, RoleId, Status } from '@/utils/app.constant';
 import { fetchAttendanceStats } from '@/utils/helperAttendanceStatApi';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -85,25 +89,52 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
         const statusReason = selectedValue;
         const membershipId = store?.learnerDeleteId;
 
-        await updateCohortMemberStatus({
-          memberStatus,
-          statusReason,
-          membershipId,
-        });
         const resolvedTenantId = tenantId ?? localStorage.getItem('tenantId');
         if (!resolvedTenantId) {
           showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
           return;
         }
-        const resp = await updateUserTenantStatus(userId, resolvedTenantId, {
-          status: 'archived', reason: statusReason
+
+        // Latest user details (User Read API) -> current-tenant role summary
+        const roleSummary = await getTenantRoleSummary(userId, resolvedTenantId);
+
+        // 1. Cohort Status Update API
+        const cohortResp = await updateCohortMemberStatus({
+          memberStatus,
+          statusReason,
+          membershipId,
         });
+        if (cohortResp?.responseCode !== 200) {
+          showToastMessage(
+            cohortResp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+            'error'
+          );
+          return;
+        }
+
+        // 2. User Role Archival API, 3. Tenant Status Update API (only when
+        //    this was the last active role in the current tenant)
+        const resp = await archiveUserRoleAndTenant({
+          userId,
+          roleId: RoleId.STUDENT,
+          tenantId: resolvedTenantId,
+          reason: statusReason,
+          summary: roleSummary,
+        });
+        if (resp?.responseCode !== 200) {
+          showToastMessage(
+            resp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+            'error'
+          );
+          return;
+        }
         showToastMessage(t('COMMON.USER_DELETED_PERMANENTLY'), 'success');
       }
     }
   }
   catch(error){
-
+    console.error('Error deleting user:', error);
+    showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
   }
   finally{
     setSelectedValue('');

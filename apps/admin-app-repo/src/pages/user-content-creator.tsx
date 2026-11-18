@@ -27,6 +27,7 @@ import { Button } from '@mui/material';
 import SimpleModal from '@/components/SimpleModal';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { deleteUser } from '@shared-lib-v2/MapUser/DeleteUser';
+import { reactivateUserRoleAndTenant } from '@shared-lib-v2/MapUser/UserRoleArchival';
 import editIcon from '../../public/images/editIcon.svg';
 import deleteIcon from '../../public/images/deleteIcon.svg';
 import Image from 'next/image';
@@ -390,13 +391,19 @@ const ContentCreator = () => {
 
   const archiveToactive = async () => {
     try {
-      const resp = await deleteUser({
+      const resp = await reactivateUserRoleAndTenant({
         userId: editableUserId,
         roleId: roleId,
         tenantId: tenantId,
-        status: 'active',
       });
       setArchiveToActiveOpen(false);
+      if (resp?.responseCode !== 200) {
+        showToastMessage(
+          resp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+          'error'
+        );
+        return;
+      }
       searchData(prefilledFormData, currentPage);
 
       showToastMessage(t('LEARNERS.ACTIVATE_USER_SUCCESS'), 'success');

@@ -73,6 +73,7 @@ import { FormContext } from '@/components/DynamicForm/DynamicFormConstant';
 import ConfirmationPopup from '@/components/ConfirmationPopup';
 import DeleteDetails from '@/components/DeleteDetails';
 import { deleteUser } from '@shared-lib-v2/MapUser/DeleteUser';
+import { reactivateUserRoleAndTenant } from '@shared-lib-v2/MapUser/UserRoleArchival';
 import {
   transformLabel,
   fetchUserData,
@@ -89,7 +90,6 @@ import ResetFiltersButton from '@/components/ResetFiltersButton/ResetFiltersButt
 import { showToastMessage } from '@/components/Toastify';
 import { enrollUserTenant } from '@shared-lib-v2/MapUser/MapService';
 import { updateUser } from '@shared-lib-v2/DynamicForm/services/CreateUserService';
-import { updateUserTenantStatus } from '@/services/UserService';
 import { sendCredentialService } from '@/services/NotificationService';
 import { buildProgramMappingEmailRequest } from '@shared-lib-v2/DynamicForm/utils/notifications/programMapping';
 import useStore from '@/store/store';
@@ -126,6 +126,7 @@ const Facilitator = () => {
   const [districtFieldId, setDistrictFieldId] = useState('');
   const [villageFieldId, setVillageFieldId] = useState('');
   const [archiveToActiveOpen, setArchiveToActiveOpen] = useState(false);
+  const [selectedUserDetails, setSelectedUserDetails] = useState<any>(null);
   const [selectedBatches, setSelectedBatches] = useState<any[]>([]);
   const [availableBatches, setAvailableBatches] = useState<any[]>([]);
   const [availableCenters, setAvailableCenters] = useState<any[]>([]);
@@ -464,9 +465,12 @@ const Facilitator = () => {
         }
       }
 
-      // After successful batch activation, update user status
-      const resp = await updateUserTenantStatus(userID, tenantId, {
-        status: 'active',
+      // After successful batch activation: User Role Archival API (status
+      // active), then Tenant Status Update API when tenant is not active
+      const resp = await reactivateUserRoleAndTenant({
+        userId: userID,
+        roleId: RoleId.TEACHER,
+        tenantId,
       });
       
       if (resp?.responseCode === 200) {
@@ -543,6 +547,7 @@ const Facilitator = () => {
         console.log('row.cohortData:', row.cohortData); // Check what data is available
         const selectedUserId = row?.userId;
         const selectedUserDetails = await getUserDetailsInfo(selectedUserId, true);
+        setSelectedUserDetails(selectedUserDetails?.userData ? selectedUserDetails : null);
         const cohortResponse = await getCohortList(selectedUserId);
         console.log('cohortResponse:', cohortResponse);
         const centerNames = [...new Set(
@@ -1069,6 +1074,11 @@ const Facilitator = () => {
               roleId: roleId,
               tenantId: tenantId,
               reason: reason,
+              // reuse the User Read result fetched when the dialog opened
+              userDetails:
+                selectedUserDetails?.userData?.userId === userID
+                  ? selectedUserDetails
+                  : undefined,
             });
 
             if (resp?.responseCode === 200) {

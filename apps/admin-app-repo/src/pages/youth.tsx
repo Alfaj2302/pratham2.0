@@ -34,7 +34,15 @@ import { FormContext } from '@/components/DynamicForm/DynamicFormConstant';
 import AddEditUser from '@/components/EntityForms/AddEditUser/AddEditUser';
 import ConfirmationPopup from '@/components/ConfirmationPopup';
 import DeleteDetails from '@/components/DeleteDetails';
-import { editEditUser, updateUserTenantStatus } from '@/services/UserService';
+import { editEditUser } from '@/services/UserService';
+import {
+  archiveUserRoleAndTenant,
+  getTenantRoleSummary,
+  reactivateUserRoleAndTenant,
+} from '@shared-lib-v2/MapUser/UserRoleArchival';
+
+// Youth listed on this page are 'Learner' role users
+const YOUTH_ROLE_ID = RoleId.STUDENT;
 import { transformLabel, formatDateToDDMMYYYY } from '@/utils/helper';
 import { getCohortList } from '@/services/GetCohortList';
 import { useTheme } from '@mui/material/styles';
@@ -255,6 +263,8 @@ const Youth = () => {
 
   const userDelete = async () => {
     try {
+      // Latest user details (User Read API) -> current-tenant role summary
+      const roleSummary = await getTenantRoleSummary(userID, tenantId);
       let membershipId = null;
 
       // Attempt to get the cohort list
@@ -283,19 +293,29 @@ const Youth = () => {
               'Failed to archive user from center:',
               updateResponse
             );
+            showToastMessage(
+              updateResponse?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+              'error'
+            );
+            return;
           } else {
             console.log('User successfully archived from center.');
           }
         } catch (error) {
           console.error('Error archiving user from center:', error);
+          showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
+          return;
         }
       }
 
-      // Always attempt to delete the user
-      console.log('Proceeding to self-delete...');
-      const resp = await updateUserTenantStatus(userID, tenantId, {
-        status: 'archived',
-        reason: reason,
+      // User Role Archival API, then Tenant Status Update API only when
+      // this was the last active role in the current tenant
+      const resp = await archiveUserRoleAndTenant({
+        userId: userID,
+        roleId: YOUTH_ROLE_ID,
+        tenantId,
+        reason,
+        summary: roleSummary,
       });
 
       if (resp?.responseCode === 200) {
@@ -312,6 +332,7 @@ const Youth = () => {
         console.log('Team leader successfully archived.');
       } else {
         console.error('Failed to archive team leader:', resp);
+        showToastMessage(resp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'), 'error');
       }
 
       return resp;
@@ -395,29 +416,37 @@ const Youth = () => {
 
             if (updateResponse?.responseCode !== 200) {
               console.error(
-                `Failed to archive user with membershipId ${membershipId}:`,
+                `Failed to activate user with membershipId ${membershipId}:`,
                 updateResponse
               );
+              showToastMessage(
+                updateResponse?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'),
+                'error'
+              );
+              return;
             } else {
               console.log(
-                `User with membershipId ${membershipId} successfully archived.`
+                `User with membershipId ${membershipId} successfully activated.`
               );
             }
           } catch (error) {
             console.error(
-              `Error archiving user with membershipId ${membershipId}:`,
+              `Error activating user with membershipId ${membershipId}:`,
               error
             );
+            showToastMessage(t('COMMON.SOMETHING_WENT_WRONG'), 'error');
+            return;
           }
         }
       }
 
-      // Always attempt to delete the user
-      console.log('Proceeding to self-delete...');
-      const resp = await updateUserTenantStatus(userID, tenantId, {
-        status: 'active',
+      // User Role Archival API (status active), then Tenant Status Update API
+      // when the tenant membership is not active
+      const resp = await reactivateUserRoleAndTenant({
+        userId: userID,
+        roleId: YOUTH_ROLE_ID,
+        tenantId,
       });
-      showToastMessage(t("LEARNERS.ACTIVATE_USER_SUCCESS"), "success");
 
       if (resp?.responseCode === 200) {
         // setResponse((prev) => ({
@@ -431,9 +460,11 @@ const Youth = () => {
         // }));
         searchData(prefilledFormData, currentPage);
         
+        showToastMessage(t("LEARNERS.ACTIVATE_USER_SUCCESS"), "success");
         console.log('learner successfully aactive.');
       } else {
-        console.error('Failed to archive team leader:', resp);
+        console.error('Failed to activate youth:', resp);
+        showToastMessage(resp?.params?.errmsg || t('COMMON.SOMETHING_WENT_WRONG'), 'error');
       }
 
       return resp;
