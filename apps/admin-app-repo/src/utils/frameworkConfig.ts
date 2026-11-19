@@ -62,6 +62,7 @@ export const LOOKUP = {
     'Creative Arts',
     'Employee Training',
     'Environment Education',
+    'General Training & Capacity Building',
     'Growth & Learning',
     'Health & Wellbeing',
     'Inclusive Education',
@@ -77,6 +78,7 @@ export const LOOKUP = {
     'Agriculture Education',
     'Apparel',
     'Art & Culture',
+    'ASER',
     'Assamese',
     'Automotive',
     'Awareness & Advocacy',
@@ -120,6 +122,7 @@ export const LOOKUP = {
     'Khasi',
     'Knowledge Videos',
     'Leadership',
+    'Low Tech',
     'Malayalam',
     'Marathi',
     'Math',
@@ -357,6 +360,7 @@ export const POS_SUB_DOMAIN_NAME_TO_ID: Record<string, string> = {
   'Creative Arts':         'pos-framework_subdomain_creativearts',
   'Employee Training':     'pos-framework_subdomain_employeetraining',
   'Environment Education': 'pos-framework_subdomain_environmenteducation',
+  'General Training & Capacity Building': 'pos-framework_subdomain_generaltrainingandcapacitybuilding',
   'Growth & Learning':     'pos-framework_subdomain_growthplayfullearning',
   'Health & Wellbeing':    'pos-framework_subdomain_healthwellbeing',
   'Inclusive Education':   'pos-framework_subdomain_inclusiveeducation',
@@ -371,6 +375,7 @@ export const POS_SUBJECT_NAME_TO_ID: Record<string, string> = {
   'Agriculture Education':              'pos-framework_subject_agricultureeducation',
   'Apparel':                            'pos-framework_subject_apparel',
   'Art & Culture':                      'pos-framework_subject_artandculture',
+  'ASER':                               'pos-framework_subject_aser',
   'Assamese':                           'pos-framework_subject_assamese',
   'Automotive':                         'pos-framework_subject_automotive',
   'Awareness & Advocacy':               'pos-framework_subject_awarenessandadvocacy',
@@ -414,6 +419,7 @@ export const POS_SUBJECT_NAME_TO_ID: Record<string, string> = {
   'Khasi':                              'pos-framework_subject_khasi',
   'Knowledge Videos':                   'pos-framework_subject_knowledgevideos',
   'Leadership':                         'pos-framework_subject_leadership',
+  'Low Tech':                           'pos-framework_subject_lowtech',
   'Malayalam':                          'pos-framework_subject_malayalam',
   'Marathi':                            'pos-framework_subject_marathi',
   'Math':                               'pos-framework_subject_math',
@@ -535,7 +541,7 @@ export const SCP_COURSE_TYPE_NAME_TO_ID: Record<string, string> = {
 
 export const POS_DOMAIN_TO_SUBDOMAINS: Record<string, string[]> = {
   'Learning for School': ['Academics', 'Growth & Learning', 'Media Moments', 'Inclusive Education'],
-  'Learning for Work':   ['Career Exploration', 'Employee Training', 'New Age Skills'],
+  'Learning for Work':   ['Career Exploration', 'Employee Training', 'General Training & Capacity Building', 'New Age Skills'],
   'Learning for Life':   ['Creative Arts', 'Health & Wellbeing', 'Sports', 'Inclusive Learning', 'Environment Education'],
 };
 
@@ -551,7 +557,7 @@ export const POS_SUBDOMAIN_TO_SUBJECTS: Record<string, string[]> = {
     'Activity Videos', 'Knowledge Videos', 'Spoken English', 'Computational Thinking', 'Stories',
   ],
   'Media Moments': ['TV Episodes', 'Podcasts'],
-  'Inclusive Education': ['Innovative Strategies', 'Subject Specific Learning', 'Early Learning & School Readiness'],
+  'Inclusive Education': ['Innovative Strategies', 'Subject Specific Learning', 'Early Learning & School Readiness', 'Low Tech'],
   'Career Exploration': [
     'Everyday Skills', 'ITES', 'Beauty', 'Healthcare', 'Waterworks Management & Sanitation',
     'Hospitality & Tourism', 'Media & Graphics', 'Agriculture Education', 'Good Contractor Program',
@@ -563,6 +569,7 @@ export const POS_SUBDOMAIN_TO_SUBJECTS: Record<string, string[]> = {
     'Finance & Accounts', 'Leadership', 'Planning & Strategy',
   ],
   'New Age Skills': ['Essential Awareness', 'Digital Skill Building', 'Job Readiness'],
+  'General Training & Capacity Building': ['ASER'],
   'Creative Arts': ['Crafts & Design', 'Visual Arts', 'Art & Culture', 'Performing Arts'],
   'Health & Wellbeing': ['Physical Health', 'Mental Health', 'General Health Awareness'],
   'Sports': ['Digital Games', 'Individual Sports', 'Team Games'],
