@@ -646,6 +646,7 @@
     "WRITE_TO_US_AT": "आम्हाला येथे लिहा"
   },
   "LOGIN_PAGE": {
+    "SET_PASSWORD": "पासवर्ड सेट करा",
     "USERNAME_PASSWORD_NOT_CORRECT": "युजर नाव  किंवा पासवर्ड योग्य नाही",
     "DEVICE_FINGERPRINT_SUCCESS": "डिव्हाइस फिंगरप्रिंट यशस्वीरित्या तयार केला",
     "DEVICE_FINGERPRINT_ERROR": "डिव्हाइस फिंगरप्रिंट तयार करण्यात त्रुटी",

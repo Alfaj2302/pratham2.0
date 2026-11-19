@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 const PasswordCreate: React.FC<PasswordCreateProps> = ({
   handleResetPassword,
   editPassword = false,
+  submitLabel,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme<any>();
@@ -366,7 +367,7 @@ const PasswordCreate: React.FC<PasswordCreateProps> = ({
             className="one-line-text"
             disabled={!isFormValid || loading}
           >
-            {t('LOGIN_PAGE.RESET_PASSWORD')}
+            {submitLabel ?? t('LOGIN_PAGE.RESET_PASSWORD')}
           </Button>
         </Box>
       </Box>

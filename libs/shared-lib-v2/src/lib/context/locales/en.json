@@ -648,6 +648,7 @@
     "WRITE_TO_US_AT": "Write to us at"
   },
   "LOGIN_PAGE": {
+    "SET_PASSWORD": "Set Password",
     "USERNAME_PASSWORD_NOT_CORRECT": "Username or Password is not correct",
     "CAPTCHA_VERIFICATION_FAILED": "CAPTCHA verification failed. Please try again.",
     "DEVICE_FINGERPRINT_SUCCESS": "Device fingerprint generated successfully",

@@ -646,6 +646,7 @@
     "WRITE_TO_US_AT": "మాకు ఇక్కడ వ్రాయండి"
   },
   "LOGIN_PAGE": {
+    "SET_PASSWORD": "పాస్‌వర్డ్ సెట్ చేయండి",
     "USERNAME_PASSWORD_NOT_CORRECT": "యూజర్‌నేమ్ లేదా పాస్‌వర్డ్ సరైనది కాదు",
     "DEVICE_FINGERPRINT_SUCCESS": "డివైస్ ఫింగర్‌ప్రింట్ విజయవంతంగా రూపొందించబడింది",
     "DEVICE_FINGERPRINT_ERROR": "డివైస్ ఫింగర్‌ప్రింట్ రూపొందించడంలో లోపం",

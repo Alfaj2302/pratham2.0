@@ -646,6 +646,7 @@
     "WRITE_TO_US_AT": "ଆମକୁ ଲେଖନ୍ତୁ"
   },
   "LOGIN_PAGE": {
+    "SET_PASSWORD": "ପାସୱାର୍ଡ ସେଟ୍ କରନ୍ତୁ",
     "USERNAME_PASSWORD_NOT_CORRECT": "ୟୁଜର  ନାମ କିମ୍ବା ପାସୱାର୍ଡ ଠିକ୍ ନୁହେଁ",
     "DEVICE_FINGERPRINT_SUCCESS": "ଡିଭାଇସ ଫିଙ୍ଗରପ୍ରିଣ୍ଟ ସଫଳତାର ସହିତ ସୃଷ୍ଟି ହେଲା",
     "DEVICE_FINGERPRINT_ERROR": "ଡିଭାଇସ ଫିଙ୍ଗରପ୍ରିଣ୍ଟ ସୃଷ୍ଟି କରିବାରେ ତ୍ରୁଟି",
