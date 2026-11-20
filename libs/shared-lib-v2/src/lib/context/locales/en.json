@@ -196,7 +196,12 @@
       "ENROLL_IN_TO": "Enroll in to",
       "PERSONAL_DATA_CONSENT_BEFORE_LINK": "I agree to the collection and processing of the Personal Data (marked as *mandatory above) as per this",
       "CONSENT_FORM": "Consent Form",
-      "PERSONAL_DATA_CONSENT_AFTER_LINK": "cum Privacy Notice."
+      "PERSONAL_DATA_CONSENT_AFTER_LINK": "cum Privacy Notice.",
+      "PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK": "I consent: I agree to the collection and processing of my Personal Data, as described in para 1 of this",
+      "PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK": ".",
+      "PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK": "I, as the parent/legal guardian of the child, hereby provide my consent to the collection and processing of my child's Personal Data, as described in para 1 of this",
+      "PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK": ".",
+      "CONSENT_FORM_AND_PRIVACY_NOTICE": "Consent Form and Privacy Notice"
     },
     "PROGRAM_SWITCH_MODAL": {
       "REGISTERED_ON": "Registered on",

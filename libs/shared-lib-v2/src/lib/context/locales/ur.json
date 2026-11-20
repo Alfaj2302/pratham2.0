@@ -146,7 +146,12 @@
       "ENROLL_IN_TO": "میں اندراج کریں۔",
       "PERSONAL_DATA_CONSENT_BEFORE_LINK": "میں اس",
       "CONSENT_FORM": "رضامندی فارم",
-      "PERSONAL_DATA_CONSENT_AFTER_LINK": "بشمول رازداری نوٹس کے مطابق ذاتی ڈیٹا (اوپر *لازمی کے طور پر نشان زد) کو جمع کرنے اور اس پر کارروائی کرنے سے اتفاق کرتا/کرتی ہوں۔"
+      "PERSONAL_DATA_CONSENT_AFTER_LINK": "بشمول رازداری نوٹس کے مطابق ذاتی ڈیٹا (اوپر *لازمی کے طور پر نشان زد) کو جمع کرنے اور اس پر کارروائی کرنے سے اتفاق کرتا/کرتی ہوں۔",
+      "PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK": "میں رضامندی دیتا/دیتی ہوں: میں اس",
+      "PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK": "کے پیرا 1 میں بیان کردہ طریقے کے مطابق اپنے ذاتی ڈیٹا کو جمع کرنے اور اس پر کارروائی کرنے سے اتفاق کرتا/کرتی ہوں۔",
+      "PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK": "میں، بچے کے والدین/قانونی سرپرست کی حیثیت سے، اس",
+      "PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK": "کے پیرا 1 میں بیان کردہ طریقے کے مطابق اپنے بچے کے ذاتی ڈیٹا کو جمع کرنے اور اس پر کارروائی کرنے کے لیے بذریعہ ہذا اپنی رضامندی فراہم کرتا/کرتی ہوں۔",
+      "CONSENT_FORM_AND_PRIVACY_NOTICE": "رضامندی فارم اور رازداری نوٹس"
     },
     "PROGRAM_SWITCH_MODAL": {
       "REGISTERED_ON": "اندراج کی تاریخ",

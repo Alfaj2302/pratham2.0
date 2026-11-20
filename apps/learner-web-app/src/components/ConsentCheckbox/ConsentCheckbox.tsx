@@ -6,28 +6,35 @@ import {
 } from '@mui/material';
 import { useTranslation } from '@shared-lib';
 
+// Pathways in Education Consent Form and Privacy Notice, one per age group
+const ADULT_CONSENT_FORM_URL = '/files/pathways_consent_form_above_18.pdf';
+const MINOR_CONSENT_FORM_URL = '/files/pathways_consent_form_below_18.pdf';
+
 type Props = {
   checked: boolean;
   onChange: (checked: boolean) => void;
-  // Consent Form cum Privacy Notice PDF. The link text stays plain until a URL is configured.
-  consentFormUrl?: string;
+  // Under 18: consent is given by the parent/legal guardian on the child's behalf
+  isMinor: boolean;
 };
 
 // Personal data consent shown below the form, styled like the consent on the
 // registration Create Account step.
-const ConsentCheckbox = ({
-  checked,
-  onChange,
-  consentFormUrl,
-}: Props) => {
+const ConsentCheckbox = ({ checked, onChange, isMinor }: Props) => {
   const { t } = useTranslation();
-  const afterLinkText = t('LEARNER_APP.EDIT_PROFILE.PERSONAL_DATA_CONSENT_AFTER_LINK');
-
-  const handleConsentForm = () => {
-    if (consentFormUrl) {
-      window.open(consentFormUrl, '_blank', 'noopener,noreferrer');
-    }
-  };
+  const beforeLinkText = t(
+    isMinor
+      ? 'LEARNER_APP.EDIT_PROFILE.PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK'
+      : 'LEARNER_APP.EDIT_PROFILE.PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK'
+  );
+  // Most languages finish the sentence after the link, so each age group has its own tail
+  const afterLinkText = t(
+    isMinor
+      ? 'LEARNER_APP.EDIT_PROFILE.PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK'
+      : 'LEARNER_APP.EDIT_PROFILE.PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK'
+  );
+  const consentFormUrl = isMinor
+    ? MINOR_CONSENT_FORM_URL
+    : ADULT_CONSENT_FORM_URL;
 
   return (
     <Box mt={2}>
@@ -41,7 +48,7 @@ const ConsentCheckbox = ({
         }
         label={
           <Typography variant="h3">
-            {t('LEARNER_APP.EDIT_PROFILE.PERSONAL_DATA_CONSENT_BEFORE_LINK')}{' '}
+            {beforeLinkText}{' '}
             <Typography
               component="span"
               fontWeight="bold"
@@ -49,11 +56,11 @@ const ConsentCheckbox = ({
               onClick={(e) => {
                 // Opening the PDF shouldn't toggle the checkbox
                 e.preventDefault();
-                handleConsentForm();
+                window.open(consentFormUrl, '_blank', 'noopener,noreferrer');
               }}
-              sx={{ cursor: consentFormUrl ? 'pointer' : 'default' }}
+              sx={{ cursor: 'pointer' }}
             >
-              {t('LEARNER_APP.EDIT_PROFILE.CONSENT_FORM')}
+              {t('LEARNER_APP.EDIT_PROFILE.CONSENT_FORM_AND_PRIVACY_NOTICE')}
             </Typography>
             {/^[.,।]/.test(afterLinkText) ? '' : ' '}
             {afterLinkText}

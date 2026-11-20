@@ -196,7 +196,12 @@
       "ENROLL_IN_TO": "इसमें नामांकन करें",
       "PERSONAL_DATA_CONSENT_BEFORE_LINK": "मैं इस",
       "CONSENT_FORM": "सहमति पत्र",
-      "PERSONAL_DATA_CONSENT_AFTER_LINK": "सह गोपनीयता सूचना के अनुसार व्यक्तिगत डेटा (ऊपर *अनिवार्य के रूप में चिह्नित) के संग्रह और प्रसंस्करण के लिए सहमत हूँ।"
+      "PERSONAL_DATA_CONSENT_AFTER_LINK": "सह गोपनीयता सूचना के अनुसार व्यक्तिगत डेटा (ऊपर *अनिवार्य के रूप में चिह्नित) के संग्रह और प्रसंस्करण के लिए सहमत हूँ।",
+      "PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK": "मैं सहमति देता/देती हूँ: मैं इस",
+      "PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK": "के पैरा 1 में बताए अनुसार अपने व्यक्तिगत डेटा के संग्रह और प्रसंस्करण के लिए सहमत हूँ।",
+      "PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK": "मैं, बच्चे के माता-पिता/कानूनी अभिभावक के रूप में, इस",
+      "PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK": "के पैरा 1 में बताए अनुसार अपने बच्चे के व्यक्तिगत डेटा के संग्रह और प्रसंस्करण के लिए एतद्द्वारा अपनी सहमति प्रदान करता/करती हूँ।",
+      "CONSENT_FORM_AND_PRIVACY_NOTICE": "सहमति पत्र एवं गोपनीयता सूचना"
     },
     "PROGRAM_SWITCH_MODAL": {
       "REGISTERED_ON": "पंजीकरण तिथि",

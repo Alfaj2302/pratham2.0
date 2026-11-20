@@ -131,6 +131,9 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
   // Enrolling into Pathways shows one field per row and asks for personal data consent
   const isPathwaysEnrollment = isPathwaysProgram && !!enrolledProgram;
   const [consentAccepted, setConsentAccepted] = useState(false);
+  // DOB typed into the enrollment form, if any; otherwise the saved profile DOB decides
+  // whether the parent/guardian consent (under 18) or the adult consent is shown.
+  const [formDob, setFormDob] = useState<string | undefined>();
   // let formData: any = {};
   const [loading, setLoading] = useState(true);
   const [invalidLinkModal, setInvalidLinkModal] = useState(false);
@@ -138,6 +141,11 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
   const localFormData = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('formData') || '{}') : {};
   const [userFormData, setUserFormData] = useState<any>(localFormData);
   const [userData, setuserData] = useState<any>({});
+  const isConsentForMinor = isUnderEighteen(formDob || userData?.dob);
+  // A consent given for one age group must not carry over to the other statement
+  useEffect(() => {
+    setConsentAccepted(false);
+  }, [isConsentForMinor]);
   // Complete-profile and enroll-program strip marital_status out of the form when it isn't
   // required, but DynamicForm still needs the saved value to know whether "spouse" is a valid
   // family member option - keep it separately so it survives those reduced prefilledFormData shapes.
@@ -1015,13 +1023,18 @@ const EditProfile = ({ completeProfile, enrolledProgram, uponEnrollCompletion }:
                         type="learner"
                         isCompleteProfile={completeProfile}
                         createNew={false}
+                        onFormDataChange={(data: any, changedField: string) => {
+                          if (changedField === 'dob') {
+                            setFormDob(data?.dob);
+                          }
+                        }}
                       />
                     )}
                     {isPathwaysEnrollment && addSchema && (
                       <ConsentCheckbox
                         checked={consentAccepted}
                         onChange={setConsentAccepted}
-                        consentFormUrl={uiConfig?.consentFormUrl}
+                        isMinor={isConsentForMinor}
                       />
                     )}
                     <Button

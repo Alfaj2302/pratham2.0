@@ -196,7 +196,12 @@
       "ENROLL_IN_TO": "ನೋಂದಾಯಿಸಿಕೊಳ್ಳಿ",
       "PERSONAL_DATA_CONSENT_BEFORE_LINK": "ಈ",
       "CONSENT_FORM": "ಸಮ್ಮತಿ ಪತ್ರ",
-      "PERSONAL_DATA_CONSENT_AFTER_LINK": "ಮತ್ತು ಗೌಪ್ಯತಾ ಸೂಚನೆ ಪ್ರಕಾರ ವೈಯಕ್ತಿಕ ಡೇಟಾದ (ಮೇಲೆ *ಕಡ್ಡಾಯ ಎಂದು ಗುರುತಿಸಲಾದ) ಸಂಗ್ರಹಣೆ ಮತ್ತು ಸಂಸ್ಕರಣೆಗೆ ನಾನು ಸಮ್ಮತಿಸುತ್ತೇನೆ."
+      "PERSONAL_DATA_CONSENT_AFTER_LINK": "ಮತ್ತು ಗೌಪ್ಯತಾ ಸೂಚನೆ ಪ್ರಕಾರ ವೈಯಕ್ತಿಕ ಡೇಟಾದ (ಮೇಲೆ *ಕಡ್ಡಾಯ ಎಂದು ಗುರುತಿಸಲಾದ) ಸಂಗ್ರಹಣೆ ಮತ್ತು ಸಂಸ್ಕರಣೆಗೆ ನಾನು ಸಮ್ಮತಿಸುತ್ತೇನೆ.",
+      "PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK": "ನಾನು ಸಮ್ಮತಿಸುತ್ತೇನೆ: ಈ",
+      "PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK": "ಪ್ಯಾರಾ 1 ರಲ್ಲಿ ವಿವರಿಸಿರುವಂತೆ, ನನ್ನ ವೈಯಕ್ತಿಕ ಡೇಟಾದ ಸಂಗ್ರಹಣೆ ಮತ್ತು ಸಂಸ್ಕರಣೆಗೆ ನಾನು ಒಪ್ಪುತ್ತೇನೆ.",
+      "PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK": "ಮಗುವಿನ ಪೋಷಕರು/ಕಾನೂನುಬದ್ಧ ಪಾಲಕರಾಗಿ, ನಾನು ಈ",
+      "PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK": "ಪ್ಯಾರಾ 1 ರಲ್ಲಿ ವಿವರಿಸಿರುವಂತೆ, ನನ್ನ ಮಗುವಿನ ವೈಯಕ್ತಿಕ ಡೇಟಾದ ಸಂಗ್ರಹಣೆ ಮತ್ತು ಸಂಸ್ಕರಣೆಗೆ ಈ ಮೂಲಕ ನನ್ನ ಸಮ್ಮತಿಯನ್ನು ನೀಡುತ್ತೇನೆ.",
+      "CONSENT_FORM_AND_PRIVACY_NOTICE": "ಸಮ್ಮತಿ ಪತ್ರ ಮತ್ತು ಗೌಪ್ಯತಾ ಸೂಚನೆ"
     },
     "PROGRAM_SWITCH_MODAL": {
       "REGISTERED_ON": "ನೋಂದಣಿಯಾದ ದಿನಾಂಕ",
