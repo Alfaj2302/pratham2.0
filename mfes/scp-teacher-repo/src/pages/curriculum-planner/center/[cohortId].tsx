@@ -144,24 +144,25 @@ const CoursePlannerDetail = () => {
 
   useEffect(() => {
     const calculateProgress = (tasks: any[]) => {
-      let completionPercentage = 0;
-      const weightage = Number((100 / tasks.length).toFixed());
-      tasks.forEach((task: any) => {
+      // Accumulate fractional task completion and round once at the end:
+      // rounding each task's weight first makes the total drift off 100.
+      const completedTasks = tasks.reduce((total: number, task: any) => {
         if (task.status === AssessmentStatus.COMPLETED_SMALL) {
-          completionPercentage += weightage;
-        } else {
-          const subtasks = task.children || [];
-          const subtaskWeightage = Number(
-            (weightage / subtasks.length).toFixed()
-          );
-          subtasks.forEach((subtask: any) => {
-            if (subtask.status === AssessmentStatus.COMPLETED_SMALL) {
-              completionPercentage += subtaskWeightage;
-            }
-          });
+          return total + 1;
         }
-      });
-      setCompletionPercentage(completionPercentage);
+        const subtasks = task.children || [];
+        if (!subtasks.length) {
+          return total;
+        }
+        const completedSubtasks = subtasks.filter(
+          (subtask: any) => subtask.status === AssessmentStatus.COMPLETED_SMALL
+        ).length;
+        return total + completedSubtasks / subtasks.length;
+      }, 0);
+
+      setCompletionPercentage(
+        Math.min(100, Math.round((completedTasks / tasks.length) * 100))
+      );
     };
     if (userProjectDetails?.tasks?.length) {
       calculateProgress(userProjectDetails.tasks);
