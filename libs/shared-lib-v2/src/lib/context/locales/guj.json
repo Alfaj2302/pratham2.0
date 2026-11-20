@@ -196,7 +196,12 @@
       "ENROLL_IN_TO": "નોંધણી કરો",
       "PERSONAL_DATA_CONSENT_BEFORE_LINK": "હું આ",
       "CONSENT_FORM": "સંમતિ પત્રક",
-      "PERSONAL_DATA_CONSENT_AFTER_LINK": "સહ ગોપનીયતા સૂચના મુજબ વ્યક્તિગત ડેટા (ઉપર *ફરજિયાત તરીકે ચિહ્નિત) ના સંગ્રહ અને પ્રક્રિયા માટે સંમતિ આપું છું."
+      "PERSONAL_DATA_CONSENT_AFTER_LINK": "સહ ગોપનીયતા સૂચના મુજબ વ્યક્તિગત ડેટા (ઉપર *ફરજિયાત તરીકે ચિહ્નિત) ના સંગ્રહ અને પ્રક્રિયા માટે સંમતિ આપું છું.",
+      "PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK": "હું સંમતિ આપું છું: હું આ",
+      "PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK": "ના ફકરા 1 માં વર્ણવ્યા મુજબ મારા વ્યક્તિગત ડેટાના સંગ્રહ અને પ્રક્રિયા માટે સંમત છું.",
+      "PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK": "હું, બાળકના માતા-પિતા/કાનૂની વાલી તરીકે, આ",
+      "PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK": "ના ફકરા 1 માં વર્ણવ્યા મુજબ મારા બાળકના વ્યક્તિગત ડેટાના સંગ્રહ અને પ્રક્રિયા માટે આથી મારી સંમતિ આપું છું.",
+      "CONSENT_FORM_AND_PRIVACY_NOTICE": "સંમતિ પત્રક અને ગોપનીયતા સૂચના"
     },
     "PROGRAM_SWITCH_MODAL": {
       "REGISTERED_ON": "નોંધણી તારીખ",

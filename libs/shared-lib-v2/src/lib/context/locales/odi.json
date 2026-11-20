@@ -196,7 +196,12 @@
       "ENROLL_IN_TO": "ଏଥିରେ ପଞ୍ଜିକରଣ କରନ୍ତୁ",
       "PERSONAL_DATA_CONSENT_BEFORE_LINK": "ମୁଁ ଏହି",
       "CONSENT_FORM": "ସମ୍ମତି ପତ୍ର",
-      "PERSONAL_DATA_CONSENT_AFTER_LINK": "ତଥା ଗୋପନୀୟତା ବିଜ୍ଞପ୍ତି ଅନୁଯାୟୀ ବ୍ୟକ୍ତିଗତ ତଥ୍ୟ (ଉପରେ *ବାଧ୍ୟତାମୂଳକ ଭାବେ ଚିହ୍ନିତ) ର ସଂଗ୍ରହ ଏବଂ ପ୍ରକ୍ରିୟାକରଣ ପାଇଁ ସହମତ।"
+      "PERSONAL_DATA_CONSENT_AFTER_LINK": "ତଥା ଗୋପନୀୟତା ବିଜ୍ଞପ୍ତି ଅନୁଯାୟୀ ବ୍ୟକ୍ତିଗତ ତଥ୍ୟ (ଉପରେ *ବାଧ୍ୟତାମୂଳକ ଭାବେ ଚିହ୍ନିତ) ର ସଂଗ୍ରହ ଏବଂ ପ୍ରକ୍ରିୟାକରଣ ପାଇଁ ସହମତ।",
+      "PERSONAL_DATA_CONSENT_ADULT_BEFORE_LINK": "ମୁଁ ସମ୍ମତି ଦେଉଛି: ମୁଁ ଏହି",
+      "PERSONAL_DATA_CONSENT_ADULT_AFTER_LINK": "ଅନୁଚ୍ଛେଦ 1 ରେ ବର୍ଣ୍ଣିତ ଅନୁଯାୟୀ ମୋର ବ୍ୟକ୍ତିଗତ ତଥ୍ୟର ସଂଗ୍ରହ ଏବଂ ପ୍ରକ୍ରିୟାକରଣ ପାଇଁ ସହମତ।",
+      "PERSONAL_DATA_CONSENT_MINOR_BEFORE_LINK": "ମୁଁ, ପିଲାର ପିତାମାତା/ଆଇନଗତ ଅଭିଭାବକ ଭାବେ, ଏହି",
+      "PERSONAL_DATA_CONSENT_MINOR_AFTER_LINK": "ଅନୁଚ୍ଛେଦ 1 ରେ ବର୍ଣ୍ଣିତ ଅନୁଯାୟୀ ମୋ ପିଲାର ବ୍ୟକ୍ତିଗତ ତଥ୍ୟର ସଂଗ୍ରହ ଏବଂ ପ୍ରକ୍ରିୟାକରଣ ପାଇଁ ଏତଦ୍ୱାରା ମୋର ସମ୍ମତି ପ୍ରଦାନ କରୁଛି।",
+      "CONSENT_FORM_AND_PRIVACY_NOTICE": "ସମ୍ମତି ପତ୍ର ଏବଂ ଗୋପନୀୟତା ବିଜ୍ଞପ୍ତି"
     },
     "PROGRAM_SWITCH_MODAL": {
       "REGISTERED_ON": "ପଞ୍ଜୀକରଣ ତାରିଖ",
