@@ -140,16 +140,16 @@ const rangeLength = contentLanguageField?.range?.length || 0;
   }, []);
   
   const partners = [
-    { src: '/knowledge/Abhivyaktilogo.png', alt: 'Adobe' },
-    { src: '/knowledge/Arpan.png', alt: 'EAA' },
-    { src: '/knowledge/Ccmb_logo_color.png', alt: 'Google' },
-    { src: '/knowledge/GCF-Mobile-Logo-Medium.jpg', alt: 'Hemant-Goradia' },
-    { src: '/knowledge/IISER-Pune.png', alt: 'Jaideep-Khanna' },
-    { src: '/knowledge/Khetee_Transparent.png', alt: 'Schmidt-Futures' },
-    { src: '/knowledge/menstrupedia.png', alt: 'Schmidt-Futures' },
-    { src: '/knowledge/Sarmaya.png', alt: 'Schmidt-Futures' },
-    { src: '/knowledge/Terra-Conscious.png', alt: 'Schmidt-Futures' },
-    { src: '/knowledge/ThinkTac.png', alt: 'Schmidt-Futures' },
+    { src: 'images/knowledge/Abhivyaktilogo.png', alt: 'Adobe' },
+    { src: 'images/knowledge/Arpan.png', alt: 'EAA' },
+    { src: 'images/knowledge/Ccmb_logo_color.png', alt: 'Google' },
+    { src: 'images/knowledge/GCF-Mobile-Logo-Medium.jpg', alt: 'Hemant-Goradia' },
+    { src: 'images/knowledge/IISER-Pune.png', alt: 'Jaideep-Khanna' },
+    { src: 'images/knowledge/Khetee_Transparent.png', alt: 'Schmidt-Futures' },
+    { src: 'images/knowledge/menstrupedia.png', alt: 'Schmidt-Futures' },
+    { src: 'images/knowledge/Sarmaya.png', alt: 'Schmidt-Futures' },
+    { src: 'images/knowledge/Terra-Conscious.png', alt: 'Schmidt-Futures' },
+    { src: 'images/knowledge/ThinkTac.png', alt: 'Schmidt-Futures' },
   ];
   const ourPartners = [
     { src: '/our-partner/1.jpg', alt: 'logo1' },

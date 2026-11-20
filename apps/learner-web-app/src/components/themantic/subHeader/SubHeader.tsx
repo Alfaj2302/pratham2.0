@@ -28,10 +28,12 @@ const SubHeader = ({
   showFilter,
   getFilter,
   resourceCount = 0,
+  showSearch = true,
 }: {
   showFilter: boolean;
   getFilter?: (lang: string) => void;
   resourceCount?: number;
+  showSearch?: boolean;
 }) => {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams?.get('q') || '');
@@ -160,160 +162,164 @@ const SubHeader = ({
       </Box>
 
       {/* Main Container */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: { xs: 'stretch', md: 'center' },
-          justifyContent: 'space-between',
-
-          pb: { xs: 1, sm: 1 },
-          pt: '8px',
-          bgcolor: '#fff',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
-          borderRadius: 2,
-          minHeight: { xs: 'auto', md: 64 },
-          width: '100%',
-          gap: { xs: 2, md: 2 },
-        }}
-      >
-        {/* Language Dropdown */}
-        {showFilter && (
-          <Box
-            sx={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: { xs: 'center', md: 'flex-start' },
-            }}
-          >
-            <FormControl>
-              <Select
-                value={selectedLang}
-                onChange={handleLanguageChange}
-                IconComponent={KeyboardArrowDownIcon}
-                sx={{
-                  bgcolor: '#fff',
-                  color: '#222',
-                  borderRadius: '4px',
-                  fontWeight: 500,
-                  border: '1px solid #d1d5db',
-                  height: '40px',
-
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                  '& .MuiSelect-select': {
-                    padding: '4px 8px',
-                    fontSize: scaledFontSize(14),
-                    textAlign: 'center',
-                  },
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                  '& .MuiSvgIcon-root': {
-                    fontSize: scaledFontSize(16),
-                    color: '#222',
-                  },
-                }}
-              >
-                {languageOptions.map((lang) => (
-                  <MenuItem key={lang} value={lang}>
-                    {lang}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        )}
-
-        {/* Centered Label */}
-        {showFilter && (
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              order: { xs: 2, md: 1 },
-            }}
-          >
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 600,
-                  fontSize: scaledFontSizeResponsive({ xs: 16, sm: 18 }),
-                  color: 'black',
-                  mb: 0.5,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  maxWidth: '100%',
-                  fontFamily: '"Montserrat", sans-serif',
-                }}
-              >
-                <SpeakableText text={`${resourceCount} Resources`}>
-                  {resourceCount} Resources
-                </SpeakableText>
-              </Typography>
-
-            </Box>
-          </Box>
-        )}
-
-        {/* Search Bar */}
+      {(showFilter || showSearch) && (
         <Box
           sx={{
             display: 'flex',
-            justifyContent: { xs: 'center', md: 'flex-end' },
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: { xs: 'stretch', md: 'center' },
+            justifyContent: 'space-between',
+
+            pb: { xs: 1, sm: 1 },
+            pt: '8px',
+            bgcolor: '#fff',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
+            borderRadius: 2,
+            minHeight: { xs: 'auto', md: 64 },
             width: '100%',
-            order: { xs: 1, md: 2 },
+            gap: { xs: 2, md: 2 },
           }}
         >
-          <Box
-            sx={{
-              minWidth: { xs: '100%', sm: 260 },
-              maxWidth: { xs: '100%', sm: 340 },
-              width: { xs: '100%', sm: 'auto' },
-            }}
-          >
-            <SearchButton
-              searchValue={search}
-              onSearch={(value) => {
-                if (typeof window !== 'undefined') {
-                  const windowUrl = window.location.pathname;
-                  const cleanedUrl = windowUrl;
+          {/* Language Dropdown */}
+          {showFilter && (
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: { xs: 'center', md: 'flex-start' },
+              }}
+            >
+              <FormControl>
+                <Select
+                  value={selectedLang}
+                  onChange={handleLanguageChange}
+                  IconComponent={KeyboardArrowDownIcon}
+                  sx={{
+                    bgcolor: '#fff',
+                    color: '#222',
+                    borderRadius: '4px',
+                    fontWeight: 500,
+                    border: '1px solid #d1d5db',
+                    height: '40px',
 
-                  logEvent({
-                    action: 'search in thematic coneten by ' + value,
-                    category: cleanedUrl,
-                    label: 'Search thematic content',
-                  });
-                  if (value) {
-                    router.push(
-                      '/themantic/search?q=' + encodeURIComponent(value)
-                    );
-                  } else {
-                    router.push('/themantic/search');
-                  }
-                }
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                    '& .MuiSelect-select': {
+                      padding: '4px 8px',
+                      fontSize: scaledFontSize(14),
+                      textAlign: 'center',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                    '& .MuiSvgIcon-root': {
+                      fontSize: scaledFontSize(16),
+                      color: '#222',
+                    },
+                  }}
+                >
+                  {languageOptions.map((lang) => (
+                    <MenuItem key={lang} value={lang}>
+                      {lang}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          )}
+
+          {/* Centered Label */}
+          {showFilter && (
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+                order: { xs: 2, md: 1 },
               }}
-              handleSearch={setSearch}
-              _box={{
-                mx: 'auto',
-                mt: { xs: 0, sm: 4 },
-                '@media (min-width: 900px)': {
-                  mb: '100px',
-                },
+            >
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: scaledFontSizeResponsive({ xs: 16, sm: 18 }),
+                    color: 'black',
+                    mb: 0.5,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                    fontFamily: '"Montserrat", sans-serif',
+                  }}
+                >
+                  <SpeakableText text={`${resourceCount} Resources`}>
+                    {resourceCount} Resources
+                  </SpeakableText>
+                </Typography>
+
+              </Box>
+            </Box>
+          )}
+
+          {/* Search Bar */}
+          {showSearch && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: { xs: 'center', md: 'flex-end' },
+                width: '100%',
+                order: { xs: 1, md: 2 },
               }}
-            />
-          </Box>
+            >
+              <Box
+                sx={{
+                  minWidth: { xs: '100%', sm: 260 },
+                  maxWidth: { xs: '100%', sm: 340 },
+                  width: { xs: '100%', sm: 'auto' },
+                }}
+              >
+                <SearchButton
+                  searchValue={search}
+                  onSearch={(value) => {
+                    if (typeof window !== 'undefined') {
+                      const windowUrl = window.location.pathname;
+                      const cleanedUrl = windowUrl;
+
+                      logEvent({
+                        action: 'search in thematic coneten by ' + value,
+                        category: cleanedUrl,
+                        label: 'Search thematic content',
+                      });
+                      if (value) {
+                        router.push(
+                          '/themantic/search?q=' + encodeURIComponent(value)
+                        );
+                      } else {
+                        router.push('/themantic/search');
+                      }
+                    }
+                  }}
+                  handleSearch={setSearch}
+                  _box={{
+                    mx: 'auto',
+                    mt: { xs: 0, sm: 4 },
+                    '@media (min-width: 900px)': {
+                      mb: '100px',
+                    },
+                  }}
+                />
+              </Box>
+            </Box>
+          )}
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

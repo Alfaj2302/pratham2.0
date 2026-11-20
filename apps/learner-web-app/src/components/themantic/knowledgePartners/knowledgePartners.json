@@ -1,0 +1,170 @@
+[
+  {
+    "id": "sampurna-murti",
+    "name": "Dr. Sampurna Murti",
+    "kind": "individual",
+    "partnerType": "Technical Advisory Partner",
+    "descriptor": "M.Sc, Ph.D. Biochemistry, The Institute of Science, (Bombay University), Mumbai, India",
+    "expertise": [
+      "STEM",
+      "Chemistry",
+      "Science Education"
+    ],
+    "image": "/images/knowledge/Sampurna-murti.jpeg",
+    "about": [
+      "Dr. Murti, a highly qualified science expert with post-doctoral research experience from the University of California, Davis, U.S.A., and Hospital for Sick Children, Toronto, Canada, has taught Chemistry for over 10 years to 11th and 12th grade students in different schools across India. She has co-authored a book on Chemistry for 12th grade students, published by Cambridge University Press. She headed Pratham Books, set up by Pratham for publishing high-quality, low-cost books in multiple Indian languages for children. She has been associated with Pratham for over 6 years and has contributed significantly to the development of educational content."
+    ],
+    "contributions": [
+      "Developing new content and writing scripts based on biochemical processes presented in simple and interesting formats",
+      "Editing and proofreading scripts, videos, posters, and content related to STEM subjects, Vocational skills, and Financial Literacy",
+      "Fact-checking, ensuring simplicity of language and presentation along with contextual relevance",
+      "Explaining complex scientific concepts in easily comprehensible styles"
+    ],
+    "status": "Pending"
+  },
+  {
+    "id": "jagadish-shrinivasavadhani",
+    "name": "Jagadish Shrinivasavadhani",
+    "kind": "individual",
+    "partnerType": "Technical Knowledge Partner",
+    "descriptor": "M.Tech in Computer Engineering from IIT Kharagpur",
+    "expertise": [
+      "Science",
+      "Mathematics",
+      "Experiential Learning"
+    ],
+    "image": "/images/knowledge/Jagdish-sir-v2.png",
+    "about": [
+      "Jagdish Shrinivasavadhani has approximately 20 years of experience in the IT services industry. He was associated with various outreach activities while working in the corporate sector. He has been working towards the popularisation of science for several years. He has designed many activities that aim to link textbook science with everyday objects and processes. He has been associated with Pratham Mysore for the last 12 years and contributed immensely to the development of educational content."
+    ],
+    "contributions": [
+      "Taught Mathematics at Arivu School for 8th standard students",
+      "Assisting Vision Empower Trust in reviews of Teacher Instruction Kits",
+      "Assisted in developing experiential learning packages for 8th and 9th grade",
+      "Managed ‘Learn, Out of the Box’ project for three years",
+      "Working with the Pratham Translation Network to provide content accuracy, review of the scripts/videos, and translation support (Kannada)"
+    ],
+    "status": "Pending"
+  },
+  {
+    "id": "green-communities-foundation",
+    "name": "Green Communities Foundation",
+    "kind": "organisation",
+    "partnerType": "Technical Knowledge Partner",
+    "expertise": [
+      "Waste Management",
+      "Sustainability"
+    ],
+    "image": "/images/knowledge/GCF-Mobile-Logo-Medium.jpg",
+    "about": [
+      "Green Communities Foundation (GCF) is a Mumbai-based non-profit organisation established in 2017 that works towards building cleaner, waste-free communities through sustainable waste management practices. It collaborates with housing societies, corporate organisations and rural communities to promote waste segregation at source, recycling of dry waste, composting of wet waste, and responsible waste disposal. The organisation also conducts awareness workshops and training programmes to encourage community participation and behaviour change. Its work focuses on developing replicable waste management models across urban and rural Maharashtra.",
+      "GCF partnered with Pratham in 2022 to conduct the Plastic-STORI and develop educational resources on Plastic literacy."
+    ],
+    "website": "https://www.greencf.org/",
+    "status": "Done"
+  },
+  {
+    "id": "jyoti-shinde",
+    "name": "Dr. Jyoti Shinde",
+    "kind": "individual",
+    "partnerType": "Technical Knowledge Partner",
+    "descriptor": "Family Physician and MD in Ayurveda with over 24 years of experience",
+    "expertise": [
+      "Public Health",
+      "Hygiene",
+      "Nutrition",
+      "Ayurveda"
+    ],
+    "image": "/images/knowledge/Jyoti-V2.jpg",
+    "about": [
+      "Family Physician and MD in Ayurveda with over 24 years of experience, practicing independently in Pune.",
+      "Expertise in Public Health and Hygiene, Nutrition, First Aid, Lifestyle, Ayurveda, De-addiction, and Blood Donation.",
+      "Experience and knowledge strongly complement the objectives of this project."
+    ],
+    "status": "Done"
+  },
+  {
+    "id": "vandana-garg",
+    "name": "Dr. Vandana Garg",
+    "kind": "individual",
+    "partnerType": "Technical Knowledge Partner",
+    "descriptor": "Ph.D. in Food and Nutrition",
+    "expertise": [
+      "Nutrition and Food Sciences"
+    ],
+    "image": "/images/knowledge/Vandana-v2.png",
+    "about": [
+      "An accomplished expert in Nutrition and Food Sciences, holds a Ph.D. in Food and Nutrition.",
+      "She is an Executive committee member of the Indian Dietetic Association, Rajasthan chapter and has worked with people from all walks of life. She had presented research and review papers at different National Conferences and loves experimenting to develop new recipes with healthy, wholesome, and nutritious ingredients. She is a believer in finding the right balance in nutritional strategies with a keen interest in working towards health and well-being at the public level."
+    ],
+    "website": "https://jijeevisha.co.in/about-us/",
+    "status": "Done"
+  },
+  {
+    "id": "vigyan-ashram",
+    "name": "Vigyan Ashram",
+    "kind": "organisation",
+    "partnerType": "Technical Knowledge Partner",
+    "expertise": [
+      "Science",
+      "Technology & Nutrition garden"
+    ],
+    "image": "/images/knowledge/Vigyan-Ashram-HD-LOGO.jpg",
+    "about": [
+      "Vigyan Ashram is a pioneer in school based vocational education and rural technology development. Founded in 1983 in Pabal, Maharashtra, Vigyan Ashram empowers rural youth and entrepreneurs through hands-on learning (“Learning by Doing”), open-source digital fabrication, and sustainable community solutions.",
+      "Over the years, Vigyan Ashram’s program has increased, and now it is implementing its various program through many sister and partner organisations. Vigyan Ashram’s program and activities at its campus at Pabal and J.P Naik Center for education & Development, Pune are implemented under the umbrella of ‘Indian Institute of Education’. Scale-up activities of Vigyan Ashram are done in partnership with ‘Skills Training for Advancement of Rural Societies forum (STARS Forum). It is networking with various NGOs across India and implementing the ‘Rural Development through Education System(RDES)’ concept of Vigyan Ashram."
+    ],
+    "website": "https://vigyanashram.com/",
+    "status": "Done"
+  },
+  {
+    "id": "mudit-verma",
+    "name": "Mudit Verma",
+    "kind": "individual",
+    "partnerType": "Technical Knowledge Partner",
+    "descriptor": "Engineering (B.Tech - Kurukshetra University) Delhi",
+    "expertise": [
+      "STEM Curriculum Development and Teacher Training"
+    ],
+    "image": "/images/knowledge/Mudit-verma.jpeg",
+    "about": [
+      "A TFI Alumni and a dynamic, performance-driven educator with over seven years in the education sector, specialising in designing and executing inquiry-based STEM modules. Experienced in researching and creating interactive K–12 math and science content for edtech platforms, developing assessment items aligned with NCERT, NEP 2020 and NCF 2023 frameworks, and using AI prompts and custom GPTs to streamline content workflows. Has built and implemented interactive STEM curricula for middle school, partnered with state education bodies on large-scale programmes, and equipped 1,000+ students and 500+ teachers with strong conceptual understanding and pedagogical practice. Also brings classroom teaching experience that lifted school pass rates, alongside work in theatre and experiential learning."
+    ],
+    "status": "Pending"
+  },
+  {
+    "id": "beacon-tv",
+    "name": "Beacon TV",
+    "kind": "organisation",
+    "partnerType": "Learning & Knowledge Partner",
+    "expertise": [
+      "Science Communication",
+      "Talk Shows",
+      "Health Shows",
+      "Ecology and Environment"
+    ],
+    "image": "/images/knowledge/Beacon-TV-LOGO-updated.jpg",
+    "about": [
+      "Beacon Television is an award winning  production house established by Seema Muralidhara and H. B. Muralidhara. They are both journalists and television professionals trained from the FTII, Pune and Central Production Centre, New Delhi. Recipients of the National award for Popularising Science (2006) they have conceptualised, directed and produced several award winning TV series. They have been associated with Vigyan Prasar (DST), Zee TV, Star TV, Doordarshan, NCSM and several organisations like SEWA Federation, Vatsalya Foundation, FPAI, FOGSI, PSBT and TERI."
+    ],
+    "status": "Done"
+  },
+  {
+    "id": "abhivyakti",
+    "name": "Abhivyakti Health and Education Services",
+    "kind": "organisation",
+    "partnerType": "Technical Knowledge Partner",
+    "expertise": [
+      "Health",
+      "Science Education (Biology)",
+      "Psychology",
+      "Counselling"
+    ],
+    "image": "/images/knowledge/Abhivyakti-logo.png",
+    "about": [
+      "Abhivyakti provides services like Educational content creation, translations (English/ Hindi to Marathi), Marathi Proofreading/ review, lesson plan or on field sessions.",
+      "In the Health domain we provide services like Health Education Expert sessions, Counselling, Health content development (documents/ scripts), conducting workshops (gender awareness, menstrual hygiene management; expert talks on basic first aid for schools), and lectures/ live sessions of Yoga."
+    ],
+    "status": "Done"
+  }
+]
