@@ -293,3 +293,34 @@ export const getFieldOptions = async ({
     throw error;
   }
 };
+export interface DistrictUserCountParam {
+  role: string;
+  tenantId: string;
+  stateId: (string | number)[];
+}
+
+export interface DistrictUserCount {
+  name: string;
+  user_count: number;
+  level?: string;
+  [key: string]: any;
+}
+
+export const getDistrictUserCount = async ({
+  role,
+  tenantId,
+  stateId,
+}: DistrictUserCountParam): Promise<DistrictUserCount[]> => {
+  const apiUrl = API_ENDPOINTS.districtUserCount;
+  try {
+    const response = await post(apiUrl, {
+      role,
+      tenantId,
+      stateId: stateId.map(String),
+    });
+    return response?.data?.result ?? [];
+  } catch (error) {
+    console.error('Error in fetching district user count', error);
+    throw error;
+  }
+};

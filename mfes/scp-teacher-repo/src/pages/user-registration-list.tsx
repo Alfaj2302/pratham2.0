@@ -56,7 +56,8 @@ const UserRegistrationList = () => {
       const stored = JSON.parse(raw);
       return {
         states:    stored.state    != null             ? [stored.state]    : undefined,
-        districts: stored.district != null             ? [stored.district] : undefined,
+        districts: stored.districts?.length            ? stored.districts
+                 : stored.district != null             ? [stored.district] : undefined,
         blocks:    stored.blocks?.length               ? stored.blocks     : undefined,
       };
     } catch {
