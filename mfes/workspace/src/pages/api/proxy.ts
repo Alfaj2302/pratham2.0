@@ -111,22 +111,55 @@ export default async function handler(
   }
 }
 
-// Sort the terms of the given framework categories alphabetically by name so
-// dropdowns in the content editor form (e.g. Subject) render in A-Z order.
+const byName = (a: any, b: any) =>
+  (a?.name ?? "").localeCompare(b?.name ?? "", undefined, { sensitivity: "base" });
+
+// Sort the given framework categories' terms alphabetically by name so dropdowns
+// in the content editor form (e.g. Subject) render in A-Z order. This covers both
+// the category's own term list and the term associations the editor uses to fill
+// dependent dropdowns (e.g. Subject options after selecting Domain/SubDomain).
 function sortFrameworkCategoryTerms(data: any, categoryCodes: string[]) {
   const categories = data?.result?.framework?.categories;
   if (!Array.isArray(categories)) return;
 
   categories.forEach((category: any) => {
-    if (!categoryCodes.includes(category?.code) || !Array.isArray(category?.terms)) {
-      return;
+    if (!Array.isArray(category?.terms)) return;
+
+    if (categoryCodes.includes(category?.code)) {
+      category.terms.sort(byName);
+      // Keep `index` consistent with the new order in case the editor sorts by it
+      category.terms.forEach((term: any, i: number) => {
+        term.index = i + 1;
+      });
     }
-    category.terms.sort((a: any, b: any) =>
-      (a?.name ?? "").localeCompare(b?.name ?? "", undefined, { sensitivity: "base" })
+
+    category.terms.forEach((term: any) =>
+      sortTermAssociations(term, categoryCodes)
     );
-    // Keep `index` consistent with the new order in case the editor sorts by it
-    category.terms.forEach((term: any, i: number) => {
-      term.index = i + 1;
-    });
   });
+}
+
+// Sort associations belonging to the given categories in place, leaving the
+// positions and order of associations from other categories untouched.
+function sortTermAssociations(term: any, categoryCodes: string[]) {
+  if (Array.isArray(term?.associations)) {
+    const slots: number[] = [];
+    const matched: any[] = [];
+    term.associations.forEach((assoc: any, i: number) => {
+      if (categoryCodes.includes(assoc?.category)) {
+        slots.push(i);
+        matched.push(assoc);
+      }
+    });
+    matched.sort(byName);
+    slots.forEach((slot, i) => {
+      term.associations[slot] = matched[i];
+    });
+  }
+
+  if (Array.isArray(term?.children)) {
+    term.children.forEach((child: any) =>
+      sortTermAssociations(child, categoryCodes)
+    );
+  }
 }
