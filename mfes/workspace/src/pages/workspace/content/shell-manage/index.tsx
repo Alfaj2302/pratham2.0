@@ -3,7 +3,7 @@ import Script from 'next/script';
 import { useRouter } from 'next/router';
 import { Box, useTheme } from '@mui/material';
 import useTenantConfig from '../../../../hooks/useTenantConfig';
-import { getLocalStoredUserId } from '../../../../services/LocalStorageService';
+import { getLocalStoredChannelId, getLocalStoredCollectionFramework, getLocalStoredUserId } from '../../../../services/LocalStorageService';
 import WorkspaceHeader from '../../../../components/WorkspaceHeader';
 
 // Built in the content-editor repo (`npm run build:pratham`) and copied to public/webcomponents.
@@ -28,14 +28,16 @@ const ShellManagePage = () => {
     customElements.whenDefined('shell-manage').then(() => {
       if (cancelled || !shellRef.current) return;
       const userId = getLocalStoredUserId();
+      const channelId = getLocalStoredChannelId();
+      const collectionFramework = getLocalStoredCollectionFramework();
       (shellRef.current as any).config = {
         // Same-origin: `/mfe_workspace/action/*` is forwarded by the workspace API proxy.
         baseurl: router.basePath,
-        channel: tenantConfig.CHANNEL_ID,
-        framework: tenantConfig.CONTENT_FRAMEWORK,
+        channel: channelId,
+        framework: collectionFramework,
         createdBy: userId,
-        createdFor: [tenantConfig.CHANNEL_ID],
-        targetFWIds: [tenantConfig.COLLECTION_FRAMEWORK],
+        createdFor: [channelId],
+        targetFWIds: [collectionFramework],
         lastUpdatedBy: userId,
         theme: {
           primary: theme.palette.primary.main,
