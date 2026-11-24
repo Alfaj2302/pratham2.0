@@ -1,5 +1,6 @@
 //@ts-nocheck
 const baseurl = process.env.NEXT_PUBLIC_MIDDLEWARE_URL;
+const baseurlV2 = process.env.NEXT_PUBLIC_BASE_URL;
 
 const API_ENDPOINTS = {
   contentRead: (doId: string) => `${baseurl}/api/content/v1/read/${doId}?fields=artifactUrl`,
@@ -16,7 +17,7 @@ const API_ENDPOINTS = {
   userAuth: `${baseurl}/user/auth`,
   resetPassword: `${baseurl}/user/reset-password`,
   fieldOptionsRead: `${baseurl}/fields/options/read`,
-  districtUserCount: `${baseurl}/user/v1/district-user-count`,
+  districtUserCount: `${baseurlV2}/user/v1/district-user-count`,
   cohortSearch: `${baseurl}/cohort/search`,
   userTenantStatus: `${baseurl}/user-tenant/status`,
   fieldOptionDelete: (type: string, option: string) => `${baseurl}/fields/options/delete/${type}?option=${option}`,

@@ -15,7 +15,7 @@ interface LocationOption {
 
 const normalizeName = (name: unknown) => String(name ?? '').trim().toLowerCase();
 
-// Merge the district-user-count result (names + counts, in API order) with the
+// Merge the district-user-count result (names + counts) with the
 // field options (ids needed by the Block API and the user list filter).
 const buildDistrictOptions = (counts: any[], fieldOptions: LocationOption[]): LocationOption[] => {
   const byId = new Map(fieldOptions.map((o) => [String(o.value), o]));
@@ -29,7 +29,10 @@ const buildDistrictOptions = (counts: any[], fieldOptions: LocationOption[]): Lo
     seen.add(String(match.value));
     options.push({ ...match, label: item.name || match.label, userCount: Number(item.user_count) || 0 });
   });
-  return options;
+  // Highest user count first; ties fall back to alphabetical order
+  return options.sort(
+    (a, b) => (b.userCount ?? 0) - (a.userCount ?? 0) || a.label.localeCompare(b.label)
+  );
 };
 
 interface LocationDropdownsProps {
