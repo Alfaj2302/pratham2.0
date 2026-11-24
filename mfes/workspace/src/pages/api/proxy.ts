@@ -93,6 +93,10 @@ export default async function handler(
     console.log("response =====>", response);
     const data = await response.json();
     console.log("data =====>", data);
+
+    if (pathString.startsWith("/api/framework/v1/read/")) {
+      sortFrameworkCategoryTerms(data, ["subject"]);
+    }
     res.status(response.status).json(data);
   } catch (error: any) {
     console.error("Error in proxy:", error.message);
@@ -105,4 +109,24 @@ export default async function handler(
       .json({ message: "Error fetching data", error: error.message });
     }
   }
+}
+
+// Sort the terms of the given framework categories alphabetically by name so
+// dropdowns in the content editor form (e.g. Subject) render in A-Z order.
+function sortFrameworkCategoryTerms(data: any, categoryCodes: string[]) {
+  const categories = data?.result?.framework?.categories;
+  if (!Array.isArray(categories)) return;
+
+  categories.forEach((category: any) => {
+    if (!categoryCodes.includes(category?.code) || !Array.isArray(category?.terms)) {
+      return;
+    }
+    category.terms.sort((a: any, b: any) =>
+      (a?.name ?? "").localeCompare(b?.name ?? "", undefined, { sensitivity: "base" })
+    );
+    // Keep `index` consistent with the new order in case the editor sorts by it
+    category.terms.forEach((term: any, i: number) => {
+      term.index = i + 1;
+    });
+  });
 }
