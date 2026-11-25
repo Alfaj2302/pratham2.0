@@ -262,6 +262,7 @@
     "CLASS": "کلاس",
     "NOT_MARKED": "نشان زدہ نہیں",
     "FUTURE_DATE_CANT_MARK": "مستقبل کی تاریخ نشان زد نہیں کی جا سکتی",
+    "ATTENDANCE_SYNC_INFO": "آن لائن (Zoom) سیشن کی حاضری آدھی رات کے بعد خود بخود سنک ہو جاتی ہے۔ ذاتی طور پر (اِن پرسن) سیشن کی حاضری آپ کے نشان لگاتے ہی ظاہر ہو جاتی ہے۔",
     "PERCENT_ATTENDANCE": "{{percent_students}}% حاضری",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} موجود)",
     "OVERVIEW": "جائزہ",

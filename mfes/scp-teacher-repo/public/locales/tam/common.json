@@ -262,6 +262,7 @@
     "CLASS": "வகுப்பு",
     "NOT_MARKED": "குறிக்கப்படவில்லை",
     "FUTURE_DATE_CANT_MARK": "எதிர்கால தேதியைக் குறிக்க முடியாது.",
+    "ATTENDANCE_SYNC_INFO": "ஆன்லைன் (Zoom) அமர்வின் வருகைப்பதிவு நள்ளிரவுக்குப் பிறகு தானாக ஒத்திசைக்கப்படும். நேரடி (இன்-பெர்சன்) அமர்வின் வருகைப்பதிவு நீங்கள் குறித்தவுடன் தோன்றும்.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% வருகை",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} மாணவர்கள் வருகை)",
     "OVERVIEW": "கண்ணோட்டம்",

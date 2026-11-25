@@ -263,6 +263,7 @@
     "CLASS": "Class",
     "NOT_MARKED": "Not Marked",
     "FUTURE_DATE_CANT_MARK": "Future date can't be marked",
+    "ATTENDANCE_SYNC_INFO": "Online (Zoom) session attendance syncs automatically after midnight. In-person session attendance appears as soon as you mark it.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% Attendance",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} present)",
     "OVERVIEW": "Overview",

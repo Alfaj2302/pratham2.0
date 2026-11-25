@@ -196,6 +196,7 @@
     "CLASS": "ക്ലാസ്",
     "NOT_MARKED": "അടയാളപ്പെടുത്തിയിട്ടില്ല",
     "FUTURE_DATE_CANT_MARK": "ഭാവിയിലെ തീയതി അടയാളപ്പെടുത്താൻ കഴിയില്ല",
+    "ATTENDANCE_SYNC_INFO": "ഓൺലൈൻ (Zoom) സെഷൻ ഹാജർ അർദ്ധരാത്രിക്ക് ശേഷം സ്വയമേവ സിങ്ക് ആകും. നേരിട്ടുള്ള (ഇൻ-പേഴ്സൺ) സെഷൻ ഹാജർ നിങ്ങൾ രേഖപ്പെടുത്തിയ ഉടൻ ദൃശ്യമാകും.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% ഹാജർ",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} ഹാജർ)",
     "OVERVIEW": "ആശയം",

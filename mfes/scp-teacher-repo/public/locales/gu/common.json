@@ -262,6 +262,7 @@
     "CLASS": "ક્લાસ",
     "NOT_MARKED": "ચિહ્નિત નથી",
     "FUTURE_DATE_CANT_MARK": "ભવિષ્યની તારીખ ચિહ્નિત કરી શકાતી નથી",
+    "ATTENDANCE_SYNC_INFO": "ઑનલાઇન (Zoom) સત્રની હાજરી મધ્યરાત્રિ પછી આપમેળે સિંક થાય છે. રૂબરૂ (ઇન-પર્સન) સત્રની હાજરી તમે નોંધો કે તરત જ દેખાય છે.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% હાજરી",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} હાજર)",
     "OVERVIEW": "ઓવરવ્યૂ",

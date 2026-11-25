@@ -262,6 +262,7 @@
     "CLASS": "ଶ୍ରେଣୀ",
     "NOT_MARKED": "ମାର୍କ କରାଯାଇ ନାହି",
     "FUTURE_DATE_CANT_MARK": "ଭବିଷ୍ୟ ଦିନାଙ୍କ ମାର୍କ କରାଯାଇ ପାରିବ ନାହି",
+    "ATTENDANCE_SYNC_INFO": "ଅନଲାଇନ୍ (Zoom) ସେସନ୍‌ର ଉପସ୍ଥିତି ମଧ୍ୟରାତ୍ରି ପରେ ସ୍ୱୟଂଚାଳିତ ଭାବେ ସିଙ୍କ୍ ହୁଏ। ପ୍ରତ୍ୟକ୍ଷ (ଇନ୍-ପର୍ସନ୍) ସେସନ୍‌ର ଉପସ୍ଥିତି ଆପଣ ମାର୍କ କରିବା ମାତ୍ରେ ଦେଖାଯାଏ।",
     "PERCENT_ATTENDANCE": "{{percent_students}}% ଉପସ୍ଥିତି",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} ଉପସ୍ଥିତ)",
     "OVERVIEW": "ଓଭର ଭିଉ",
