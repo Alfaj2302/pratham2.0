@@ -235,6 +235,11 @@ const AssessmentDetails = () => {
   const parentId = searchParams.get('parentId')
   const userId = searchParams.get('userId')
   const returnUrl = searchParams.get('returnUrl')
+  // Vocational Training entry point (/assessment -> offline test card). It is a
+  // standalone question set with no parent course, and the mobile app allows a
+  // single submission only — so re-upload is withheld and the mobile file rules
+  // apply. Every other caller of this page keeps its existing behaviour.
+  const isVtFlow = searchParams.get('flow') === 'vt'
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedQuestion] = useState<ScoreDetail | null>(null);
   const [editScore, setEditScore] = useState<string>('');
@@ -1462,12 +1467,13 @@ console.log('assessmentStatusData>>>>>:', assessmentStatusData);
                             >
                               View Images
                             </Button>
-                            {[
-                              'AI Processed',
-                              'Awaiting Your Approval',
-                              'AI Pending',
-                              'Approved',
-                            ].includes(assessmentData?.status || '') && (
+                            {!isVtFlow &&
+                              [
+                                'AI Processed',
+                                'Awaiting Your Approval',
+                                'AI Pending',
+                                'Approved',
+                              ].includes(assessmentData?.status || '') && (
                               <Button
                                 variant="outlined"
                                 onClick={handleReUpload}
@@ -1811,7 +1817,15 @@ console.log('assessmentStatusData>>>>>:', assessmentStatusData);
         isReUploadMode={isReUploadMode}
         setAssessmentTrackingData={setAssessmentTrackingData}
         parentId={parentId as string}
-        customMaxImages={10}
+        customMaxImages={isVtFlow ? null : 10}
+        maxFileSizeMb={isVtFlow ? 10 : 5}
+        recommendedMaxImages={isVtFlow ? 20 : null}
+        formatHintKey={
+          isVtFlow
+            ? 'LEARNER_APP.VT_ASSESSMENT.FORMAT_JPG_SIZE_10MB_UP_TO_20_IMAGES'
+            : 'AI.FORMAT_JPG_SIZE_5MB_UP_TO_4_IMAGES'
+        }
+        showResubmitWarning={isVtFlow}
       />
 
       {/* Snackbar for feedback */}

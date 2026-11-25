@@ -17,6 +17,7 @@ import editIcon from '../../../public/images/editIcon.svg';
 import deleteIcon from '../../../public/images/deleteIcon.svg';
 import Image from 'next/image';
 import {
+  extractMatchingKeys,
   fetchForm,
   searchListData,
 } from '@/components/DynamicForm/DynamicFormCallback';
@@ -26,6 +27,7 @@ import {
   BatchSearchSchema,
   BatchSearchUISchema,
 } from '@/constant/Forms/BatchSearchNew';
+import { L2BatchCreate } from '@/constant/Forms/L2BatchCreate';
 import {
   BatchCreateSchema,
   BatchCreateUISchema,
@@ -57,6 +59,8 @@ interface BatchFlowProps {
   centerBoards?: string[];
   centerMediums?: string[];
   centerGrades?: string[];
+  centerIndustries?: string[];
+  centerSkills?: string[];
   centerStreams?: string[];
   centerType?: string | null;
 }
@@ -66,6 +70,8 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
   centerBoards = [],
   centerMediums = [],
   centerGrades = [],
+  centerIndustries = [],
+  centerSkills = [],
   centerStreams = [],
   centerType = null,
 }) => {
@@ -98,6 +104,10 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
       : null;
   const isPathwaysProgram =
     storedProgram === TenantName.SECOND_CHANCE_PROGRAM_PATHWAYS;
+  // Vocational Training (YouthNet) centers use the L2 batch form (domain/
+  // skills/dates); Pathways uses board/medium/grade/stream; every other
+  // program keeps the original SCP board/medium/grade form.
+  const useL2Form = storedProgram === TenantName.YOUTHNET;
   const initialFormData =
     typeof window !== 'undefined' && localStorage.getItem('stateId')
       ? { state: [localStorage.getItem('stateId')] }
@@ -124,23 +134,34 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
       board?: string[];
       medium?: string[];
       grade?: string[];
+      domain?: string[];
+      skills?: string[];
       stream?: string[];
+      startdate?: string;
+      enddate?: string;
     }
   ) => {
-    let alterSchema = resolveFrameworkPlaceholders(
-      structuredClone(
-        isPathwaysProgram ? PathwaysBatchCreateSchema : BatchCreateSchema
-      )
-    );
-    let alterUiSchema = structuredClone(
-      isPathwaysProgram ? PathwaysBatchCreateUISchema : BatchCreateUISchema
-    );
+    let alterSchema;
+    let alterUiSchema;
+    if (useL2Form) {
+      alterSchema = JSON.parse(JSON.stringify(L2BatchCreate.schema));
+      alterUiSchema = JSON.parse(JSON.stringify(L2BatchCreate.uiSchema));
+    } else {
+      alterSchema = resolveFrameworkPlaceholders(
+        structuredClone(
+          isPathwaysProgram ? PathwaysBatchCreateSchema : BatchCreateSchema
+        )
+      );
+      alterUiSchema = structuredClone(
+        isPathwaysProgram ? PathwaysBatchCreateUISchema : BatchCreateUISchema
+      );
+    }
 
     let requiredArray = alterSchema?.required || [];
-    const mustRequired = ['name', 'board', 'medium', 'grade'];
-    if (alterSchema?.properties?.stream) {
-      mustRequired.push('stream');
-    }
+    // Only force fields that actually exist on this form's schema.
+    const mustRequired = ['name', 'board', 'medium', 'grade', 'stream'].filter(
+      (key) => key === 'name' || alterSchema?.properties?.[key]
+    );
     mustRequired.forEach((item) => {
       if (!requiredArray.includes(item)) {
         requiredArray.push(item);
@@ -169,7 +190,7 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
       alterSchema?.properties?.board?.api?.payload?.fetchUrl;
 
     const overrideEnum = (
-      fieldKey: 'board' | 'medium' | 'grade' | 'stream',
+      fieldKey: 'board' | 'medium' | 'grade' | 'domain' | 'skills' | 'stream',
       centerVals: string[]
     ) => {
       if (alterSchema?.properties?.[fieldKey]) {
@@ -198,6 +219,111 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
     overrideEnum('board', centerBoards);
     overrideEnum('medium', centerMediums);
     overrideEnum('grade', centerGrades);
+
+    if (useL2Form) {
+      // Domain/Skills options are the center's own configured values (plus
+      // the batch's saved ones on edit), resolved through the framework so
+      // Skills always follow the selected Domain: Domain is an `initial`
+      // lookup and Skills a `dependent` lookup on Domain. On a Domain change
+      // the shared DynamicForm clears the selected Skills and refetches the
+      // options for the new Domain, so a Skill from another Domain can't be
+      // kept or saved. `directOnly` keeps Skills to the Domain's own direct
+      // associations (see api/dynamic-form/get-framework.js).
+      const mergeValues = (centerVals: string[], existing?: string[]) =>
+        Array.from(
+          new Set([
+            ...(Array.isArray(centerVals) ? centerVals : []),
+            ...(existing || []),
+          ])
+        ).filter(Boolean);
+      const allowedDomains = mergeValues(centerIndustries, existingValues?.domain);
+      const allowedSkills = mergeValues(centerSkills, existingValues?.skills);
+      // Same pos-framework the schema points at, on this environment's own
+      // middleware instead of the hardcoded dev host.
+      const schemaFrameworkUrl =
+        alterSchema?.properties?.skills?.api?.payload?.fetchUrl;
+      const frameworkUrl = process.env.NEXT_PUBLIC_MIDDLEWARE_URL
+        ? `${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/api/framework/v1/read/pos-framework`
+        : schemaFrameworkUrl;
+
+      if (alterSchema?.properties?.domain) {
+        alterSchema.properties.domain.items = {
+          type: 'string',
+          enum: ['Select'],
+          enumNames: ['Select'],
+        };
+        alterSchema.properties.domain.api = {
+          ...alterSchema.properties.domain.api,
+          // Same lookup as the Center form's own Domain field (subjects under
+          // Career Exploration), narrowed to the center's domains.
+          payload: {
+            ...alterSchema.properties.domain.api?.payload,
+            fetchUrl: frameworkUrl,
+            allowedValues: allowedDomains,
+            directOnly: true,
+          },
+          callType: 'initial',
+        };
+      }
+      if (alterSchema?.properties?.skills) {
+        alterSchema.properties.skills.items = {
+          type: 'string',
+          enum: ['Select'],
+          enumNames: ['Select'],
+        };
+        alterSchema.properties.skills.api = {
+          ...alterSchema.properties.skills.api,
+          // Same lookup as the Center form's own Skills field (the selected
+          // Domain's skills), narrowed to the center's skills.
+          payload: {
+            ...alterSchema.properties.skills.api?.payload,
+            fetchUrl: frameworkUrl,
+            allowedValues: allowedSkills,
+            directOnly: true,
+          },
+          callType: 'dependent',
+          dependent: 'domain',
+        };
+      }
+    }
+
+    // Neither startdate nor enddate can be in the past. "Today" can't live
+    // as a static value in the schema file since it changes daily, so it's
+    // injected here (formatMinimum for AJV validation on submit, ui:options
+    // minValue to also block past dates in the date picker itself).
+    // Local date (not UTC) so "today" matches the user's own calendar day.
+    const now = new Date();
+    const today = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, '0'),
+      String(now.getDate()).padStart(2, '0'),
+    ].join('-');
+    const toDateKey = (value: any) => {
+      const raw = typeof value === 'object' ? value?.value : value;
+      return typeof raw === 'string' && /^\d{4}-\d{2}-\d{2}/.test(raw)
+        ? raw.slice(0, 10)
+        : null;
+    };
+    ['startdate', 'enddate'].forEach((key) => {
+      // On edit, a date that has already passed (< today) is locked - today
+      // itself stays editable. A locked field is disabled and the "no past
+      // dates" rule is skipped for it, otherwise the unchanged saved value
+      // would fail validation.
+      const savedDate = isEditMode ? toDateKey(existingValues?.[key]) : null;
+      const isLocked = !!savedDate && savedDate < today;
+      if (alterSchema?.properties?.[key] && !isLocked) {
+        alterSchema.properties[key].formatMinimum = today;
+      }
+      if (alterUiSchema?.[key]) {
+        alterUiSchema[key]['ui:options'] = {
+          ...alterUiSchema[key]['ui:options'],
+          ...(isLocked ? {} : { minValue: today }),
+        };
+        if (isLocked) {
+          alterUiSchema[key]['ui:disabled'] = true;
+        }
+      }
+    });
 
     // Stream is scoped to the center's own selected streams (same as the
     // other fields above), but must also be filtered by whichever board is
@@ -295,6 +421,12 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
       if (centerGrades?.length === 1 && alterUiSchema?.grade) {
         alterUiSchema.grade['ui:disabled'] = true;
       }
+      if (centerIndustries?.length === 1 && alterUiSchema?.domain) {
+        alterUiSchema.domain['ui:disabled'] = true;
+      }
+      if (centerSkills?.length === 1 && alterUiSchema?.skills) {
+        alterUiSchema.skills['ui:disabled'] = true;
+      }
       if (centerStreams?.length === 1 && alterUiSchema?.stream) {
         alterUiSchema.stream['ui:disabled'] = true;
       }
@@ -305,8 +437,31 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
         delete alterUiSchema.medium['ui:disabled'];
       if (alterUiSchema?.grade?.['ui:disabled'])
         delete alterUiSchema.grade['ui:disabled'];
+      if (alterUiSchema?.domain?.['ui:disabled'])
+        delete alterUiSchema.domain['ui:disabled'];
+      if (alterUiSchema?.skills?.['ui:disabled'])
+        delete alterUiSchema.skills['ui:disabled'];
       if (alterUiSchema?.stream?.['ui:disabled'])
         delete alterUiSchema.stream['ui:disabled'];
+    }
+
+    // Same label on every program's batch form (L2 form's schema says UNIT_NAME).
+    if (alterSchema?.properties?.name) {
+      alterSchema.properties.name.title = 'Batch Name';
+    }
+
+    // YouthNet: once a batch's Start Date has passed (< today), its Domain
+    // and Skills (and the Skills-dependent Assessments) can no longer be
+    // changed (same rule as the date fields).
+    if (useL2Form && isEditMode) {
+      const savedStartDate = toDateKey(existingValues?.startdate);
+      if (savedStartDate && savedStartDate < today) {
+        ['domain', 'skills', 'assessments'].forEach((key) => {
+          if (alterUiSchema?.[key]) {
+            alterUiSchema[key]['ui:disabled'] = true;
+          }
+        });
+      }
     }
 
     setAddSchema(alterSchema);
@@ -340,6 +495,8 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
     centerBoards,
     centerMediums,
     centerGrades,
+    centerIndustries,
+    centerSkills,
     centerStreams,
   ]);
 
@@ -437,36 +594,76 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
       label: 'Center',
       render: (row) => <CenterLabel parentId={row?.parentId} />,
     },
-    {
-      key: 'board',
-      label: 'Boards',
-      render: (row) =>
-        transformLabel(
-          row.customFields
-            .find((field) => field.label === 'BOARD')
-            ?.selectedValues?.join(', ')
-        ) || '-',
-    },
-    {
-      key: 'medium',
-      label: 'Medium',
-      render: (row) =>
-        transformLabel(
-          row.customFields
-            .find((field) => field.label === 'MEDIUM')
-            ?.selectedValues?.join(', ')
-        ) || '-',
-    },
-    {
-      key: 'grade',
-      label: 'Grade',
-      render: (row) =>
-        transformLabel(
-          row.customFields
-            .find((field) => field.label === 'GRADE')
-            ?.selectedValues?.join(', ')
-        ) || '-',
-    },
+    // Vocational Training batches carry domain/skills instead of board/medium/grade.
+    ...(storedProgram === TenantName.YOUTHNET
+      ? [
+          {
+            key: 'domain',
+            label: 'Domain',
+            render: (row) =>
+              transformLabel(
+                row.customFields
+                  .find((field) => field.label === 'DOMAIN')
+                  ?.selectedValues?.join(', ')
+              ) || '-',
+          },
+          {
+            key: 'skills',
+            label: 'Skills',
+            render: (row) =>
+              transformLabel(
+                row.customFields
+                  .find((field) => field.label === 'SKILLS')
+                  ?.selectedValues?.join(', ')
+              ) || '-',
+          },
+          {
+            key: 'startdate',
+            label: 'Start Date',
+            render: (row) =>
+              row.customFields.find((field) => field.label === 'START_DATE')
+                ?.selectedValues?.[0] || '-',
+          },
+          {
+            key: 'enddate',
+            label: 'End Date',
+            render: (row) =>
+              row.customFields.find((field) => field.label === 'END_DATE')
+                ?.selectedValues?.[0] || '-',
+          },
+        ]
+      : [
+          {
+            key: 'board',
+            label: 'Boards',
+            render: (row) =>
+              transformLabel(
+                row.customFields
+                  .find((field) => field.label === 'BOARD')
+                  ?.selectedValues?.join(', ')
+              ) || '-',
+          },
+          {
+            key: 'medium',
+            label: 'Medium',
+            render: (row) =>
+              transformLabel(
+                row.customFields
+                  .find((field) => field.label === 'MEDIUM')
+                  ?.selectedValues?.join(', ')
+              ) || '-',
+          },
+          {
+            key: 'grade',
+            label: 'Grade',
+            render: (row) =>
+              transformLabel(
+                row.customFields
+                  .find((field) => field.label === 'GRADE')
+                  ?.selectedValues?.join(', ')
+              ) || '-',
+          },
+        ]),
     ...(isPathwaysProgram
       ? [
           {
@@ -512,9 +709,30 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
           board: getSelectedValues('BOARD'),
           medium: getSelectedValues('MEDIUM'),
           grade: getSelectedValues('GRADE'),
+          domain:
+            row?.customFields?.find(
+              (f: any) => f.label === 'INDUSTRY' || f.label === 'DOMAIN'
+            )?.selectedValues || [],
+          skills: getSelectedValues('SKILLS'),
           stream: getSelectedValues('STREAM'),
+          startdate: getSelectedValues('START_DATE')?.[0],
+          enddate: getSelectedValues('END_DATE')?.[0],
         };
         buildSchemaAndUi(true, existingValues);
+
+        // YouthNet L2 batches (domain/skills/dates) keep the fieldId-based
+        // extraction against the L2 schema.
+        if (useL2Form) {
+          const l2FormData = extractMatchingKeys(row, addSchema);
+          if (centerType === 'regular') {
+            l2FormData.batch_type = 'regular';
+          }
+          setPrefilledAddFormData(l2FormData);
+          setIsEdit(true);
+          setEditableUserId(row?.cohortId);
+          handleOpenModal();
+          return;
+        }
 
         // Build form data directly from the batch's own customFields,
         // matched by label, instead of extractMatchingKeys's fieldId
@@ -655,6 +873,10 @@ const BatchFlow: React.FC<BatchFlowProps> = ({
                   prefillWithBMGS.medium = [centerMediums[0]];
                 if (centerGrades?.length === 1)
                   prefillWithBMGS.grade = [centerGrades[0]];
+                if (centerIndustries?.length === 1)
+                  prefillWithBMGS.domain = [centerIndustries[0]];
+                if (centerSkills?.length === 1)
+                  prefillWithBMGS.skills = [centerSkills[0]];
                 if (centerStreams?.length === 1)
                   prefillWithBMGS.stream = [centerStreams[0]];
 

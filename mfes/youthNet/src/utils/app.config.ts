@@ -60,7 +60,10 @@ export const accessControl: { [key: string]: Role[] } = {
   showTeacherLevelCenterData: [Role.TEACHER],
   accessCoursePlanner: [Role.TEACHER, Role.TEAM_LEADER],
   accessCoursePlannerDetails: [Role.TEACHER, Role.TEAM_LEADER],
-  accessAssessments: [Role.TEACHER, Role.TEAM_LEADER],
+  // Trainer-only: the YouthNet Assessments and Manual Assessment (Trainer) flows are built for the
+  // Trainer role. Narrowed from the [TEACHER, TEAM_LEADER] value inherited from scp-teacher-repo;
+  // this key had no consumer in YouthNet before `utils/hoc/withAccessControl`.
+  accessAssessments: [Role.TEACHER],
   accessCenters: [Role.TEACHER, Role.TEAM_LEADER],
 };
 

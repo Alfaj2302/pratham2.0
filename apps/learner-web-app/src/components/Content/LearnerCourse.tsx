@@ -29,10 +29,14 @@ export default memo(function LearnerCourse({
   const { t } = useTranslation();
   const { staticFilter, filterFramework } = _content ?? {};
   const contentListRef = useRef<HTMLDivElement>(null);
+  // Filter state is persisted per listing. Callers that show a different
+  // catalogue (e.g. the L2 Courses tab, scoped to the batch's skill) pass their
+  // own key so a facet chosen on one listing cannot silently narrow another.
+  const filterStorageKey = _content?.filterStorageKey ?? 'learnerCourseFilters';
 
   useEffect(() => {
     const initFilters = async () => {
-      const savedFilters = localStorage.getItem('learnerCourseFilters');
+      const savedFilters = localStorage.getItem(filterStorageKey);
       if (savedFilters) {
         setFilterState(JSON.parse(savedFilters));
         return;
@@ -121,10 +125,10 @@ export default memo(function LearnerCourse({
         offset: 0,
 
       };
-      localStorage.setItem('learnerCourseFilters', JSON.stringify(updated));
+      localStorage.setItem(filterStorageKey, JSON.stringify(updated));
       return updated;
     });
-  }, []);
+  }, [filterStorageKey]);
 
   const handleFilterChange = (newFilterState: typeof filterState) => {
     setFilterState((prevState: any) => {
@@ -132,7 +136,7 @@ export default memo(function LearnerCourse({
         ...prevState,
         filters: newFilterState,
       };
-      localStorage.setItem('learnerCourseFilters', JSON.stringify(updated));
+      localStorage.setItem(filterStorageKey, JSON.stringify(updated));
       return updated;
     });
   };

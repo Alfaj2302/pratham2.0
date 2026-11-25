@@ -67,6 +67,9 @@ export enum Role {
   INSTRUCTOR = 'Instructor',
   LEAD = 'Lead',
   MOBILIZER = 'Mobilizer',
+  // Backend role name string (apps/admin-app-repo's RoleName.PLACEMENT_RETENTION_COORDINATOR),
+  // distinct from the display label "Placement Retention Coordinator".
+  PLACEMENT_RETENTION_COORDINATOR = 'Placement Retention',
 }
 
 export enum Status {

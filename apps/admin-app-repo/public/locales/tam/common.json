@@ -175,7 +175,20 @@
     "DELETE_FROM_BATCH_WARNING": "பயனரை மேலே உள்ள மையத்தின் பேட்ச்களிலிருந்து நீக்க விரும்புகிறீர்களா?",
     "SAVE": "சேமிக்கவும்",
     "SAVING": "சேமிக்கப்படுகிறது...",
-    "MAP_NEW": "புதிய இணைப்பு"
+    "MAP_NEW": "புதிய இணைப்பு",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found"
   },
   "LOGIN_PAGE": {
     "USERNAME": "பயனர் பெயர்",
@@ -253,7 +266,9 @@
     "SKILLING_CENTERS": "திறன் பயிற்சி மையங்கள்",
     "CURRICULUM_PLANNER": "பாடத்திட்டத் திட்டமிடல்",
     "BATCH": "பேட்ச்",
-    "MOBILIZER": "வழிகாட்டி"
+    "MOBILIZER": "வழிகாட்டி",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "மாநிலம்",
@@ -393,7 +408,18 @@
     "DISTRICT_CODE": "மாவட்டக் குறியீடு",
     "BLOCK_CODE": "வட்டக் குறியீடு",
     "CODE": "குறியீடு",
-    "MASTER": "மாஸ்டர்"
+    "MASTER": "மாஸ்டர்",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "நிறுவனத்தின் பெயர்",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "மையம்",
@@ -890,5 +916,16 @@
     "WORKING_LOCATION_REQUIRED_AT_LEAST_ONE": "பணிபுரியும் இடம் கட்டாயம். அனைத்து வட்டங்களிலும் குறைந்தது ஒரு கிராமத்தையாவது தேர்ந்தெடுக்கவும்.",
     "MOBILIZER_NAME": "வழிகாட்டி பெயர்",
     "EDIT_MOBILIZER": "மொபிலைசரைத் திருத்தவும்"
-  }
+  },
+  "PLACEMENT PROPERTY": "Placement Property",
+  "PLACEMENT PROPERTY NAME": "Placement Property Name",
+  "PINCODE": "Pincode",
+  "DOMAIN": "Domain",
+  "INDUSTRY TYPE": "Industry Type",
+  "PLACEMENT PROPERTY CONTACT": "Placement Property Contact",
+  "PLACEMENT PROPERTY EMAIL": "Placement Property Email",
+  "MEDICAL INSURACE": "Medical Insurance",
+  "MEDICAL ASSISTANCE": "Medical Assistance",
+  "PROPERTY SANITISED": "Property Sanitised",
+  "TRANSPORTATION FACILITY": "Transportation Facility"
 }

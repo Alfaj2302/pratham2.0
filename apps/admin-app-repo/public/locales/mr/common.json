@@ -175,7 +175,20 @@
     "DELETE_FROM_BATCH_WARNING": "तुम्हाला वर नमूद केलेल्या केंद्रांच्या बॅचमधून वापरकर्त्याला हटवायचे आहे का?",
     "SAVE": "सेव्ह करा",
     "SAVING": "जतन केले जात आहे",
-    "MAP_NEW": "नवीन नकाशित करा"
+    "MAP_NEW": "नवीन नकाशित करा",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found"
   },
   "LOGIN_PAGE": {
     "USERNAME": "वापरकर्ता नाव",
@@ -253,7 +266,9 @@
     "SKILLING_CENTERS": "कौशल्य केंद्रे",
     "CURRICULUM_PLANNER": "अभ्यासक्रम नियोजक",
     "BATCH": "बॅच",
-    "MOBILIZER": "मार्गदर्शक"
+    "MOBILIZER": "मार्गदर्शक",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "राज्य",
@@ -393,7 +408,18 @@
     "DISTRICT_CODE": "जिला कोड",
     "BLOCK_CODE": "ब्लॉक कोड",
     "CODE": "कोड",
-    "MASTER": "मास्टर"
+    "MASTER": "मास्टर",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "संस्थेचे नाव",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "सेंटर",
@@ -890,5 +916,16 @@
     "WORKING_LOCATION_REQUIRED_AT_LEAST_ONE": "कामाचे ठिकाण आवश्यक आहे. कृपया सर्व ब्लॉकमध्ये किमान एक गाव निवडा.",
     "MOBILIZER_NAME": "मार्गदर्शकाचे नाव",
     "EDIT_MOBILIZER": "मोबिलायझर एडिट करा"
-  }
+  },
+  "PLACEMENT PROPERTY": "Placement Property",
+  "PLACEMENT PROPERTY NAME": "Placement Property Name",
+  "PINCODE": "Pincode",
+  "DOMAIN": "Domain",
+  "INDUSTRY TYPE": "Industry Type",
+  "PLACEMENT PROPERTY CONTACT": "Placement Property Contact",
+  "PLACEMENT PROPERTY EMAIL": "Placement Property Email",
+  "MEDICAL INSURACE": "Medical Insurance",
+  "MEDICAL ASSISTANCE": "Medical Assistance",
+  "PROPERTY SANITISED": "Property Sanitised",
+  "TRANSPORTATION FACILITY": "Transportation Facility"
 }

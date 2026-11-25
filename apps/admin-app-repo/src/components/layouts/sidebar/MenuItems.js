@@ -164,7 +164,8 @@ export const getFilteredMenuItems = () => {
                 (subItem) =>
                   subItem.title === 'SIDEBAR.MENTOR' ||
                   subItem.title === 'SIDEBAR.MENTOR_LEADER' ||
-                  subItem.title === 'SIDEBAR.MOBILIZER'
+                  subItem.title === 'SIDEBAR.MOBILIZER' ||
+                  subItem.title === 'SIDEBAR.TRAINER'
               ),
             };
           }

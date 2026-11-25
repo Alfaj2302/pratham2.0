@@ -405,5 +405,6 @@ export const YOUTHNET_USER_ROLE = {
   LEAD:"Lead",
   INSTRUCTOR:"Instructor",
   LEARNER:"Learner",
-  MOBILIZER:"Mobilizer"
+  MOBILIZER:"Mobilizer",
+  PLACEMENT_RETENTION_COORDINATOR: "Placement Retention",
 };

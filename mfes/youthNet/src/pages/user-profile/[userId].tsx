@@ -10,7 +10,7 @@ import Header from '../../components/Header';
 import BackHeader from '../../components/youthNet/BackHeader';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticPaths } from 'next';
-import { VILLAGE_DATA } from '../../components/youthNet/tempConfigs';
+import { VILLAGE_DATA, YOUTHNET_USER_ROLE } from '../../components/youthNet/tempConfigs';
 import VillageDetailCard from '../../components/youthNet/VillageDetailCard';
 import Frame2 from '../../assets/images/SurveyFrame2.png';
 import Profile from '../../components/youthNet/Profile';
@@ -63,6 +63,8 @@ const UserId = () => {
     joinedOn?: string | null;
     workingVillages?: string | null;
     enrollmentId?: string | null;
+    domain?: string | null;
+    skills?: string | null;
   }>({
     userRole: null,
     userID: null,
@@ -81,6 +83,8 @@ const UserId = () => {
     joinedOn: null,
     workingVillages: null,
     enrollmentId: null,
+    domain: null,
+    skills: null,
   });
 
   // Get current user ID and userProgram from localStorage on mount
@@ -447,6 +451,46 @@ const UserId = () => {
           return null;
         };
 
+        // Domain (Trainer + Placement Retention) and Skills (Trainer only).
+        // Uses the profile's own role names: the current user's role from
+        // localStorage, or every role the viewed user has in this tenant.
+        const tenantName = localStorage.getItem('tenantName');
+        const profileTenant =
+          userData?.tenantData?.find((tenant: any) => tenant?.tenantName === tenantName) ||
+          userData?.tenantData?.[0];
+        const profileRoles: string[] =
+          userId === storedUserId
+            ? [role]
+            : (profileTenant?.roles || []).map((r: any) => r?.roleName);
+        const hasRole = (roleName: string) =>
+          profileRoles.some((r) => r?.toLowerCase() === roleName.toLowerCase());
+        const isTrainer = hasRole(YOUTHNET_USER_ROLE.INSTRUCTOR);
+        const showDomain =
+          isTrainer || hasRole(YOUTHNET_USER_ROLE.PLACEMENT_RETENTION_COORDINATOR);
+
+        // DOMAIN/SKILLS selectedValues are plain strings (see
+        // TrainerTaxonomyService), not {value} objects like getFieldValue
+        // expects. The cached userData of the logged-in user may not carry
+        // them, so fall back to a fresh user/read for these roles.
+        let taxonomySource = userData;
+        const hasTaxonomyField = (node: any) =>
+          node?.customFields?.some(
+            (item: any) => item.label === 'DOMAIN' || item.label === 'SKILLS'
+          );
+        if (showDomain && userId === storedUserId && !hasTaxonomyField(userData)) {
+          const fresh = await getUserDetails(userId, true);
+          taxonomySource = fresh?.userData || userData;
+        }
+        const getTaxonomyValue = (label: string) => {
+          const values =
+            taxonomySource?.customFields?.find((item: any) => item.label === label)
+              ?.selectedValues || [];
+          const names = values
+            .map((item: any) => (typeof item === 'string' ? item : item?.label ?? item?.value))
+            .filter(Boolean);
+          return Array.from(new Set(names)).join(', ');
+        };
+
         setUser({
           firstName: toPascalCase(userData?.firstName) || '',
           lastName: toPascalCase(userData?.lastName) || '',
@@ -472,6 +516,8 @@ const UserId = () => {
           village: getFieldValue('VILLAGE'),
           workingVillages: getWorkingVillages(),
           enrollmentId: userData?.enrollmentId || null,
+          domain: showDomain ? getTaxonomyValue('DOMAIN') || '-' : null,
+          skills: isTrainer ? getTaxonomyValue('SKILLS') || '-' : null,
         });
       }
     };
@@ -620,6 +666,8 @@ const UserId = () => {
             lastName={user.lastName || ''}
             workingVillages={user.workingVillages || null}
             enrollmentId={user.enrollmentId || null}
+            domain={user.domain || null}
+            skills={user.skills || null}
           />
         </Box>
         <Button

@@ -19,15 +19,37 @@
 const configFeatures = {
   skippedFeatures: [""],
   features: {
+    // Assessments (Trainer). Paths corrected to the files that actually exist in YouthNet — the
+    // previous values were inherited from scp-teacher-repo and pointed at pages/components that had
+    // never been created here.
     Assessments: {
-      pages: ["./src/pages/assessments/index.tsx", "./src/pages/assessments/user/[userId]/index.tsx", "./src/pages/assessments/user/[userId]/subject/[subjectId]/index.tsx"],
+      pages: [
+        "./src/pages/assessments/index.tsx",
+        "./src/pages/assessments/user/[userId]/index.tsx",
+        "./src/pages/assessments/user/[userId]/subject/[subjectId]/index.tsx",
+        "./src/pages/assessments/user/[userId]/attempt/[assessmentTrackingId]/[assessmentId]/index.tsx"
+      ],
       components: [{
         name: "AssessmentReportCard",
-        path: "./src/components/AssessmentReportCard.tsx"
+        path: "./src/components/assessment/AssessmentReportCard.tsx"
+      }
+      ],
+    },
+    // Manual Assessment (Trainer). Distinct from the volunteer flow at ./src/pages/manual-assessments,
+    // which is intentionally not covered by any feature flag here.
+    ManualAssessmentTrainer: {
+      pages: [
+        "./src/pages/manual-assessment-trainer/index.tsx",
+        "./src/pages/manual-assessment-trainer/[assessmentId]/index.tsx",
+        "./src/pages/manual-assessment-trainer/[assessmentId]/[userId]/index.tsx"
+      ],
+      components: [{
+        name: "TrainerCohortSelection",
+        path: "./src/components/assessment/TrainerCohortSelection.tsx"
       },
       {
-        name: "AssessmentReport",
-        path: "./src/components/AssessmentReport.tsx"
+        name: "AssessmentSortModal",
+        path: "./src/components/assessment/AssessmentSortModal.tsx"
       }
       ],
     },

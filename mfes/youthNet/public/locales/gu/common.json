@@ -329,7 +329,9 @@
     "ENROLLMENT_NUMBER": "એનરોલમેન્ટ નંબર",
     "SELECT_OPTION": "ઓપ્શન સિલેક્ટ કરો",
     "PROFILE_UPDATE_SUCCESSFULLY": "પ્રોફાઇલ સફળતાપૂર્વક અપડેટ થઈ",
-    "UNABLE_TO_PROFILE_UPDATE_": "પ્રોફાઇલ અપડેટ કરવામાં અસમર્થ"
+    "UNABLE_TO_PROFILE_UPDATE_": "પ્રોફાઇલ અપડેટ કરવામાં અસમર્થ",
+    "MOCK_TEST": "મોક ટેસ્ટ",
+    "UNIT_TEST": "યુનિટ ટેસ્ટ"
   },
   "FIELDS": {
     "DESIGNATION": "હોદો",
@@ -569,6 +571,8 @@
     "SUBJECTS_I_TEACH": "મારા દ્વારા શીખવવામાં આવેલ વિષયો",
     "GENDER": "જાતિ",
     "UNIT_NAME": "યુનિટ નું નામ",
+    "BATCH_NAME": "બેચનું નામ",
+    "ASSESSMENTS": "અસેસમેન્ટસ",
     "UNIT_CODE": "યુનિટ કોડ",
     "ENROLLMENT_NUMBER": "એનરોલમેન્ટ નંબર",
     "BLOCK_NAME": "બ્લોક નું નામ",
@@ -985,7 +989,20 @@
     "IMAGE_UPLOADED": "ઇમેજ અપલોડ કરો",
     "VIEW": "જુઓ",
     "REUPLOAD": "ફરીથી અપલોડ કરો",
-    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ફોર્મેટ: jpg, jpeg. કદ: {{mb}} MB {{count}} ઇમેજ સુધી"
+    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "* ફોર્મેટ: jpg, jpeg. કદ: {{mb}} MB {{count}} ઇમેજ સુધી",
+    "BATCH": "બેચ",
+    "ATTEMPT_DETAILS": "પ્રયાસ વિગતો",
+    "ATTEMPT_SUMMARY": "પ્રયાસ સારાંશ",
+    "CORRECT": "સાચું",
+    "INCORRECT": "ખોટું",
+    "SCORE": "ગુણ",
+    "TIME": "સમય",
+    "ATTEMPTED_ON": "પ્રયાસ કર્યો",
+    "PERCENTAGE": "ટકાવારી",
+    "NO_ANSWER": "કોઈ જવાબ નથી",
+    "ATTEMPT_NOT_FOUND": "મૂલ્યાંકન પ્રયાસ મળ્યો નથી",
+    "SUBMITTING": "સબમિટ થઈ રહ્યું છે...",
+    "UPDATING": "અપડેટ થઈ રહ્યું છે..."
   },
   "MOBILIZER": {
     "MOBILIZER": "માર્ગદર્શક",

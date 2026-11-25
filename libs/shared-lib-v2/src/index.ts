@@ -19,6 +19,7 @@ export * from './utils/DataClient';
 export * from './utils/customIdbStore';
 export * from './utils/trackingContentQueueLookup';
 export * from './lib/CertificateModal/CertificateModal';
+export * from './lib/SimpleModal/SimpleModal';
 export * from './lib/CourseCompletionBanner/CourseCompletionBanner';
 export * from './utils/helper';
 export * from './utils/scaledFontSize';

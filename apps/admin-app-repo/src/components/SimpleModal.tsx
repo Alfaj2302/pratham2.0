@@ -25,6 +25,7 @@ interface SimpleModalProps {
   isFullwidth?: boolean;
   modalWidth?: string;
   id?: any;
+  primaryDisabled?: boolean;
 }
 
 const SimpleModal: React.FC<SimpleModalProps> = ({
@@ -41,6 +42,7 @@ const SimpleModal: React.FC<SimpleModalProps> = ({
   isFullwidth = true,
   modalWidth = '40%',
   id = '',
+  primaryDisabled = false,
 }) => {
   const theme = useTheme<any>();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -168,6 +170,7 @@ const SimpleModal: React.FC<SimpleModalProps> = ({
                   onClick={primaryActionHandler}
                   form={id}
                   type="submit"
+                  disabled={primaryDisabled}
                 >
                   {primaryText}
                 </Button>

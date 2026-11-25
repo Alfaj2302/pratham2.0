@@ -1,4 +1,5 @@
 const baseurl = process.env.NEXT_PUBLIC_MIDDLEWARE_URL;
+const baseurlV2 = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const API_ENDPOINTS = {
   contentRead: (doId: string) => `${baseurl}/api/content/v1/read/${doId}?fields=artifactUrl`,
@@ -45,6 +46,10 @@ export const API_ENDPOINTS = {
   hierarchialSearch: `${baseurl}/user/hierarchical-search`,
   userTenantStatus: (userId: string, tenantId: string) =>`${baseurl}/user-tenant/status?userId=${userId}&tenantId=${tenantId}`,
   usersHierarchyView: `${baseurl}/user/users-hierarchy-view`,
+  placementPropertySearch: `${baseurlV2}/prathamservice/v1/placement-property/search`,
+  placementPropertyCreate: `${baseurlV2}/prathamservice/v1/placement-property/create`,
+  placementPropertyUpdate: `${baseurlV2}/prathamservice/v1/placement-property/update`,
+  placementPropertyStatus: `${baseurlV2}/prathamservice/v1/placement-property/status`,
 };
 
 export const COURSE_PLANNER_UPLOAD_ENDPOINTS = `${process.env.NEXT_PUBLIC_BASE_URL}/prathamservice/v1/course-planner/upload`;

@@ -175,7 +175,20 @@
     "DELETE_FROM_BATCH_WARNING": "کیا آپ اوپر والے مرکز کے بیچوں سے یوزر کو حذف کرنا چاہتے ہیں؟",
     "SAVE": "محفوظ کریں۔",
     "SAVING": "محفوظ ہو رہا ہے...",
-    "MAP_NEW": "نیا میپ کریں"
+    "MAP_NEW": "نیا میپ کریں",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found"
   },
   "LOGIN_PAGE": {
     "USERNAME": "صارف نام",
@@ -253,7 +266,9 @@
     "SKILLING_CENTERS": "ہنر سکھانے کے مراکز",
     "CURRICULUM_PLANNER": "نصاب کا منصوبہ ساز",
     "BATCH": "گروپ",
-    "MOBILIZER": "سرپرست"
+    "MOBILIZER": "سرپرست",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "ریاست",
@@ -393,7 +408,18 @@
     "DISTRICT_CODE": "ضلعی کوڈ",
     "BLOCK_CODE": "بلاک کوڈ",
     "CODE": "کوڈ",
-    "MASTER": "ماسٹر"
+    "MASTER": "ماسٹر",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "تنظیم کا نام",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "سنٹر",
@@ -890,5 +916,16 @@
     "WORKING_LOCATION_REQUIRED_AT_LEAST_ONE": "کام کی جگہ لازمی ہے۔ براہِ کرم تمام بلاکس میں کم از کم ایک گاؤں منتخب کریں۔",
     "MOBILIZER_NAME": "مینٹر کا نام",
     "EDIT_MOBILIZER": "موبلائزر میں ترمیم کریں۔"
-  }
+  },
+  "PLACEMENT PROPERTY": "Placement Property",
+  "PLACEMENT PROPERTY NAME": "Placement Property Name",
+  "PINCODE": "Pincode",
+  "DOMAIN": "Domain",
+  "INDUSTRY TYPE": "Industry Type",
+  "PLACEMENT PROPERTY CONTACT": "Placement Property Contact",
+  "PLACEMENT PROPERTY EMAIL": "Placement Property Email",
+  "MEDICAL INSURACE": "Medical Insurance",
+  "MEDICAL ASSISTANCE": "Medical Assistance",
+  "PROPERTY SANITISED": "Property Sanitised",
+  "TRANSPORTATION FACILITY": "Transportation Facility"
 }

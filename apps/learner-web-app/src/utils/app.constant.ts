@@ -135,4 +135,7 @@ export enum FormValues {
   TRANSGENDER = 'TRANSGENDER',
 }
 
+// Custom field used to record that the learner has confirmed interest in the L2 course.
+export const L2_INTEREST_FIELD_ID = '3cd23569-3995-483e-9e0f-0ff6cbd9bad0';
+
 

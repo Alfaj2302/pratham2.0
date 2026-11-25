@@ -317,3 +317,96 @@ export const hierarchyContent = async (content_do_id: string) => {
   }
 };
 
+
+// ---------------------------------------------------------------------------
+// Vocational Training (VT) assessment flow
+// ---------------------------------------------------------------------------
+// NOTE: `getAssessmentStatus` above posts to /tracking/assessment/search, which
+// returns raw attempt records. The category roll-up (status + percentage) the
+// VT screens need comes from a different endpoint, /tracking/assessment/search/status,
+// which is what the mobile app (learner-app `getAssessmentStatus`) calls. Hence
+// this separate wrapper rather than reusing the similarly-named one above.
+
+export interface IAssessmentStatusSummary {
+  status?: string;
+  percentage?: number | string;
+  assessments?: unknown[];
+  [key: string]: unknown;
+}
+
+export const getAssessmentStatusSummary = async (body: {
+  userId: string[];
+  courseId: string[];
+  unitId: string[];
+  contentId: string[];
+}): Promise<IAssessmentStatusSummary[]> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/tracking/assessment/search/status`;
+  try {
+    const response = await post(apiUrl, body);
+    const data = response?.data?.data;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error in getting assessment status summary:', error);
+    return [];
+  }
+};
+
+/**
+ * Look up question sets by identifier. The batch's ASSESSMENTS custom field is
+ * the only filter — VT batches carry no BOARD, so no board/program/evaluationType
+ * filters are applied here (mirrors learner-app `assessmentListApi` in its
+ * `assignedIds` branch).
+ *
+ * Deliberately NOT the `ContentSearch` wrapper: it injects a `fields` whitelist
+ * (name/description/mimeType/identifier/...) that the search honours literally,
+ * so `assessmentType`, `evaluationType`, `IL_UNIQUE_ID`, `medium` and
+ * `lastPublishedOn` all come back undefined. Every question set would then fall
+ * into the "Other" category and look like an online test. Both the mobile app
+ * (`assessmentListApi`) and scp (`getDoIdForAssessmentDetails`) send filters with
+ * no `fields` and get the full documents; this does the same.
+ */
+export const getAssessmentsByIds = async (identifiers: string[]) => {
+  if (!identifiers?.length) return [];
+  const apiUrl =
+    `${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/action/composite/v3/search` +
+    `?orgdetails=orgName,email&licenseDetails=name,description,url`;
+  try {
+    const response = await post(apiUrl, {
+      request: {
+        filters: {
+          identifier: identifiers,
+          status: ['Live'],
+          primaryCategory: ['Practice Question Set'],
+        },
+        sort_by: { lastUpdatedOn: 'desc' },
+        query: '',
+        limit: 100,
+        offset: 0,
+      },
+    });
+    const questionSets = response?.data?.result?.QuestionSet;
+    return Array.isArray(questionSets) ? questionSets : [];
+  } catch (error) {
+    console.error('Error in getting assessments by ids:', error);
+    return [];
+  }
+};
+
+/**
+ * Fetch full question bodies (used for the `editorState.solutions` text shown on
+ * the read-only answer sheet). Callers pass at most a chunk of 10 identifiers.
+ */
+export const listQuestions = async (identifiers: string[]) => {
+  if (!identifiers?.length) return [];
+  const apiUrl = `${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/api/question/v2/list`;
+  try {
+    const response = await post(apiUrl, {
+      request: { search: { identifier: identifiers } },
+    });
+    const questions = response?.data?.result?.questions;
+    return Array.isArray(questions) ? questions : [];
+  } catch (error) {
+    console.error('Error in listing questions:', error);
+    return [];
+  }
+};

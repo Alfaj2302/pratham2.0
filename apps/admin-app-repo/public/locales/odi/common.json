@@ -175,7 +175,20 @@
     "DELETE_FROM_BATCH_WARNING": "ଆପଣ ଉପରୋକ୍ତ କେନ୍ଦ୍ରର ବ୍ୟାଚଗୁଡ଼ିକରୁ ଉପଯୋଗକର୍ତ୍ତାଙ୍କୁ ବିଲୋପ କରିବାକୁ ଚାହୁଁଛନ୍ତି କି?",
     "SAVE": "ସେଭ",
     "SAVING": "ସଞ୍ଚୟ କରୁଛି...",
-    "MAP_NEW": "ନୂତନ ମ୍ୟାପ୍"
+    "MAP_NEW": "ନୂତନ ମ୍ୟାପ୍",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found"
   },
   "LOGIN_PAGE": {
     "USERNAME": "ୟୁଜରଙ୍କ  ନାମ",
@@ -253,7 +266,9 @@
     "SKILLING_CENTERS": "ଦକ୍ଷତା କେନ୍ଦ୍ର",
     "CURRICULUM_PLANNER": "ପାଠ୍ୟକ୍ରମ ଯୋଜନାକାରୀ",
     "BATCH": "ବ୍ୟାଚ୍",
-    "MOBILIZER": "ପରାମର୍ଶଦାତା"
+    "MOBILIZER": "ପରାମର୍ଶଦାତା",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "ରାଜ୍ୟ",
@@ -393,7 +408,18 @@
     "DISTRICT_CODE": "ଜିଲ୍ଲାର କୋଡ୍",
     "BLOCK_CODE": "ବ୍ଲକ୍ ର କୋଡ୍",
     "CODE": "କୋଡ୍",
-    "MASTER": "ମାଷ୍ଟର"
+    "MASTER": "ମାଷ୍ଟର",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "ସଂସ୍ଥାର ନାମ",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "କେନ୍ଦ୍ର",
@@ -890,5 +916,16 @@
     "WORKING_LOCATION_REQUIRED_AT_LEAST_ONE": "କାର୍ଯ୍ୟସ୍ଥଳ ଆବଶ୍ୟକ। ଦୟାକରି ସମସ୍ତ ବ୍ଲକ୍‌ରେ କମ୍ ସେ କମ୍ ଗୋଟିଏ ଗାଁ ଚୟନ କରନ୍ତୁ।",
     "MOBILIZER_NAME": "ପରାମର୍ଶଦାତାଙ୍କ ନାମ",
     "EDIT_MOBILIZER": "ମୋବିଲାଇଜର୍‌କୁ ଏଡିଟ୍ କରନ୍ତୁ"
-  }
+  },
+  "PLACEMENT PROPERTY": "Placement Property",
+  "PLACEMENT PROPERTY NAME": "Placement Property Name",
+  "PINCODE": "Pincode",
+  "DOMAIN": "Domain",
+  "INDUSTRY TYPE": "Industry Type",
+  "PLACEMENT PROPERTY CONTACT": "Placement Property Contact",
+  "PLACEMENT PROPERTY EMAIL": "Placement Property Email",
+  "MEDICAL INSURACE": "Medical Insurance",
+  "MEDICAL ASSISTANCE": "Medical Assistance",
+  "PROPERTY SANITISED": "Property Sanitised",
+  "TRANSPORTATION FACILITY": "Transportation Facility"
 }

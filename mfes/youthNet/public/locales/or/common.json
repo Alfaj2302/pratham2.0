@@ -329,7 +329,9 @@
     "ENROLLMENT_NUMBER": "ପଞ୍ଜୀକରଣ ସଂଖ୍ୟା |",
     "SELECT_OPTION": "ପସନ୍ଦ ବାଛନ୍ତୁ",
     "PROFILE_UPDATE_SUCCESSFULLY": "ପ୍ରୋଫାଇଲ୍ ସଫଳତାର ସହ ଅପଡେଟ୍ ହୋଇଛି",
-    "UNABLE_TO_PROFILE_UPDATE_": "ପ୍ରୋଫାଇଲ୍ ଅପଡେଟ୍ କରିବାରେ ଅସମର୍ଥ"
+    "UNABLE_TO_PROFILE_UPDATE_": "ପ୍ରୋଫାଇଲ୍ ଅପଡେଟ୍ କରିବାରେ ଅସମର୍ଥ",
+    "MOCK_TEST": "ନକଲି ପରୀକ୍ଷା",
+    "UNIT_TEST": "ୟୁନିଟ୍ ପରୀକ୍ଷା"
   },
   "FIELDS": {
     "DESIGNATION": "ପଦବୀ",
@@ -569,6 +571,8 @@
     "SUBJECTS_I_TEACH": "ମୁଁ ଶିକ୍ଷା ଦେଉଥିବା ବିଷୟଗୁଡ଼ିକ |",
     "GENDER": "ଲିଙ୍ଗ",
     "UNIT_NAME": "ୟୁନିଟ ନାମ",
+    "BATCH_NAME": "ବ୍ୟାଚ୍ ନାମ",
+    "ASSESSMENTS": "ମୂଲ୍ୟାଙ୍କନ",
     "UNIT_CODE": "ୟୁନିଟ କୋଡ",
     "ENROLLMENT_NUMBER": "ପଞ୍ଜୀକରଣ ସଂଖ୍ୟା |",
     "BLOCK_NAME": "ବ୍ଲକ୍ ନାମ",
@@ -985,7 +989,20 @@
     "IMAGE_UPLOADED": "ପ୍ରତିଛବି ଅପଲୋଡ୍ କରାଯାଇଛି",
     "VIEW": "ଦର୍ଶନ",
     "REUPLOAD": "ପୁଣି ଅପଲୋଡ୍ କରନ୍ତୁ",
-    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "• ଫର୍ମାଟ୍: jpg, jpeg । ଆକାର: ସର୍ବାଧିକ {{mb}} MB । ସର୍ବାଧିକ {{count}}ଟି ଚିତ୍ର ଅପଲୋଡ୍ କରିପାରିବେ।"
+    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "• ଫର୍ମାଟ୍: jpg, jpeg । ଆକାର: ସର୍ବାଧିକ {{mb}} MB । ସର୍ବାଧିକ {{count}}ଟି ଚିତ୍ର ଅପଲୋଡ୍ କରିପାରିବେ।",
+    "BATCH": "ବ୍ୟାଚ୍",
+    "ATTEMPT_DETAILS": "ପ୍ରୟାସ ବିବରଣୀ",
+    "ATTEMPT_SUMMARY": "ପ୍ରୟାସ ସାରାଂଶ",
+    "CORRECT": "ଠିକ୍",
+    "INCORRECT": "ଭୁଲ",
+    "SCORE": "ସ୍କୋର",
+    "TIME": "ସମୟ",
+    "ATTEMPTED_ON": "ପ୍ରୟାସ କରାଯାଇଥିଲା",
+    "PERCENTAGE": "ଶତକଡ଼ା",
+    "NO_ANSWER": "କୌଣସି ଉତ୍ତର ନାହିଁ",
+    "ATTEMPT_NOT_FOUND": "ମୂଲ୍ୟାଙ୍କନ ପ୍ରୟାସ ମିଳିଲା ନାହିଁ",
+    "SUBMITTING": "ଦାଖଲ କରାଯାଉଛି...",
+    "UPDATING": "ଅପଡେଟ୍ କରାଯାଉଛି..."
   },
   "MOBILIZER": {
     "MOBILIZER": "ପରାମର୍ଶଦାତା",

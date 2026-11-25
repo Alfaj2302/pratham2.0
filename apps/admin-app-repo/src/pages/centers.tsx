@@ -100,6 +100,7 @@ const Centers = () => {
       searchData(prefilledFormData, 0);
     }
   }, [pageLimit]);
+
   useEffect(() => {
     // Fetch form schema from API and set it in state.
     const fetchData = async () => {
@@ -170,27 +171,45 @@ const Centers = () => {
       //   alterSchema.properties.center_type.default = 'regular';
       // }
 
+      // Same label on every program's center form (API form says UNIT_NAME).
+      if (alterSchema?.properties?.name) {
+        alterSchema.properties.name.title = 'Center Name';
+      }
+
       setAddSchema(alterSchema);
 
       //set 2 grid layout
       let alterUISchema = responseForm?.uiSchema;
-      alterUISchema['ui:order'] = [
-        "state",
-        "district",
-        "block",
-        "village",
-        "board",
-        "medium",
-        "grade",
-        "stream",
-        "name",
-        "center_type",
-        "address",
-        "image",
-        "google_map_link",
-        'industry',
-        "catchment_area"
-      ];
+      // YouthNet: ui:order fully driven by the schema's own property order,
+      // so any field the form adds/removes is reflected automatically.
+      // Other programs: keep the preferred SCP/Pathways field order, limited
+      // to fields present on the schema, with any others appended after.
+      const schemaKeys = Object.keys(alterSchema?.properties || {});
+      if (storedProgram === TenantName.YOUTHNET) {
+        alterUISchema['ui:order'] = schemaKeys;
+      } else {
+        const preferredOrder = [
+          'state',
+          'district',
+          'block',
+          'village',
+          'board',
+          'medium',
+          'grade',
+          'stream',
+          'name',
+          'center_type',
+          'address',
+          'image',
+          'google_map_link',
+          'industry',
+          'catchment_area',
+        ].filter((key) => schemaKeys.includes(key));
+        alterUISchema['ui:order'] = [
+          ...preferredOrder,
+          ...schemaKeys.filter((key) => !preferredOrder.includes(key)),
+        ];
+      }
       alterUISchema = enhanceUiSchemaWithGrid(alterUISchema);
 
       setAddUiSchema(alterUISchema);
@@ -360,6 +379,42 @@ const Centers = () => {
   // ];
   const extraColumnsForYouthnet = [
     {
+      key: 'domain',
+      label: 'Domain',
+      render: (row) =>
+        transformLabel(
+          row.customFields
+            .find(
+              (field) => field.label === 'DOMAIN'
+            )
+            ?.selectedValues?.join(', ')
+        ) || '-',
+    },
+    {
+      key: 'skills',
+      label: 'Skills',
+      render: (row) =>
+        transformLabel(
+          row.customFields
+            .find((field) => field.label === 'SKILLS')
+            ?.selectedValues?.join(', ')
+        ) || '-',
+    },
+    {
+      key: 'active_batches',
+      label: 'Active Batches',
+      render: (row) => (
+        <ActiveArchivedBatch cohortId={row?.cohortId} type={Status.ACTIVE} />
+      ),
+    },
+    {
+      key: 'archived_batches',
+      label: 'Archived Batches',
+      render: (row) => (
+        <ActiveArchivedBatch cohortId={row?.cohortId} type={Status.ARCHIVED} />
+      ),
+    },
+    {
       key: 'image',
       label: 'Images',
       render: (row: any) => {
@@ -523,9 +578,9 @@ const Centers = () => {
         setOpenBatchModal(true);
         // console.log('row in view batch', row);
       },
-      show: (row) =>
-        row.status !== 'archived' &&
-        isSecondChanceTenant(storedProgram),
+      // Batch creation/viewing (via BatchFlow) is no longer SCP-only —
+      // YouthNet uses the L2 batch form, SCP/Pathways their own forms.
+      show: (row) => row.status !== 'archived',
     },
     {
       icon: (
@@ -821,6 +876,17 @@ const Centers = () => {
               centerGrades={
                 selectedCenter?.customFields?.find(
                   (field: any) => field.label === 'GRADE'
+                )?.selectedValues || []
+              }
+              centerIndustries={
+                selectedCenter?.customFields?.find(
+                  (field: any) =>
+                    field.label === 'INDUSTRY' || field.label === 'DOMAIN'
+                )?.selectedValues || []
+              }
+              centerSkills={
+                selectedCenter?.customFields?.find(
+                  (field: any) => field.label === 'SKILLS'
                 )?.selectedValues || []
               }
               centerStreams={

@@ -10,12 +10,14 @@ import {
 } from '@learner/utils/API/contentService';
 import { checkAuth } from '@shared-lib-v2/utils/AuthService';
 import { showToastMessage } from '@learner/components/ToastComponent/Toastify';
-import { getUserDetails } from '@learner/utils/API/userService';
+import { getUserDetails, updateUser } from '@learner/utils/API/userService';
+import { L2_INTEREST_FIELD_ID } from '@learner/utils/app.constant';
 
 export interface TopicProp {
   topic: string;
   courses?: any[];
 }
+
 const getCustomFieldValueFromArray = (customFields: any, label: string[]) => {
   const fieldValue = label.reduce((acc, curr) => {
     const field = customFields.find((f: any) => f.label === curr);
@@ -30,6 +32,7 @@ const LTwoCourse: React.FC = () => {
   const [count, setCount] = useState(0);
   const [topics, setTopics] = useState<TopicProp[]>([]);
   const [userResponse, setUserResponse] = useState<any>(null);
+  const [isInterested, setIsInterested] = useState(false);
   const [selectedTopic, setSelectedTopic] = React.useState<
     TopicProp | undefined
   >(undefined);
@@ -57,6 +60,15 @@ const LTwoCourse: React.FC = () => {
               ...(result.userData || {}),
               ...customFieldsJson,
             });
+            // The L2_INTERESTED field only appears in customFields once the
+            // learner has shown interest, so its presence alone hides the
+            // section — its value is not checked.
+            const hasInterestField = (result?.userData?.customFields ?? []).some(
+              (field: any) =>
+                field?.fieldId === L2_INTEREST_FIELD_ID ||
+                field?.label === 'L2_INTERESTED'
+            );
+            setIsInterested(hasInterestField);
             const courses = await fetchUserCoursesWithContent(userId, tenantId);
             setTopics(courses);
           } catch (error) {
@@ -69,40 +81,24 @@ const LTwoCourse: React.FC = () => {
     fetchTopics();
   }, []);
 
-  // Return null if there are no topics
-  if (topics.length === 0) {
+  // Return null if there are no topics, or the learner has already confirmed
+  // interest and isn't currently looking at the post-submit confirmation modal
+  if (topics.length === 0 || (isInterested && !isModalOpen)) {
     return null;
   }
 
   const handleInterestClick = () => {
     setIsModalOpen(true);
-
-    // if (userResponse) {
-    //   const { email, dob } = userResponse;
-    //   // @ts-ignore
-    //   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //   const dobPattern = /^\d{4}-\d{2}-\d{2}$/;
-
-    //   if (!emailPattern.test(email) || !dobPattern.test(dob)) {
-    //     showToastMessage(
-    //       'Complete your profile with a valid email and DOB in YYYY-MM-DD format',
-    //       'error'
-    //     );
-    //   } else {
-    //     setIsModalOpen(true);
-    //   }
-    // } else {
-    //   showToastMessage(
-    //     'Complete your profile with a valid email and DOB in YYYY-MM-DD format',
-    //     'error'
-    //   );
-    // }
   };
 
   const handleSubmit = async () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      return;
+    }
     try {
       // Get user data
-      const userData = {
+      const salesforceUserData = {
         first_name: userResponse?.firstName ?? '',
         middle_name: userResponse?.middleName ?? '',
         last_name: userResponse?.lastName ?? '',
@@ -126,22 +122,39 @@ const LTwoCourse: React.FC = () => {
         topicName: selectedTopic?.topic ?? '',
       };
 
-      // Call createL2Course API
-      await createL2Course(userData);
+      // Call createL2Course API (Salesforce)
+      await createL2Course(salesforceUserData);
 
-      setCount(1);
-      if (count == 1) {
-        setIsModalOpen(false);
-        setCount(0);
+      // Flag interest on the user's profile so the section stays hidden on revisit
+      const response = await updateUser(userId, {
+        userData: {
+          firstName: userResponse?.firstName ?? '',
+          lastName: userResponse?.lastName ?? '',
+          mobile: userResponse?.mobile ?? '',
+          dob: userResponse?.dob ?? '',
+          gender: userResponse?.gender ?? '',
+        },
+        customFields: [
+          {
+            fieldId: L2_INTEREST_FIELD_ID,
+            value: 'yes',
+          },
+        ],
+      });
+
+      if (response?.data?.params?.err !== null) {
+        throw new Error(response?.data?.params?.errmsg ?? 'Failed to update interest');
       }
+
+      setIsInterested(true);
+      setCount(1);
     } catch (error: any) {
-      const response = error?.response;
+      const errorResponse = error?.response;
       console.error(
         'Error in handleSubmit:',
-        response?.data?.message?.join('') ?? error
+        errorResponse?.data?.message?.join('') ?? error
       );
       showToastMessage(t('LEARNER_APP.COMMON.REACHOUT_TO_MENTOR'), 'error');
-      // Handle error appropriately
     }
   };
 

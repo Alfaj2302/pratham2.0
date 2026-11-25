@@ -2,6 +2,18 @@
   "COMMON": {
     "LANGUAGE": "Language",
     "ADD_NEW": "Add New",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
     "PAGE_SIZE": "Page Size",
     "DELETE_USER": "Delete User",
     "DELETE_USER_WITH_REASON": "Delete User",
@@ -143,6 +155,7 @@
     "NO_YOUTH_FOUND": "No Youth Found",
     "NO_MENTOR_LEAD_FOUND": "No Central Head Found",
     "NO_STATE_FOUND": "No State Found",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found",
     "NO_VILLAGE_FOUND": "No Village Found",
     "NO_DISTRICTS_FOUND": "No District Found",
     "NO_BLOCK_FOUND": "No Block Found",
@@ -162,6 +175,7 @@
     "SUBMIT_YOUR_REQUEST_FOR_ISSUES": "Submit your request and let us assist you with any issues or concerns.",
     "WE_ARE_HERE_TO_HELP": "We’re Here to Help",
     "NO_STATE_LEAD_FOUND": "No State Lead Found",
+    "NO_PLACEMENT_RETENTION_COORDINATOR_FOUND": "No Placement Retention Coordinator Found",
     "FAQS": "FAQ's",
     "RESET_FILTERS": "Reset Filters",
     "ACTIVATE_USER": "Activate User",
@@ -245,6 +259,7 @@
     "YOUTH": "Youth",
     "FAQS": "FAQ's",
     "STATE_LEAD": "State Lead",
+    "PLACEMENT_RETENTION_COORDINATOR": "Placement Retention",
     "MASTER": "Master",
     "STATES": "States",
     "DISTRICTS": "Districts",
@@ -254,7 +269,9 @@
     "SKILLING_CENTERS": "Skilling Centers",
     "CURRICULUM_PLANNER": "Curriculum Planner",
     "BATCH": "Batch",
-    "MOBILIZER": "Mentor"
+    "MOBILIZER": "Mentor",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "State",
@@ -394,7 +411,18 @@
     "DISTRICT_CODE": "District Code",
     "BLOCK_CODE": "Block Code",
     "CODE": "Code",
-    "MASTER": "Master"
+    "MASTER": "Master",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "Organization Name",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "center",
@@ -813,6 +841,18 @@
     "NOT_ABLE_UPDATE_STATE_LEAD": "Not able to update State Lead",
     "NOT_ABLE_CREATE_STATE_LEAD": "Not able to create State Lead",
     "UPDATE_STATE_LEAD": "Update State Lead"
+  },
+  "PLACEMENT_RETENTION_COORDINATORS": {
+    "SEARCHBAR_PLACEHOLDER": "Search Placement Retention Coordinator..",
+    "NEW_PLACEMENT_RETENTION_COORDINATOR": "New Placement Retention Coordinator",
+    "FIRST_SELECT_REQUIRED_FIELDS": "First select required fields",
+    "PLACEMENT_RETENTION_COORDINATOR_CREATED_SUCCESSFULLY": "Placement Retention Coordinator has been successfully created!",
+    "USER_CREDENTIALS_WILL_BE_SEND_SOON": "Placement Retention Coordinator is created, credentials will be sent soon",
+    "PLACEMENT_RETENTION_COORDINATOR_UPDATED_SUCCESSFULLY": "Placement Retention Coordinator has been successfully updated!",
+    "EDIT_PLACEMENT_RETENTION_COORDINATOR": "Edit Placement Retention Coordinator",
+    "NOT_ABLE_UPDATE_PLACEMENT_RETENTION_COORDINATOR": "Not able to update Placement Retention Coordinator",
+    "NOT_ABLE_CREATE_PLACEMENT_RETENTION_COORDINATOR": "Not able to create Placement Retention Coordinator",
+    "UPDATE_PLACEMENT_RETENTION_COORDINATOR": "Update Placement Retention Coordinator"
   },
   "MENTORS": {
     "SEARCHBAR_PLACEHOLDER": "Search mentors..",

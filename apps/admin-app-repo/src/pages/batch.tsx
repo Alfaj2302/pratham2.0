@@ -144,6 +144,10 @@ const Batch = () => {
         alterSchema.properties.grade.maxSelection = 1;
       }
 
+      if (alterSchema?.properties?.name) {
+        alterSchema.properties.name.title = 'Batch Name';
+      }
+
       setAddSchema(alterSchema);
       setAddUiSchema(responseForm?.uiSchema);
     };

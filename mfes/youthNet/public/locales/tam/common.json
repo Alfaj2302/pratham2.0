@@ -329,7 +329,9 @@
     "ENROLLMENT_NUMBER": "சேர்க்கை எண்",
     "SELECT_OPTION": "விருப்பத்தைத் தேர்ந்தெடுக்கவும்",
     "PROFILE_UPDATE_SUCCESSFULLY": "சுயவிவரம் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டது",
-    "UNABLE_TO_PROFILE_UPDATE_": "சுயவிவரத்தைப் புதுப்பிக்க முடியவில்லை"
+    "UNABLE_TO_PROFILE_UPDATE_": "சுயவிவரத்தைப் புதுப்பிக்க முடியவில்லை",
+    "MOCK_TEST": "மாதிரித் தேர்வு",
+    "UNIT_TEST": "யூனிட் சோதனை"
   },
   "FIELDS": {
     "DESIGNATION": "பதவி",
@@ -569,6 +571,8 @@
     "SUBJECTS_I_TEACH": "நான் கற்பிக்கும் பாடங்கள்",
     "GENDER": "பாலினம்",
     "UNIT_NAME": "யூனிட் பெயர்",
+    "BATCH_NAME": "தொகுதி பெயர்",
+    "ASSESSMENTS": "மதிப்பீடுகள்",
     "UNIT_CODE": "யூனிட் குறியீடு",
     "ENROLLMENT_NUMBER": "சேர்க்கை எண்",
     "BLOCK_NAME": "வட்டத்தின் பெயர்",
@@ -985,7 +989,20 @@
     "IMAGE_UPLOADED": "படம் பதிவேற்றப்பட்டது",
     "VIEW": "பார்",
     "REUPLOAD": "மீண்டும் பதிவேற்றம்",
-    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "வடிவம்: jpg, jpeg. அளவு: {{mb}} MB, {{count}} படங்கள் வரை."
+    "FORMAT_JPG_SIZE_MB_UP_TO_IMAGES": "வடிவம்: jpg, jpeg. அளவு: {{mb}} MB, {{count}} படங்கள் வரை.",
+    "BATCH": "தொகுதி",
+    "ATTEMPT_DETAILS": "முயற்சி விவரங்கள்",
+    "ATTEMPT_SUMMARY": "முயற்சி சுருக்கம்",
+    "CORRECT": "சரி",
+    "INCORRECT": "தவறு",
+    "SCORE": "மதிப்பெண்",
+    "TIME": "நேரம்",
+    "ATTEMPTED_ON": "முயற்சித்த தேதி",
+    "PERCENTAGE": "சதவீதம்",
+    "NO_ANSWER": "பதில் இல்லை",
+    "ATTEMPT_NOT_FOUND": "மதிப்பீட்டு முயற்சி கிடைக்கவில்லை",
+    "SUBMITTING": "சமர்ப்பிக்கப்படுகிறது...",
+    "UPDATING": "புதுப்பிக்கப்படுகிறது..."
   },
   "MOBILIZER": {
     "MOBILIZER": "வழிகாட்டி",

@@ -25,6 +25,10 @@ interface ProfileDetailsProps {
   lastName?: string | null;
   workingVillages?: string | null;
   enrollmentId?: string | null;
+  // Shown only when given (Domain: Trainer + Placement Retention; Skills:
+  // Trainer) - see pages/user-profile/[userId].tsx.
+  domain?: string | null;
+  skills?: string | null;
 }
 
 const Profile: React.FC<ProfileDetailsProps> = ({
@@ -47,6 +51,8 @@ const Profile: React.FC<ProfileDetailsProps> = ({
   lastName,
   workingVillages,
   enrollmentId,
+  domain,
+  skills,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme<any>();
@@ -339,6 +345,42 @@ const Profile: React.FC<ProfileDetailsProps> = ({
                 gutterBottom
               >
                 {workingVillages}
+              </Typography>
+            </Grid>
+          )}
+
+          {domain && (
+            <Grid item xs={12}>
+              <Typography
+                color={theme.palette.warning['500']}
+                sx={{ fontSize: '12px', fontWeight: 600, mt: 2 }}
+              >
+                {t('DOMAIN', { defaultValue: 'Domain' })}
+              </Typography>
+              <Typography
+                color={theme.palette.warning['A200']}
+                sx={{ fontSize: '16px', fontWeight: 400 }}
+                gutterBottom
+              >
+                {domain}
+              </Typography>
+            </Grid>
+          )}
+
+          {skills && (
+            <Grid item xs={12}>
+              <Typography
+                color={theme.palette.warning['500']}
+                sx={{ fontSize: '12px', fontWeight: 600, mt: 2 }}
+              >
+                {t('SKILLS', { defaultValue: 'Skills' })}
+              </Typography>
+              <Typography
+                color={theme.palette.warning['A200']}
+                sx={{ fontSize: '16px', fontWeight: 400 }}
+                gutterBottom
+              >
+                {skills}
               </Typography>
             </Grid>
           )}

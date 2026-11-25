@@ -5,6 +5,8 @@ import {
   cohortHierarchy,
   VolunteerField,
 } from './app.constant';
+import { AssessmentType } from './app.config';
+import { format, parseISO } from 'date-fns';
 
 export const generateUUID = () => {
   let d = new Date().getTime();
@@ -451,4 +453,25 @@ export const filterOutUserVillages = (
   return transformedVillageData.filter(
     (village) => !userVillageIdSet.has(village.id)
   );
+};
+
+// Maps the Assessment Type dropdown's internal value ('pre' | 'post' | 'other') to the
+// AssessmentType enum value the composite-search `assessmentType` filter expects.
+// Ported from scp-teacher-repo's helper of the same name.
+export const getAssessmentType = (type: string) => {
+  if (type === 'pre') {
+    return AssessmentType.PRE_TEST;
+  } else if (type === 'post') {
+    return AssessmentType.POST_TEST;
+  } else {
+    return AssessmentType.OTHER;
+  }
+};
+
+// Formats an ISO date string as "2 Feb, 2024". Ported from scp-teacher-repo; used by the
+// Assessments learner-detail page to show when each subject assessment was last updated.
+export const format2DigitDate = (dateStr: any) => {
+  if (dateStr === undefined || dateStr === null) return '';
+  const dateObj = parseISO(dateStr);
+  return format(dateObj, 'd MMM, yyyy');
 };

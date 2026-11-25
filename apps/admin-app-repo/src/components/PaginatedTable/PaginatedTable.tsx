@@ -170,7 +170,10 @@ const PaginatedTable = ({
             <TableRow>
               {visibleActions.length > 0 && <TableCell>Actions</TableCell>}
               {columns?.map((col) => (
-                <TableCell key={col.key || col.keys?.join('-')}>
+                <TableCell
+                  key={col.key || col.keys?.join('-')}
+                  sx={{ minWidth: col.minWidth }}
+                >
                   {col.label}
                 </TableCell>
               ))}
@@ -224,7 +227,10 @@ const PaginatedTable = ({
                     </TableCell>
                   )}
                   {columns?.map((col) => (
-                    <TableCell key={col.key || col.keys?.join('-')}>
+                    <TableCell
+                      key={col.key || col.keys?.join('-')}
+                      sx={{ minWidth: col.minWidth }}
+                    >
                       {/* ✅ Keep custom render logic if provided */}
                       {col.render
                         ? col.render(row)

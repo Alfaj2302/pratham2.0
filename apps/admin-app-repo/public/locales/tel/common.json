@@ -175,7 +175,20 @@
     "DELETE_FROM_BATCH_WARNING": "మీరు పై సెంటర్ బ్యాచ్‌ల నుండి యూజర్‌ను తొలగించాలనుకుంటున్నారా?",
     "SAVE": "భద్రపరచండి",
     "SAVING": "సేవ్ అవుతోంది...",
-    "MAP_NEW": "మ్యాప్ కొత్త"
+    "MAP_NEW": "మ్యాప్ కొత్త",
+    "STATUS": "Status",
+    "NO": "No",
+    "CONFIRM": "Confirm",
+    "ADD_PLACEMENT_PROPERTY": "Add Placement Property",
+    "UPDATE_PLACEMENT_PROPERTY": "Update Placement Property",
+    "PLACEMENT_PROPERTY_CREATED_SUCCESSFULLY": "Placement Property Created Successfully",
+    "PLACEMENT_PROPERTY_UPDATED_SUCCESSFULLY": "Placement Property Updated Successfully",
+    "STATUS_UPDATED_SUCCESSFULLY": "Status Updated Successfully",
+    "CHANGE_STATUS": "Change Status",
+    "CONFIRM_ACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to activate this Placement Property?",
+    "CONFIRM_DEACTIVATE_PLACEMENT_PROPERTY": "Are you sure you want to deactivate this Placement Property?",
+    "DEACTIVATE": "Deactivate",
+    "NO_PLACEMENT_PROPERTY_FOUND": "No Placement Property Found"
   },
   "LOGIN_PAGE": {
     "USERNAME": "వినియోగదారు పేరు",
@@ -253,7 +266,9 @@
     "SKILLING_CENTERS": "నైపుణ్య కేంద్రాలు",
     "CURRICULUM_PLANNER": "పాఠ్య ప్రణాళిక ప్రణాళికదారు",
     "BATCH": "బ్యాచ్",
-    "MOBILIZER": "గురువు"
+    "MOBILIZER": "గురువు",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "TRAINER": "Trainer"
   },
   "FACILITATORS": {
     "STATE": "రాష్ట్రం",
@@ -393,7 +408,18 @@
     "DISTRICT_CODE": "జిల్లా కోడ్",
     "BLOCK_CODE": "బ్లాక్ కోడ్",
     "CODE": "కోడ్",
-    "MASTER": "మాస్టర్"
+    "MASTER": "మాస్టర్",
+    "PLACEMENT_PROPERTY": "Placement Property",
+    "ORGANIZATION_NAME": "సంస్థ పేరు",
+    "PINCODE": "Pincode",
+    "INDUSTRY_TYPE": "Industry Type",
+    "DOMAIN": "Domain",
+    "PLACEMENT_PROPERTY_CONTACT": "Contact",
+    "PLACEMENT_PROPERTY_EMAIL": "Email",
+    "MEDICAL_INSURANCE": "Medical Insurance",
+    "MEDICAL_ASSISTANCE": "Medical Assistance",
+    "PROPERTY_SANITISED": "Property Sanitised",
+    "TRANSPORTATION_FACILITY": "Transportation Facility"
   },
   "CENTERS": {
     "CENTER": "కేంద్రం",
@@ -890,5 +916,16 @@
     "WORKING_LOCATION_REQUIRED_AT_LEAST_ONE": "పని చేసే ప్రదేశం అవసరం. దయచేసి అన్ని బ్లాక్‌లలో కనీసం ఒక గ్రామాన్ని ఎంచుకోండి.",
     "MOBILIZER_NAME": "గురువు పేరు",
     "EDIT_MOBILIZER": "ఎడిట్ మొబిలైజర్"
-  }
+  },
+  "PLACEMENT PROPERTY": "Placement Property",
+  "PLACEMENT PROPERTY NAME": "Placement Property Name",
+  "PINCODE": "Pincode",
+  "DOMAIN": "Domain",
+  "INDUSTRY TYPE": "Industry Type",
+  "PLACEMENT PROPERTY CONTACT": "Placement Property Contact",
+  "PLACEMENT PROPERTY EMAIL": "Placement Property Email",
+  "MEDICAL INSURACE": "Medical Insurance",
+  "MEDICAL ASSISTANCE": "Medical Assistance",
+  "PROPERTY SANITISED": "Property Sanitised",
+  "TRANSPORTATION FACILITY": "Transportation Facility"
 }
