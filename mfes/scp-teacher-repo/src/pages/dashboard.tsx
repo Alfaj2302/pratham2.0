@@ -1,5 +1,6 @@
 'use client';
 
+import InfoIcon from '@mui/icons-material/Info';
 import { Box, Button, Grid, Modal, Stack, Typography } from '@mui/material';
 import { format, isAfter, isValid, parse, startOfDay } from 'date-fns';
 import React, { ComponentType, useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import {
   getCohortAttendance,
 } from '../services/AttendanceService';
 import {
+  eventBelongsToCohort,
   formatSelectedDate,
   getAfterDate,
   getBeforeDate,
@@ -19,7 +21,6 @@ import {
   shortDateFormat,
   sortSessions,
   toPascalCase,
-  eventBelongsToCohort,
 } from '../utils/helper';
 import {
   AttendancePercentageProps,
@@ -38,7 +39,6 @@ import {
   lowLearnerAttendanceLimit,
 } from './../../app.config';
 
-import AttendanceComparison from '@/components/AttendanceComparison';
 import CohortSelectionSection from '@/components/CohortSelectionSection';
 import GuideTour from '@/components/GuideTour';
 import MarkBulkAttendance from '@/components/MarkBulkAttendance';
@@ -48,7 +48,7 @@ import MarkCenterAttendanceSessionsModal, {
 import OverviewCard from '@/components/OverviewCard';
 import { showToastMessage } from '@/components/Toastify';
 import WeekCalender from '@/components/WeekCalender';
-import { getEventsForDay, getEventList } from '@/services/EventService';
+import { getEventList, getEventsForDay } from '@/services/EventService';
 import { getMyCohortMemberList } from '@/services/MyClassDetailsService';
 import {
   QueryKeys,
@@ -86,12 +86,12 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useQueryClient } from '@tanstack/react-query';
 import { useDirection } from '../hooks/useDirection';
 
+import ModalComponent from '@/components/Modal';
 import useStore from '@/store/store';
+import { modalStyles } from '@/styles/modalStyles';
 import dynamic from 'next/dynamic';
 import { isEliminatedFromBuild } from '../../featureEliminationUtil';
 import useEventDates from './../hooks/useEventDates';
-import ModalComponent from '@/components/Modal';
-import { modalStyles } from '@/styles/modalStyles';
 
 let SessionCardFooter: ComponentType<any> | null = null;
 if (!isEliminatedFromBuild('SessionCardFooter', 'component')) {
@@ -116,10 +116,14 @@ const Dashboard: React.FC<DashboardProps> = () => {
 
   const [open, setOpen] = React.useState(false);
   const [sessionsModalOpen, setSessionsModalOpen] = React.useState(false);
-  const [daySessions, setDaySessions] = React.useState<DaySessionForAttendance[]>([]);
+  const [daySessions, setDaySessions] = React.useState<
+    DaySessionForAttendance[]
+  >([]);
   const [sessionsLoading, setSessionsLoading] = React.useState(false);
-  const [selectedSession, setSelectedSession] = React.useState<DaySessionForAttendance | null>(null);
-  const [sessionAttendanceLoading, setSessionAttendanceLoading] = React.useState(false);
+  const [selectedSession, setSelectedSession] =
+    React.useState<DaySessionForAttendance | null>(null);
+  const [sessionAttendanceLoading, setSessionAttendanceLoading] =
+    React.useState(false);
   const [cohortsData, setCohortsData] = React.useState<Array<ICohort>>([]);
   const [manipulatedCohortData, setManipulatedCohortData] =
     React.useState<Array<ICohort>>(cohortsData);
@@ -335,34 +339,35 @@ const Dashboard: React.FC<DashboardProps> = () => {
           const resp = response?.result?.userDetails;
           if (resp) {
             const nameUserIdArray = resp?.map((entry: any) => ({
-                userId: entry.userId,
-                name: toPascalCase(entry.firstName),
-                memberStatus: entry.status,
-                createdAt: entry.createdAt,
-                updatedAt: entry.updatedAt,
-                userName: entry.username,
-              }));
+              userId: entry.userId,
+              name: toPascalCase(entry.firstName),
+              memberStatus: entry.status,
+              createdAt: entry.createdAt,
+              updatedAt: entry.updatedAt,
+              userName: entry.username,
+            }));
             const selectedDateFilteredMemberList = nameUserIdArray?.filter(
-                (member: {
-                  createdAt: string | number | Date;
-                  updatedAt: string | number | Date;
-                  memberStatus: string;
-                }) => {
-                  const createdAt = new Date(member.createdAt);
-                  createdAt.setHours(0, 0, 0, 0);
-                  const updatedAt = new Date(member.updatedAt);
-                  updatedAt.setHours(0, 0, 0, 0);
-                  const currentDate = new Date(selectedDate);
-                  currentDate.setHours(0, 0, 0, 0);
-                  if (
-                    (member.memberStatus === Status.ARCHIVED || member.memberStatus === "reassigned") &&
-                    updatedAt <= currentDate
-                  ) {
-                    return false;
-                  }
-                  return createdAt <= new Date(selectedDate);
+              (member: {
+                createdAt: string | number | Date;
+                updatedAt: string | number | Date;
+                memberStatus: string;
+              }) => {
+                const createdAt = new Date(member.createdAt);
+                createdAt.setHours(0, 0, 0, 0);
+                const updatedAt = new Date(member.updatedAt);
+                updatedAt.setHours(0, 0, 0, 0);
+                const currentDate = new Date(selectedDate);
+                currentDate.setHours(0, 0, 0, 0);
+                if (
+                  (member.memberStatus === Status.ARCHIVED ||
+                    member.memberStatus === 'reassigned') &&
+                  updatedAt <= currentDate
+                ) {
+                  return false;
                 }
-              );
+                return createdAt <= new Date(selectedDate);
+              }
+            );
 
             // Filter latest entries
             const filteredEntries = getLatestEntries(
@@ -624,10 +629,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
               return createdAt <= new Date(selectedDate);
             }
           );
-        const filteredEntries = getLatestEntries(
-          nameUserIdArray,
-          selectedDate
-        );
+        const filteredEntries = getLatestEntries(nameUserIdArray, selectedDate);
         if (filteredEntries && selectedDate) {
           const wrappedUpdate = (data: any) => {
             handleAttendanceDataUpdate(data);
@@ -1185,104 +1187,129 @@ const Dashboard: React.FC<DashboardProps> = () => {
                             sx={{ opacity: classId === 'all' ? 0.5 : 1 }}
                           >
                             <Stack
-                              direction="row"
-                              spacing={0}
+                              direction={{ xs: 'column', sm: 'row' }}
+                              spacing={2}
                               sx={{ gap: 0 }}
                               justifyContent={'space-between'}
                               alignItems={'center'}
                             >
-                              <Box
-                                display={'flex'}
-                                gap={'5px'}
-                                alignItems={'center'}
-                              >
-                                {currentAttendance !== 'notMarked' &&
-                                  currentAttendance !== 'futureDate' && (
-                                    <>
-                                      <CircularProgressbar
-                                        value={progressValue}
-                                        background
-                                        backgroundPadding={8}
-                                        styles={buildStyles({
-                                          textColor: pathColor,
-                                          pathColor: pathColor,
-                                          trailColor: '#E6E6E6',
-                                          strokeLinecap: 'round',
-                                          backgroundColor:
-                                            theme.palette.warning['A400'],
-                                        })}
-                                        className="fs-24 htw-24"
-                                        strokeWidth={20}
-                                      />
-                                      <Box>
-                                        <Typography
-                                          // sx={{ color: theme.palette.warning['A400'] }}
-                                          sx={{
-                                            fontSize: '12px',
-                                            fontWeight: '600',
-                                            color: '#F4F4F4',
-                                          }}
-                                          variant="h6"
-                                          className="word-break"
-                                        >
-                                          {t('DASHBOARD.PERCENT_ATTENDANCE', {
-                                            percent_students:
-                                              attendanceData?.numberOfCohortMembers &&
-                                              attendanceData.numberOfCohortMembers !==
-                                                0
-                                                ? (
-                                                    (attendanceData.presentCount /
-                                                      attendanceData.numberOfCohortMembers) *
-                                                    100
-                                                  ).toFixed(2)
-                                                : '0',
+                              <Box>
+                                <Box
+                                  display={'flex'}
+                                  gap={'5px'}
+                                  alignItems={'center'}
+                                >
+                                  {currentAttendance !== 'notMarked' &&
+                                    currentAttendance !== 'futureDate' && (
+                                      <>
+                                        <CircularProgressbar
+                                          value={progressValue}
+                                          background
+                                          backgroundPadding={8}
+                                          styles={buildStyles({
+                                            textColor: pathColor,
+                                            pathColor: pathColor,
+                                            trailColor: '#E6E6E6',
+                                            strokeLinecap: 'round',
+                                            backgroundColor:
+                                              theme.palette.warning['A400'],
                                           })}
-                                        </Typography>
-                                        <Typography
-                                          // sx={{ color: theme.palette.warning['A400'] }}
-                                          sx={{
-                                            fontSize: '12px',
-                                            fontWeight: '600',
-                                            color: '#F4F4F4',
-                                          }}
-                                          variant="h6"
-                                          className="word-break"
-                                        >
-                                          {t('DASHBOARD.PRESENT_STUDENTS', {
-                                            present_students:
-                                              attendanceData.presentCount,
-                                            total_students:
-                                              attendanceData.numberOfCohortMembers,
-                                          })}
-                                        </Typography>
-                                      </Box>
-                                    </>
-                                  )}
-                                {currentAttendance === 'notMarked' &&
-                                  currentAttendance !== 'futureDate' && (
+                                          className="fs-24 htw-24"
+                                          strokeWidth={20}
+                                        />
+                                        <Box>
+                                          <Typography
+                                            // sx={{ color: theme.palette.warning['A400'] }}
+                                            sx={{
+                                              fontSize: '12px',
+                                              fontWeight: '600',
+                                              color: '#F4F4F4',
+                                            }}
+                                            variant="h6"
+                                            className="word-break"
+                                          >
+                                            {t('DASHBOARD.PERCENT_ATTENDANCE', {
+                                              percent_students:
+                                                attendanceData?.numberOfCohortMembers &&
+                                                attendanceData.numberOfCohortMembers !==
+                                                  0
+                                                  ? (
+                                                      (attendanceData.presentCount /
+                                                        attendanceData.numberOfCohortMembers) *
+                                                      100
+                                                    ).toFixed(2)
+                                                  : '0',
+                                            })}
+                                          </Typography>
+                                          <Typography
+                                            // sx={{ color: theme.palette.warning['A400'] }}
+                                            sx={{
+                                              fontSize: '12px',
+                                              fontWeight: '600',
+                                              color: '#F4F4F4',
+                                            }}
+                                            variant="h6"
+                                            className="word-break"
+                                          >
+                                            {t('DASHBOARD.PRESENT_STUDENTS', {
+                                              present_students:
+                                                attendanceData.presentCount,
+                                              total_students:
+                                                attendanceData.numberOfCohortMembers,
+                                            })}
+                                          </Typography>
+                                        </Box>
+                                      </>
+                                    )}
+                                  {currentAttendance === 'notMarked' &&
+                                    currentAttendance !== 'futureDate' && (
+                                      <Typography
+                                        sx={{
+                                          color: theme.palette.warning['A400'],
+                                        }}
+                                        fontSize={'0.8rem'}
+                                        // variant="h6"
+                                        // className="word-break"
+                                      >
+                                        {t('DASHBOARD.NOT_MARKED')}
+                                      </Typography>
+                                    )}
+                                  {currentAttendance === 'futureDate' && (
                                     <Typography
                                       sx={{
-                                        color: theme.palette.warning['A400'],
+                                        color: theme.palette.warning['300'],
                                       }}
                                       fontSize={'0.8rem'}
-                                      // variant="h6"
-                                      // className="word-break"
+                                      fontStyle={'italic'}
+                                      fontWeight={'500'}
                                     >
-                                      {t('DASHBOARD.NOT_MARKED')}
+                                      {t('DASHBOARD.FUTURE_DATE_CANT_MARK')}
                                     </Typography>
                                   )}
-                                {currentAttendance === 'futureDate' && (
+                                </Box>
+                                <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap="6px"
+                                  mt={1}
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      color: theme.palette.primary.main,
+                                      fontSize: '1rem',
+                                      flexShrink: 0,
+                                    }}
+                                  />
                                   <Typography
                                     sx={{
-                                      color: theme.palette.warning['300'],
+                                      color: '#F4F4F4',
+                                      fontSize: '0.75rem',
+                                      lineHeight: 1.4,
                                     }}
-                                    fontSize={'0.8rem'}
-                                    fontStyle={'italic'}
-                                    fontWeight={'500'}
                                   >
-                                    {t('DASHBOARD.FUTURE_DATE_CANT_MARK')}
+                                    {t('DASHBOARD.ATTENDANCE_SYNC_INFO')}
                                   </Typography>
-                                )}
+                                </Box>
                               </Box>
                               <Box display="flex" sx={{ gap: 1 }}>
                                 <Button
@@ -1388,10 +1415,16 @@ const Dashboard: React.FC<DashboardProps> = () => {
                               selectedDate={new Date(selectedDate)}
                               selectedSession={
                                 selectedSession
-                                  ? { eventRepetitionId: selectedSession.eventRepetitionId ?? selectedSession.id }
+                                  ? {
+                                      eventRepetitionId:
+                                        selectedSession.eventRepetitionId ??
+                                        selectedSession.id,
+                                    }
                                   : null
                               }
-                              prefillLoading={!!selectedSession && sessionAttendanceLoading}
+                              prefillLoading={
+                                !!selectedSession && sessionAttendanceLoading
+                              }
                               onSaveSuccess={(isModified) => {
                                 if (isModified) {
                                   showToastMessage(
@@ -1513,9 +1546,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
                                   mb: 2,
                                 }}
                               >
-                                {t(
-                                  'COMMON.RESET_ATTENDANCE_CONFIRM_MESSAGE'
-                                )}
+                                {t('COMMON.RESET_ATTENDANCE_CONFIRM_MESSAGE')}
                               </Typography>
                               <Box
                                 display="flex"
@@ -1585,29 +1616,23 @@ const Dashboard: React.FC<DashboardProps> = () => {
                                             .filter(
                                               (member: {
                                                 createdAt:
-                                                  string | number | Date;
+                                                  | string
+                                                  | number
+                                                  | Date;
                                                 updatedAt:
-                                                  string | number | Date;
+                                                  | string
+                                                  | number
+                                                  | Date;
                                                 memberStatus: string;
                                               }) => {
                                                 const createdAt = new Date(
                                                   member.createdAt
                                                 );
-                                                createdAt.setHours(
-                                                  0,
-                                                  0,
-                                                  0,
-                                                  0
-                                                );
+                                                createdAt.setHours(0, 0, 0, 0);
                                                 const updatedAt = new Date(
                                                   member.updatedAt
                                                 );
-                                                updatedAt.setHours(
-                                                  0,
-                                                  0,
-                                                  0,
-                                                  0
-                                                );
+                                                updatedAt.setHours(0, 0, 0, 0);
                                                 const currentDate = new Date(
                                                   selectedDate
                                                 );
@@ -1643,17 +1668,14 @@ const Dashboard: React.FC<DashboardProps> = () => {
                                             ) ?? [];
                                         }
                                       }
-                                      const contextIds: string[] = [
-                                        classId,
-                                      ];
+                                      const contextIds: string[] = [classId];
                                       const dateStr = shortDateFormat(
                                         new Date(selectedDate)
                                       );
-                                      const sessions =
-                                        await getEventsForDay(
-                                          classId,
-                                          dateStr
-                                        );
+                                      const sessions = await getEventsForDay(
+                                        classId,
+                                        dateStr
+                                      );
                                       contextIds.push(
                                         ...sessions.map(
                                           (s: DaySessionForAttendance) =>
@@ -1667,9 +1689,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
                                           date: dateStr,
                                         })
                                       );
-                                      if (
-                                        attendanceRecords.length === 0
-                                      ) {
+                                      if (attendanceRecords.length === 0) {
                                         setResetAttendanceModalOpen(false);
                                         setResetAttendanceLoading(false);
                                         return;

@@ -262,6 +262,7 @@
     "CLASS": "वर्ग",
     "NOT_MARKED": "चिन्हांकित नाही",
     "FUTURE_DATE_CANT_MARK": "भविष्यातील तारीख चिन्हांकित केली जाऊ शकत नाही",
+    "ATTENDANCE_SYNC_INFO": "ऑनलाइन (Zoom) सत्राची उपस्थिती मध्यरात्रीनंतर आपोआप सिंक होते. प्रत्यक्ष (इन-पर्सन) सत्राची उपस्थिती तुम्ही नोंदवताच दिसते.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% उपस्थिती",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} उपस्थित)",
     "OVERVIEW": "विहंगावलोकन",

@@ -1265,5 +1265,8 @@
   "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "यदि अन्य, तो कृपया उस बोर्ड का नाम बताएं जिससे आपने कक्षा 10 पास की",
   "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "कक्षा 10 में आपको कौन सी श्रेणी / कितने प्रतिशत अंक मिले?",
   "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "क्या आपने प्रथम के सेकंड चांस प्रोग्राम में पढ़ाई की है?",
-  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "आपने कक्षा 10 किस वर्ष में पास की?"
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "आपने कक्षा 10 किस वर्ष में पास की?",
+  "DASHBOARD": {
+    "ATTENDANCE_SYNC_INFO": "ऑनलाइन (Zoom) सत्र की उपस्थिति आधी रात के बाद अपने आप सिंक हो जाती है। व्यक्तिगत (इन-पर्सन) सत्र की उपस्थिति आपके दर्ज करते ही दिखाई देती है।"
+  }
 }

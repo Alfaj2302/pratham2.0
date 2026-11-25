@@ -262,6 +262,7 @@
     "CLASS": "తరగతి",
     "NOT_MARKED": "మార్క్ చేయబడలేదు",
     "FUTURE_DATE_CANT_MARK": "భవిష్యత్తు తేదీని మార్క్ చేయలేము",
+    "ATTENDANCE_SYNC_INFO": "ఆన్‌లైన్ (Zoom) సెషన్ హాజరు అర్ధరాత్రి తర్వాత ఆటోమేటిక్‌గా సింక్ అవుతుంది. ప్రత్యక్ష (ఇన్-పర్సన్) సెషన్ హాజరు మీరు మార్క్ చేసిన వెంటనే కనిపిస్తుంది.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% హాజరు",
     "PRESENT_STUDENTS": "{{present_students}}/{{total_students}} మంది హాజరు",
     "OVERVIEW": "స్థూలదృష్టి",

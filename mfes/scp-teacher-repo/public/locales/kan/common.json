@@ -262,6 +262,7 @@
     "CLASS": "ತರಗತಿ",
     "NOT_MARKED": "ಗುರುತಿಸಲಾಗಿಲ್ಲ",
     "FUTURE_DATE_CANT_MARK": "ಭವಿಷ್ಯದ ದಿನಾಂಕವನ್ನು ಗುರುತಿಸಲಾಗುವುದಿಲ್ಲ.",
+    "ATTENDANCE_SYNC_INFO": "ಆನ್‌ಲೈನ್ (Zoom) ಸೆಷನ್ ಹಾಜರಾತಿ ಮಧ್ಯರಾತ್ರಿಯ ನಂತರ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸಿಂಕ್ ಆಗುತ್ತದೆ. ವೈಯಕ್ತಿಕ (ಇನ್-ಪರ್ಸನ್) ಸೆಷನ್ ಹಾಜರಾತಿಯನ್ನು ನೀವು ಗುರುತಿಸಿದ ತಕ್ಷಣ ಕಾಣಿಸುತ್ತದೆ.",
     "PERCENT_ATTENDANCE": "{{percent_students}}% ಹಾಜರಾತಿ",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} ಹಾಜರಿರುವವರು)",
     "OVERVIEW": "ಅವಲೋಕನ",

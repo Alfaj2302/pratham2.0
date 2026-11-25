@@ -262,6 +262,7 @@
     "CLASS": "कक्षा",
     "NOT_MARKED": "दर्ज नहीं",
     "FUTURE_DATE_CANT_MARK": "भविष्य की तिथि दर्ज नहीं की जा सकती",
+    "ATTENDANCE_SYNC_INFO": "ऑनलाइन (Zoom) सत्र की उपस्थिति आधी रात के बाद अपने आप सिंक हो जाती है। व्यक्तिगत (इन-पर्सन) सत्र की उपस्थिति आपके दर्ज करते ही दिखाई देती है।",
     "PERCENT_ATTENDANCE": "{{percent_students}}% उपस्थिति",
     "PRESENT_STUDENTS": "({{present_students}}/{{total_students}} उपस्थित)",
     "OVERVIEW": "अवलोकन",

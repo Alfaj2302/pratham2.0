@@ -1274,5 +1274,8 @@
   "FROM_WHICH_BOARD_DID_YOU_PASS_CLASS_10_OTHER": "If other, please specify the board from which you passed Class 10",
   "What_DIVISION_/_PERCENTAGE_DID_YOU_GET_IN_CLASS_10": "What division / percentage did you get in Class 10?",
   "HAVE_YOU_STUDIED_IN_PRATHAM'S_SECOND_CHANCE_PROGRAM": "Have you studied in Pratham's Second Chance Program?",
-  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "In which year did you pass Class 10?"
+  "IN_WHICH_YEAR_DID_YOU_PASS_CLASS_10": "In which year did you pass Class 10?",
+  "DASHBOARD": {
+    "ATTENDANCE_SYNC_INFO": "Online (Zoom) session attendance syncs automatically after midnight. In-person session attendance appears as soon as you mark it."
+  }
 }
