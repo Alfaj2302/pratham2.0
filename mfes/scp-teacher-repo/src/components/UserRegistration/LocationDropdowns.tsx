@@ -13,7 +13,8 @@ interface LocationOption {
   [key: string]: any;
 }
 
-const normalizeName = (name: unknown) => String(name ?? '').trim().toLowerCase();
+const normalizeName = (name: unknown) =>
+  typeof name === 'string' ? name.trim().toLowerCase() : '';
 
 // Merge the district-user-count result (names + counts) with the
 // field options (ids needed by the Block API and the user list filter).
@@ -382,7 +383,7 @@ const LocationDropdowns: React.FC<LocationDropdownsProps> = ({ onLocationChange 
               ) : (
                 districts.map((district) => (
                   <MenuItem key={district.value} value={district.value}>
-                    <Checkbox checked={selectedDistricts.indexOf(district.value) > -1} />
+                    <Checkbox checked={selectedDistricts.includes(district.value)} />
                     <ListItemText
                       primary={
                         district.userCount != null
