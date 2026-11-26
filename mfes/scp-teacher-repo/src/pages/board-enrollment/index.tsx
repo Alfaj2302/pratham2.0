@@ -239,7 +239,11 @@ const BoardEnrollment = () => {
     const response = await getMyCohortMemberList({
       limit,
       page: 0,
-      filters: { cohortId: classId },
+      filters: {
+        cohortId: classId,
+        // Exclude dropout learners from board enrollment
+        status: [Status.ACTIVE, 'reassigned'],
+      },
     });
     return response?.result?.userDetails || [];
   };
