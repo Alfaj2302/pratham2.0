@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button, Stack } from '@mui/material';
+import useOtpAutofill from '@shared-lib-v2/hooks/useOtpAutofill';
 
 const OtpVerificationComponent = ({
   maskedNumber,
@@ -23,20 +24,16 @@ const OtpVerificationComponent = ({
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleChange = (index: number, value: string) => {
-    if (!/^[0-9]?$/.test(value)) return;
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-    if (value && index < otp.length - 1) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
-      if (nextInput) (nextInput as HTMLInputElement).focus();
-    }
-  };
+  // Typing, paste/autofill distribution and WebOTP (see hook for the
+  // required SMS format: last line `@<site-domain> #<otp>`).
+  const { handleChange, handlePaste, handleKeyDown, restartWebOtp } =
+    useOtpAutofill(otp, setOtp);
 
   const handleResend = () => {
     setTimer(120);
     setOtp(['', '', '', '']);
+    // Abort the pending WebOTP request and arm a fresh one for the new SMS.
+    restartWebOtp();
     onResend?.();
   };
 
@@ -53,14 +50,14 @@ const OtpVerificationComponent = ({
             id={`otp-${idx}`}
             value={digit}
             onChange={(e) => handleChange(idx, e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Backspace' && otp[idx] === '' && idx > 0) {
-                const prevInput = document.getElementById(`otp-${idx - 1}`);
-                if (prevInput) (prevInput as HTMLInputElement).focus();
-              }
-            }}
+            onPaste={(e) => handlePaste(idx, e)}
+            onKeyDown={(e) => handleKeyDown(idx, e)}
+            autoComplete="one-time-code"
             inputProps={{
-              maxLength: 1,
+              // No maxLength: a full autofilled/pasted code must reach
+              // onChange; the hook enforces one digit per box.
+              inputMode: 'numeric',
+              pattern: '[0-9]*',
               style: { textAlign: 'center', fontSize: '20px' },
             }}
             sx={{ width: 50 }}
